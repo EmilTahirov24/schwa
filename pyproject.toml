@@ -3,13 +3,14 @@ name = "duzelt-workspace"
 version = "0.0.0"
 description = "Development workspace for duzelt"
 requires-python = ">=3.12"
-dependencies = ["duzelt"]
+dependencies = ["duzelt", "duzelt-api"]
 
 [tool.uv.workspace]
-members = ["packages/core"]
+members = ["packages/core", "packages/api"]
 
 [tool.uv.sources]
 duzelt = { workspace = true }
+duzelt-api = { workspace = true }
 torch = { index = "pytorch" }
 
 [[tool.uv.index]]
@@ -23,6 +24,7 @@ dev = [
     "ruff>=0.6",
     "poethepoet>=0.29",
     "mwparserfromhell>=0.7.2",
+    "httpx>=0.28.1",
 ]
 train = [
     "numpy>=2.5.2",
@@ -37,7 +39,7 @@ target-version = "py312"
 select = ["E", "F", "I", "UP", "B", "SIM"]
 
 [tool.pytest.ini_options]
-testpaths = ["packages/core/tests"]
+testpaths = ["packages/core/tests", "packages/api/tests"]
 
 [tool.poe.tasks]
 test = "pytest"
@@ -54,3 +56,7 @@ eval = "python scripts/evaluate.py --split dev"
 data = ["extract", "corpus", "lexicon"]
 train = ["context"]
 reproduce = ["data", "train", "eval"]
+
+[tool.ruff.lint.flake8-bugbear]
+# FastAPI's Depends() in a default is the framework's own idiom, not a mutable default.
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Path"]

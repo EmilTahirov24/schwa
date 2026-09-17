@@ -1,0 +1,15 @@
+<!--
+  The source the PNG icons are rendered from (scripts/make_icons.py).
+
+  The mark is a schwa - ə - because it is the letter people drop most often and the one the
+  tool is best known for putting back. The stroke stays heavy so the shape survives at 16px,
+  where a thinner letter turns to mush.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <rect width="128" height="128" rx="28" fill="#171717" />
+  <g fill="none" stroke="#fafafa" stroke-width="13" stroke-linecap="round">
+    <circle cx="64" cy="66" r="31" />
+    <path d="M36 74 H92" />
+  </g>
+  <circle cx="98" cy="30" r="10" fill="#34d399" />
+</svg>

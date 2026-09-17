@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="az">
+  <head>
+    <meta charset="utf-8" />
+    <title>Düzəlt</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        font: 14px system-ui, sans-serif;
+      }
+      body {
+        width: 320px;
+        margin: 0;
+        padding: 14px;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 15px;
+      }
+      p {
+        margin: 0 0 10px;
+        color: #666;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+      textarea {
+        box-sizing: border-box;
+        width: 100%;
+        min-height: 90px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font: inherit;
+        resize: vertical;
+      }
+      .row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-top: 8px;
+      }
+      button {
+        padding: 6px 12px;
+        border: 0;
+        border-radius: 6px;
+        background: #171717;
+        color: #fafafa;
+        font: inherit;
+        cursor: pointer;
+      }
+      button.secondary {
+        background: transparent;
+        color: #666;
+        border: 1px solid #ccc;
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+      #status {
+        font-size: 12px;
+        color: #666;
+      }
+      a {
+        color: inherit;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Düzəlt</h1>
+    <p>
+      Mətni yapışdır və düzəlt. Səhifədə yazdığın mətn üçün: mətni seç, sağ klik et, və ya
+      <b>Ctrl+Shift+E</b> bas.
+    </p>
+    <textarea id="text" placeholder="sence neden basliyaq"></textarea>
+    <div class="row">
+      <button id="fix">Düzəlt</button>
+      <button id="copy" class="secondary">Kopyala</button>
+      <span id="status"></span>
+    </div>
+    <p style="margin-top: 10px">
+      <a href="#" id="options">Parametrlər</a>
+    </p>
+    <script src="popup.js"></script>
+  </body>
+</html>

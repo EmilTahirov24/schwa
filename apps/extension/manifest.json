@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Düzəlt — Azerbaijani diacritics",
+  "version": "0.1.0",
+  "description": "Restore Azerbaijani letters in text typed without them: sence neden -> səncə nədən.",
+  "permissions": ["contextMenus", "scripting", "activeTab", "storage"],
+  "host_permissions": ["http://127.0.0.1:8000/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "commands": {
+    "fix-field": {
+      "suggested_key": { "default": "Ctrl+Shift+E", "mac": "Command+Shift+E" },
+      "description": "Restore Azerbaijani letters in the field you are typing in"
+    }
+  },
+  "options_page": "options.html",
+  "action": {
+    "default_title": "Düzəlt",
+    "default_popup": "popup.html"
+  }
+}

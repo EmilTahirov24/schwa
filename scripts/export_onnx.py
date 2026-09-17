@@ -13,7 +13,6 @@ import sys
 from pathlib import Path
 
 import torch
-
 from duzelt._tagger_model import CharTagger, predict_labels
 from duzelt.onnx_tagger import load_onnx_predictor, write_sidecar
 from duzelt.tagger import CharVocabulary, config_from_dict

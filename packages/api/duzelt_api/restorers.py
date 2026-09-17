@@ -47,9 +47,16 @@ def load_restorer() -> Loaded:
 
     tagger_path = _path_from_env(ENV_TAGGER)
     if tagger_path is not None:
+        sources["tagger"] = str(tagger_path)
+        # An .onnx file runs on onnxruntime alone, which is what lets the image ship
+        # without torch; a checkpoint is still accepted for a machine that has it.
+        if tagger_path.suffix == ".onnx":
+            from duzelt.onnx_tagger import load_onnx_restorer
+
+            return Loaded(load_onnx_restorer(tagger_path), sources)
+
         from duzelt.tagger import TaggerRestorer
 
-        sources["tagger"] = str(tagger_path)
         return Loaded(TaggerRestorer.from_checkpoint(tagger_path), sources)
 
     lexicon_path = _path_from_env(ENV_LEXICON)

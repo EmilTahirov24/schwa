@@ -30,9 +30,7 @@ def load_onnx_predictor(model_path: Path, batch_size: int = 64):
     vocabulary = CharVocabulary(meta["characters"])
     config = config_from_dict(meta["config"])
 
-    session = onnxruntime.InferenceSession(
-        str(model_path), providers=["CPUExecutionProvider"]
-    )
+    session = onnxruntime.InferenceSession(str(model_path), providers=["CPUExecutionProvider"])
     input_name = session.get_inputs()[0].name
 
     def predict(texts: Sequence[str]) -> list[list[int]]:
@@ -49,9 +47,7 @@ def load_onnx_predictor(model_path: Path, batch_size: int = 64):
 
             logits = session.run(None, {input_name: ids})[0]
             choices = logits.argmax(axis=-1)
-            labels.extend(
-                choices[row, : len(text)].tolist() for row, text in enumerate(batch)
-            )
+            labels.extend(choices[row, : len(text)].tolist() for row, text in enumerate(batch))
 
         return labels
 

@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import json
 from collections import Counter, defaultdict
-from collections.abc import Iterable
+from collections.abc import Iterable, Iterator
 from pathlib import Path
 
 from duzelt.alphabet import az_lower
@@ -18,19 +18,34 @@ from duzelt.tokenize import key_of, words_of
 __all__ = ["Lexicon"]
 
 
+#: A rival spelling counts as real, rather than as a typo in the source text, once it
+#: reaches this share of the key's occurrences and this many occurrences. Wikipedia
+#: contains "bır" for "bir" a few dozen times in 286k occurrences; that is a typo, and
+#: treating it as an ambiguity would put thousands of unwinnable words into the score.
+MIN_MINORITY_SHARE = 0.05
+MIN_MINORITY_COUNT = 10
+
+
 class Lexicon:
     """Maps a typed form to the real words it can stand for, with their counts."""
 
-    def __init__(self, forms: dict[str, Counter[str]] | None = None) -> None:
+    def __init__(
+        self,
+        forms: dict[str, Counter[str]] | None = None,
+        min_minority_share: float = MIN_MINORITY_SHARE,
+        min_minority_count: int = MIN_MINORITY_COUNT,
+    ) -> None:
         self._forms: dict[str, Counter[str]] = defaultdict(Counter)
+        self.min_minority_share = min_minority_share
+        self.min_minority_count = min_minority_count
         if forms:
             for key, counts in forms.items():
                 self._forms[key] = Counter(counts)
 
     @classmethod
-    def from_sentences(cls, sentences: Iterable[str]) -> Lexicon:
+    def from_sentences(cls, sentences: Iterable[str], **thresholds: float) -> Lexicon:
         """Count every word of every sentence into a new lexicon."""
-        lexicon = cls()
+        lexicon = cls(**thresholds)  # type: ignore[arg-type]
         for sentence in sentences:
             for word in words_of(sentence):
                 lexicon.add(word)
@@ -49,9 +64,23 @@ class Lexicon:
         candidates = self.candidates(key)
         return candidates[0][0] if candidates else None
 
-    def is_ambiguous(self, key: str) -> bool:
-        """True if more than one real word collapses to ``key``."""
+    def has_multiple_forms(self, key: str) -> bool:
+        """True if ``key`` was ever seen spelled in more than one way, typos included."""
         return len(self._forms.get(key, ())) > 1
+
+    def is_ambiguous(self, key: str) -> bool:
+        """True if at least two spellings of ``key`` are common enough to be real.
+
+        See :data:`MIN_MINORITY_SHARE`: a spelling that appears a handful of times against
+        hundreds of thousands is a typo in the source text, not a second reading.
+        """
+        counts = self._forms.get(key)
+        if counts is None or len(counts) < 2:
+            return False
+
+        total = sum(counts.values())
+        runner_up = counts.most_common(2)[1][1]
+        return runner_up >= self.min_minority_count and runner_up / total >= self.min_minority_share
 
     def count(self, key: str, form: str) -> int:
         """How often ``form`` was seen for ``key``."""
@@ -94,7 +123,15 @@ class Lexicon:
     def __contains__(self, key: object) -> bool:
         return key in self._forms
 
+    def __iter__(self) -> Iterator[str]:
+        return iter(self._forms)
+
     @property
     def ambiguous_keys(self) -> list[str]:
-        """Every key that more than one real word collapses to."""
+        """Every key with at least two spellings common enough to be real."""
+        return [key for key in self._forms if self.is_ambiguous(key)]
+
+    @property
+    def keys_with_multiple_forms(self) -> list[str]:
+        """Every key ever seen spelled in more than one way, typos included."""
         return [key for key, counts in self._forms.items() if len(counts) > 1]

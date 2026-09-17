@@ -9,10 +9,18 @@ from __future__ import annotations
 from typing import Protocol, runtime_checkable
 
 from duzelt.alphabet import az_upper, strip_diacritics
+from duzelt.context import END, START, ContextModel
 from duzelt.lexicon import Lexicon
 from duzelt.tokenize import iter_words, key_of
 
-__all__ = ["IdentityRestorer", "LexiconRestorer", "Restorer", "restore_case"]
+__all__ = [
+    "ContextRestorer",
+    "IdentityRestorer",
+    "LexiconRestorer",
+    "Restorer",
+    "WordRestorer",
+    "restore_case",
+]
 
 
 @runtime_checkable
@@ -42,11 +50,54 @@ class IdentityRestorer:
         return text
 
 
-class LexiconRestorer:
+class WordRestorer:
+    """Walks the words of a text and lets a subclass choose each spelling.
+
+    The walk keeps everything between the words untouched, restores the capitalisation of
+    the typed word, and drops any suggestion that would change more than diacritics.
+    """
+
+    name = "word"
+
+    def restore(self, text: str) -> str:
+        spans = iter_words(text)
+        keys = [key_of(text[start:end]) for start, end in spans]
+        pieces: list[str] = []
+        cursor = 0
+
+        for index, (start, end) in enumerate(spans):
+            word = text[start:end]
+            left = keys[index - 1] if index else START
+            right = keys[index + 1] if index + 1 < len(keys) else END
+            form = self.form_for(keys[index], left, right)
+
+            pieces.append(text[cursor:start])
+            pieces.append(self._apply(word, form))
+            cursor = end
+
+        pieces.append(text[cursor:])
+        return "".join(pieces)
+
+    def form_for(self, key: str, left: str, right: str) -> str | None:
+        """Return the lowercase spelling chosen for ``key``, or None to keep the word."""
+        raise NotImplementedError
+
+    @staticmethod
+    def _apply(word: str, form: str | None) -> str:
+        if form is None:
+            return word
+        candidate = restore_case(word, form)
+        # Guard the contract: a suggestion may only put diacritics back.
+        if strip_diacritics(candidate) != strip_diacritics(word):
+            return word
+        return candidate
+
+
+class LexiconRestorer(WordRestorer):
     """Replaces each word with the spelling seen most often in training.
 
     It has no notion of context, so for an ambiguous word it always answers the same way.
-    That is exactly the limit the later models have to improve on.
+    That is exactly the limit the context model has to improve on.
     """
 
     name = "lexicon"
@@ -54,26 +105,22 @@ class LexiconRestorer:
     def __init__(self, lexicon: Lexicon) -> None:
         self.lexicon = lexicon
 
-    def restore(self, text: str) -> str:
-        pieces: list[str] = []
-        cursor = 0
+    def form_for(self, key: str, left: str, right: str) -> str | None:
+        return self.lexicon.best(key)
 
-        for start, end in iter_words(text):
-            pieces.append(text[cursor:start])
-            pieces.append(self._restore_word(text[start:end]))
-            cursor = end
 
-        pieces.append(text[cursor:])
-        return "".join(pieces)
+class ContextRestorer(WordRestorer):
+    """Chooses among the candidate spellings using the neighbouring words.
 
-    def _restore_word(self, word: str) -> str:
-        form = self.lexicon.best(key_of(word))
-        if form is None:
-            return word
+    Falls back to the most frequent spelling whenever the context model has never seen the
+    key, so it can only differ from the lexicon on words it has actually learned.
+    """
 
-        candidate = restore_case(word, form)
-        # Guard the contract: a lexicon entry may only put diacritics back, never
-        # change the letters themselves.
-        if strip_diacritics(candidate) != strip_diacritics(word):
-            return word
-        return candidate
+    name = "context"
+
+    def __init__(self, lexicon: Lexicon, model: ContextModel) -> None:
+        self.lexicon = lexicon
+        self.model = model
+
+    def form_for(self, key: str, left: str, right: str) -> str | None:
+        return self.model.best(key, left, right) or self.lexicon.best(key)

@@ -40,9 +40,21 @@ class TestLexicon:
         assert lexicon.best("sence") == "səncə"
 
     def test_reports_ambiguity(self):
-        lexicon = Lexicon.from_sentences(["Qız gəldi.", "Qiz sözü yoxdur."])
+        lexicon = Lexicon.from_sentences(["Qız gəldi.", "Qiz sözü yoxdur."], min_minority_count=1)
         assert lexicon.is_ambiguous("qiz")
         assert not lexicon.is_ambiguous("geldi")
+
+    def test_a_rare_rival_spelling_is_a_typo_not_an_ambiguity(self):
+        # "bır" next to 200 occurrences of "bir" is a typo in the source text.
+        sentences = ["Bir kitab aldı."] * 200 + ["Bır kitab aldı."]
+        lexicon = Lexicon.from_sentences(sentences)
+        assert lexicon.has_multiple_forms("bir")
+        assert not lexicon.is_ambiguous("bir")
+
+    def test_a_common_rival_spelling_counts_as_ambiguous(self):
+        sentences = ["Qız gəldi."] * 100 + ["Qiz gəldi."] * 20
+        lexicon = Lexicon.from_sentences(sentences)
+        assert lexicon.is_ambiguous("qiz")
 
     def test_unknown_key_has_no_candidates(self, lexicon: Lexicon):
         assert lexicon.candidates("yoxdur") == []
@@ -114,7 +126,9 @@ class TestEvaluate:
         assert scores.sentence_accuracy == 0.0
 
     def test_counts_ambiguous_words_separately(self):
-        lexicon = Lexicon.from_sentences(["Qız gəldi.", "Qız getdi.", "Qiz sözü."])
+        lexicon = Lexicon.from_sentences(
+            ["Qız gəldi.", "Qız getdi.", "Qiz sözü."], min_minority_count=1
+        )
         scores = evaluate(["Qız gəldi."], ["Qiz gəldi."], lexicon)
         assert scores.ambiguous_words == 1
         assert scores.ambiguous_correct == 0

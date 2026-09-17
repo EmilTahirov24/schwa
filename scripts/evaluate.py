@@ -14,16 +14,20 @@ import time
 from pathlib import Path
 
 from duzelt.alphabet import strip_diacritics
+from duzelt.context import ContextModel
 from duzelt.lexicon import Lexicon
 from duzelt.metrics import evaluate
-from duzelt.restore import IdentityRestorer, LexiconRestorer, Restorer
+from duzelt.restore import ContextRestorer, IdentityRestorer, LexiconRestorer, Restorer
 
 DEFAULT_DATA = Path("data/processed")
 RESULTS_MD = Path("docs/results.md")
 
 
-def build_systems(lexicon: Lexicon) -> list[Restorer]:
-    return [IdentityRestorer(), LexiconRestorer(lexicon)]
+def build_systems(lexicon: Lexicon, context_path: Path) -> list[Restorer]:
+    systems: list[Restorer] = [IdentityRestorer(), LexiconRestorer(lexicon)]
+    if context_path.exists():
+        systems.append(ContextRestorer(lexicon, ContextModel.load(context_path)))
+    return systems
 
 
 def as_markdown(split: str, rows: list[dict]) -> str:
@@ -61,7 +65,7 @@ def main() -> int:
     lexicon = Lexicon.load(lexicon_path)
     rows = []
 
-    for system in build_systems(lexicon):
+    for system in build_systems(lexicon, args.data / "context.jsonl"):
         started = time.perf_counter()
         predictions = [system.restore(sentence) for sentence in typed]
         elapsed = time.perf_counter() - started

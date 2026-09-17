@@ -50,7 +50,22 @@ Three systems, measured the same way:
 
 ## What I measured
 
-<!-- results -->
+Dev split, 172,034 sentences from articles never seen in training:
+
+| System | Ambiguous word accuracy | Word accuracy | CER | Sentence accuracy | ms / sentence |
+| --- | --- | --- | --- | --- | --- |
+| identity | 41.0% | 36.5% | 14.56% | 3.7% | 0.00 |
+| lexicon | 79.2% | 97.1% | 0.60% | 72.1% | 0.05 |
+| context | 85.0% | 97.4% | 0.56% | 74.2% | 0.06 |
+| **tagger** | **93.8%** | **98.7%** | **0.20%** | **86.4%** | 0.31 |
+
+Corpus: 187,969 articles → 2,947,943 sentences. The lexicon holds 486,374 typed forms, of
+which 2,184 are genuinely ambiguous; those account for 96,077 of the 2,202,231 words in the
+dev split, or 4.4%. Another 3.2% of the words were never seen in training at all — the gap
+between the word models and the tagger is largely those.
+
+The tagger is a 2.3M-parameter BiLSTM trained for two epochs over the full corpus, 9 MB as
+a checkpoint and the same as ONNX. It answers 0.3 ms per sentence on a CPU.
 
 Accuracy on **ambiguous words** is the number that matters. Most words are unambiguous once
 the diacritics are gone, so overall word accuracy is already high before any model exists.
@@ -65,10 +80,22 @@ Two details behind the numbers:
 
 ## Where it still fails
 
-Everything here is measured on Wikipedia, and Wikipedia is not how people write to each
-other. `basliyaq` — perfectly ordinary in a message — never appears in it, so the word-level
-systems leave it alone. [docs/annotation.md](docs/annotation.md) describes the hand-annotated
-set of real sentences that will put a number on that gap instead of guessing at it.
+Two different things, worth keeping apart.
+
+**Names.** Almost everything the tagger gets wrong now is a proper noun: `Şulaveri`,
+`Klarçetinin`, `Burcanadze`, `Tsxenitskali`. Whether `Gurcan` is meant to be `Gürcan` is not
+decidable from the letters — you have to know the person. A dictionary of names would move
+this; nothing about the sentence will.
+
+**The reference is not always right.** `ve` appears in Wikipedia where `və` was meant, and
+the tagger is scored wrong for restoring it. So 93.8% is a floor, not a ceiling.
+
+**And the gap nobody has measured yet.** Every number here comes from Wikipedia, which is not
+how people write to each other. `basliyaq` — ordinary in a message, absent from an
+encyclopedia — is restored correctly by the tagger and left alone by the word models, which
+hints at the size of that gap without measuring it.
+[docs/annotation.md](docs/annotation.md) describes the hand-annotated set of real sentences
+that will put a number on it.
 
 ## Run it locally
 

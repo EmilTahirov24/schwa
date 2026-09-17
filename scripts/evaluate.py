@@ -17,7 +17,13 @@ from duzelt.alphabet import strip_diacritics
 from duzelt.context import ContextModel
 from duzelt.lexicon import Lexicon
 from duzelt.metrics import evaluate
-from duzelt.restore import ContextRestorer, IdentityRestorer, LexiconRestorer, Restorer
+from duzelt.restore import (
+    ContextRestorer,
+    HybridRestorer,
+    IdentityRestorer,
+    LexiconRestorer,
+    Restorer,
+)
 
 DEFAULT_DATA = Path("data/processed")
 RESULTS_MD = Path("docs/results.md")
@@ -29,6 +35,7 @@ def build_systems(
     margins: list[float],
     smoothings: list[float],
     tagger_path: Path | None = None,
+    hybrid_counts: list[int] | None = None,
 ) -> list[Restorer]:
     systems: list[Restorer] = [IdentityRestorer(), LexiconRestorer(lexicon)]
 
@@ -44,7 +51,17 @@ def build_systems(
     if tagger_path is not None and tagger_path.exists():
         from duzelt.tagger import TaggerRestorer
 
-        systems.append(TaggerRestorer.from_checkpoint(tagger_path))
+        tagger = TaggerRestorer.from_checkpoint(tagger_path)
+        systems.append(tagger)
+
+        # The context model is deliberately not wired into the hybrid: measured on dev it
+        # drags ambiguous accuracy from 92.9% down to its own 85.9%, because the tagger is
+        # the better judge of exactly the words the context model was built for.
+        for min_count in hybrid_counts or []:
+            hybrid = HybridRestorer(tagger, lexicon, None, min_count=min_count)
+            if len(hybrid_counts) > 1:
+                hybrid.name = f"hybrid (min count {min_count})"
+            systems.append(hybrid)
 
     return systems
 
@@ -78,6 +95,13 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--split", default="dev", choices=["dev", "test"])
     parser.add_argument("--tagger", type=Path, default=Path("models/tagger.pt"))
+    parser.add_argument(
+        "--hybrid-counts",
+        type=int,
+        nargs="*",
+        default=[3],
+        help="how often a single spelling must be seen before it overrules the tagger",
+    )
     parser.add_argument("--data", type=Path, default=DEFAULT_DATA)
     parser.add_argument("--limit", type=int, default=0, help="score only the first N sentences")
     parser.add_argument(
@@ -112,7 +136,14 @@ def main() -> int:
     rows = []
 
     context_path = args.data / "context.jsonl"
-    for system in build_systems(lexicon, context_path, args.margins, args.smoothings, args.tagger):
+    for system in build_systems(
+        lexicon,
+        context_path,
+        args.margins,
+        args.smoothings,
+        args.tagger,
+        args.hybrid_counts,
+    ):
         started = time.perf_counter()
         predictions = run(system, typed)
         elapsed = time.perf_counter() - started

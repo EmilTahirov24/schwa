@@ -67,8 +67,9 @@ def test_an_empty_variable_is_ignored(monkeypatch):
     assert load_restorer().name == "identity"
 
 
-def test_an_onnx_tagger_takes_the_onnxruntime_way_in(monkeypatch, tmp_path, lexicon_file):
-    """A .onnx path must route past torch and past the word models."""
+@pytest.fixture
+def onnx_stand_in(monkeypatch, tmp_path):
+    """An .onnx path that routes past torch, without needing a real model file."""
     import duzelt.onnx_tagger as onnx_tagger
 
     stand_in = IdentityRestorer()
@@ -77,9 +78,23 @@ def test_an_onnx_tagger_takes_the_onnxruntime_way_in(monkeypatch, tmp_path, lexi
 
     model = tmp_path / "tagger.onnx"
     model.write_bytes(b"")
-    monkeypatch.setenv(ENV_LEXICON, str(lexicon_file))
     monkeypatch.setenv(ENV_TAGGER, str(model))
+    return model
 
+
+def test_a_tagger_alone_is_served_on_its_own(onnx_stand_in):
     loaded = load_restorer()
     assert loaded.name == "tagger (onnx)"
-    assert loaded.sources == {"tagger": str(model)}
+    assert loaded.sources == {"tagger": str(onnx_stand_in)}
+
+
+def test_a_tagger_next_to_a_lexicon_is_served_as_the_hybrid(
+    monkeypatch, onnx_stand_in, lexicon_file
+):
+    # Measured on dev, the lexicon overruling the tagger on unanimous words is worth 1.5
+    # points of whole-sentence accuracy, so a deployment with both must use both.
+    monkeypatch.setenv(ENV_LEXICON, str(lexicon_file))
+
+    loaded = load_restorer()
+    assert loaded.name == "hybrid"
+    assert set(loaded.sources) == {"tagger", "lexicon"}

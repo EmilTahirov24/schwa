@@ -6,6 +6,7 @@ input in diacritics only. Anything else — length, case, punctuation, spacing �
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from typing import Protocol, runtime_checkable
 
 from duzelt.alphabet import az_upper, strip_diacritics
@@ -14,6 +15,7 @@ from duzelt.lexicon import Lexicon
 from duzelt.tokenize import iter_words, key_of
 
 __all__ = [
+    "HybridRestorer",
     "ContextRestorer",
     "IdentityRestorer",
     "LexiconRestorer",
@@ -107,6 +109,80 @@ class LexiconRestorer(WordRestorer):
 
     def form_for(self, key: str, left: str, right: str) -> str | None:
         return self.lexicon.best(key)
+
+
+class HybridRestorer:
+    """The tagger, overruled where the training text was unanimous about a word.
+
+    The two systems fail in opposite places. The tagger handles words nothing is known
+    about — it reads letters, not vocabulary — but it can still garble a name it has seen
+    only a few times: it wrote ``Sulaveri`` where the lexicon knows ``Şulaveri`` from nine
+    occurrences. The lexicon is the opposite: certain where it has evidence, silent where it
+    has none.
+
+    So the lexicon wins only where it is unambiguous and has been seen often enough, the
+    context model decides the genuinely ambiguous words if one is supplied, and everything
+    else is left to the tagger.
+    """
+
+    name = "hybrid"
+
+    def __init__(
+        self,
+        tagger: Restorer,
+        lexicon: Lexicon,
+        context: ContextModel | None = None,
+        min_count: int = 3,
+    ) -> None:
+        self.tagger = tagger
+        self.lexicon = lexicon
+        self.context = context
+        self.min_count = min_count
+
+    def restore(self, text: str) -> str:
+        return self.restore_many([text])[0]
+
+    def restore_many(self, texts: Sequence[str]) -> list[str]:
+        batched = getattr(self.tagger, "restore_many", None)
+        tagged = batched(texts) if batched else [self.tagger.restore(text) for text in texts]
+        return [
+            self._adjust(typed, restored) for typed, restored in zip(texts, tagged, strict=True)
+        ]
+
+    def _adjust(self, typed: str, tagged: str) -> str:
+        spans = iter_words(typed)
+        keys = [key_of(typed[start:end]) for start, end in spans]
+        pieces: list[str] = []
+        cursor = 0
+
+        for index, (start, end) in enumerate(spans):
+            left = keys[index - 1] if index else START
+            right = keys[index + 1] if index + 1 < len(keys) else END
+            form = self._form_for(keys[index])
+            if form is None and self.context is not None:
+                form = self._context_form(keys[index], left, right)
+
+            pieces.append(tagged[cursor:start])
+            pieces.append(
+                WordRestorer._apply(typed[start:end], form) if form else tagged[start:end]
+            )
+            cursor = end
+
+        pieces.append(tagged[cursor:])
+        return "".join(pieces)
+
+    def _form_for(self, key: str) -> str | None:
+        """The lexicon's answer, but only where it is unanimous and well attested."""
+        candidates = self.lexicon.candidates(key)
+        if len(candidates) != 1:
+            return None
+        form, count = candidates[0]
+        return form if count >= self.min_count else None
+
+    def _context_form(self, key: str, left: str, right: str) -> str | None:
+        if not self.lexicon.is_ambiguous(key):
+            return None
+        return self.context.best(key, left, right) if self.context else None
 
 
 class ContextRestorer(WordRestorer):

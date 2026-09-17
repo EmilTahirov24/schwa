@@ -40,10 +40,14 @@ class KeyModel:
 class ContextModel:
     """Scores the candidate spellings of ambiguous words from their neighbours."""
 
+    #: Add-k smoothing weight. Tuned on dev over 0.01 to 20: accuracy on ambiguous words
+    #: peaks at 1.0 (85.8%) and falls off on both sides, to 80.6% at 0.01 and 84.1% at 20.
+    DEFAULT_SMOOTHING = 1.0
+
     def __init__(
         self,
         keys: dict[str, KeyModel] | None = None,
-        smoothing: float = 0.5,
+        smoothing: float = DEFAULT_SMOOTHING,
         vocabulary: set[str] | None = None,
     ) -> None:
         self.keys: dict[str, KeyModel] = keys or {}
@@ -135,7 +139,7 @@ class ContextModel:
                 out.write(json.dumps(row, ensure_ascii=False) + "\n")
 
     @classmethod
-    def load(cls, path: Path, smoothing: float = 0.5) -> ContextModel:
+    def load(cls, path: Path, smoothing: float = DEFAULT_SMOOTHING) -> ContextModel:
         """Read a model written by :meth:`save`."""
         keys: dict[str, KeyModel] = {}
         vocabulary: set[str] | None = None

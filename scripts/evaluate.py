@@ -23,11 +23,23 @@ DEFAULT_DATA = Path("data/processed")
 RESULTS_MD = Path("docs/results.md")
 
 
-def build_systems(lexicon: Lexicon, context_path: Path, margins: list[float]) -> list[Restorer]:
+def build_systems(
+    lexicon: Lexicon,
+    context_path: Path,
+    margins: list[float],
+    smoothings: list[float],
+) -> list[Restorer]:
     systems: list[Restorer] = [IdentityRestorer(), LexiconRestorer(lexicon)]
-    if context_path.exists():
-        model = ContextModel.load(context_path)
-        systems.extend(ContextRestorer(lexicon, model, margin) for margin in margins)
+    if not context_path.exists():
+        return systems
+
+    for smoothing in smoothings:
+        model = ContextModel.load(context_path, smoothing=smoothing)
+        for margin in margins:
+            restorer = ContextRestorer(lexicon, model, margin)
+            if len(smoothings) > 1:
+                restorer.name = f"{restorer.name}, smoothing {smoothing:g}"
+            systems.append(restorer)
     return systems
 
 
@@ -56,6 +68,13 @@ def main() -> int:
         default=[0.0],
         help="how much better the context has to score before it overrules the lexicon",
     )
+    parser.add_argument(
+        "--smoothings",
+        type=float,
+        nargs="*",
+        default=[0.5],
+        help="add-k smoothing values to compare",
+    )
     args = parser.parse_args()
 
     split_path = args.data / f"{args.split}.txt"
@@ -73,7 +92,8 @@ def main() -> int:
     lexicon = Lexicon.load(lexicon_path)
     rows = []
 
-    for system in build_systems(lexicon, args.data / "context.jsonl", args.margins):
+    context_path = args.data / "context.jsonl"
+    for system in build_systems(lexicon, context_path, args.margins, args.smoothings):
         started = time.perf_counter()
         predictions = [system.restore(sentence) for sentence in typed]
         elapsed = time.perf_counter() - started

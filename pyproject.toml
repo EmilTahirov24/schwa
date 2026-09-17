@@ -10,6 +10,11 @@ members = ["packages/core"]
 
 [tool.uv.sources]
 duzelt = { workspace = true }
+torch = { index = "pytorch" }
+
+[[tool.uv.index]]
+name = "pytorch"
+url = "https://download.pytorch.org/whl/cu124"
 
 [dependency-groups]
 dev = [
@@ -18,6 +23,9 @@ dev = [
     "ruff>=0.6",
     "poethepoet>=0.29",
     "mwparserfromhell>=0.7.2",
+]
+train = [
+    "torch>=2.6.0",
 ]
 
 [tool.ruff]
@@ -35,3 +43,13 @@ test = "pytest"
 lint = "ruff check ."
 fmt = "ruff format ."
 check = ["lint", "test"]
+
+# The pipeline, in order. Each step reads what the previous one wrote.
+extract = "python scripts/extract_wiki.py"
+corpus = "python scripts/build_corpus.py"
+lexicon = "python scripts/build_lexicon.py"
+context = "python scripts/train_context.py"
+eval = "python scripts/evaluate.py --split dev"
+data = ["extract", "corpus", "lexicon"]
+train = ["context"]
+reproduce = ["data", "train", "eval"]

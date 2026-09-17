@@ -42,6 +42,7 @@ def main() -> int:
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--vocabulary", type=int, default=30_000, help="neighbour features")
     parser.add_argument("--max-contexts", type=int, default=200, help="kept per form and side")
+    parser.add_argument("--smoothing", type=float, default=1.0, help="add-k smoothing")
     parser.add_argument("--limit", type=int, default=0, help="stop after N sentences")
     args = parser.parse_args()
 
@@ -55,7 +56,9 @@ def main() -> int:
     vocabulary = neighbour_vocabulary(lexicon, args.vocabulary)
     print(f"{len(ambiguous)} ambiguous keys, {len(vocabulary)} neighbour features")
 
-    model = ContextModel()
+    # The model carries the vocabulary, so it maps neighbours to features the same way
+    # here and later when it restores text.
+    model = ContextModel(vocabulary=vocabulary, smoothing=args.smoothing)
     seen = 0
 
     with args.train.open(encoding="utf-8") as source:
@@ -65,13 +68,12 @@ def main() -> int:
                 continue
 
             keys = [key_of(word) for word in words]
-            features = [key if key in vocabulary else UNKNOWN for key in keys]
 
             for index, key in enumerate(keys):
                 if key not in ambiguous:
                     continue
-                left = features[index - 1] if index else START
-                right = features[index + 1] if index + 1 < len(keys) else END
+                left = keys[index - 1] if index else START
+                right = keys[index + 1] if index + 1 < len(keys) else END
                 model.observe(key, az_lower(words[index]), left, right)
 
             seen += 1

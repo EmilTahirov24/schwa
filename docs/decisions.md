@@ -48,5 +48,44 @@ accuracy is high before any model exists.
 **Decision.** Report overall accuracy, but lead with accuracy on words whose stripped form
 maps to more than one real word.
 
-**Why.** That subset is the entire problem. A metric that is already at 90% without a model
-cannot show whether the model helps.
+**Why.** That subset is the entire problem. Doing nothing at all already scores 33% on all
+words; the same system scores 37% on the ambiguous ones, and that is the number worth
+moving.
+
+## 5. The context model sees its neighbours as keys, not as spellings
+
+**Context.** To choose between `qız` and `qiz`, the model looks at the words around it. Those
+words could be represented by their spelling or by their typed form.
+
+**Decision.** Neighbours are represented by their key — the form with case and diacritics
+removed.
+
+**Why.** When the model runs, the neighbours have not been restored yet either, so their
+spelling is exactly what is unknown. Training on spellings would hand the model a feature it
+can never have at restoration time. Keys are always observable, on both sides.
+
+## 6. Context probabilities are normalised by the counts that survived pruning
+
+**Context.** The context tables are pruned to keep the model small: rare contexts are
+dropped and only the most frequent ones per spelling are kept.
+
+**Decision.** `P(neighbour | form)` divides by the sum of the kept counts, with one
+smoothing vocabulary shared by every form.
+
+**Why.** The first version divided by how often the form was seen in total. After pruning
+those two numbers differ by orders of magnitude, and they differ *unevenly*: a frequent
+spelling loses far more of its table than a rare one, so its contexts came out looking
+impossible. The model scored 59.7% on ambiguous words, well below the 79.8% of the plain
+lexicon. With the normalisation fixed, the same model and the same data score 85.7%.
+
+## 7. The context model may be given a margin before it overrules the lexicon
+
+**Context.** The most frequent spelling is right about four times out of five, so a model
+that answers on its own can lose as much as it gains.
+
+**Decision.** The restorer takes a margin: the context has to score at least that much
+higher than the most frequent spelling before its answer is used.
+
+**Why.** It makes the trade-off measurable instead of implicit. On dev, margins of 0, 1 and
+3 score 85.7%, 85.4% and 83.6%, so the model is trusted outright — but the knob stays in
+the open, and it is the first thing to revisit once the real-world set exists.

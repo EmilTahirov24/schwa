@@ -23,10 +23,11 @@ DEFAULT_DATA = Path("data/processed")
 RESULTS_MD = Path("docs/results.md")
 
 
-def build_systems(lexicon: Lexicon, context_path: Path) -> list[Restorer]:
+def build_systems(lexicon: Lexicon, context_path: Path, margins: list[float]) -> list[Restorer]:
     systems: list[Restorer] = [IdentityRestorer(), LexiconRestorer(lexicon)]
     if context_path.exists():
-        systems.append(ContextRestorer(lexicon, ContextModel.load(context_path)))
+        model = ContextModel.load(context_path)
+        systems.extend(ContextRestorer(lexicon, model, margin) for margin in margins)
     return systems
 
 
@@ -48,6 +49,13 @@ def main() -> int:
     parser.add_argument("--split", default="dev", choices=["dev", "test"])
     parser.add_argument("--data", type=Path, default=DEFAULT_DATA)
     parser.add_argument("--limit", type=int, default=0, help="score only the first N sentences")
+    parser.add_argument(
+        "--margins",
+        type=float,
+        nargs="*",
+        default=[0.0],
+        help="how much better the context has to score before it overrules the lexicon",
+    )
     args = parser.parse_args()
 
     split_path = args.data / f"{args.split}.txt"
@@ -65,7 +73,7 @@ def main() -> int:
     lexicon = Lexicon.load(lexicon_path)
     rows = []
 
-    for system in build_systems(lexicon, args.data / "context.jsonl"):
+    for system in build_systems(lexicon, args.data / "context.jsonl", args.margins):
         started = time.perf_counter()
         predictions = [system.restore(sentence) for sentence in typed]
         elapsed = time.perf_counter() - started

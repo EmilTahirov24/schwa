@@ -112,15 +112,31 @@ class LexiconRestorer(WordRestorer):
 class ContextRestorer(WordRestorer):
     """Chooses among the candidate spellings using the neighbouring words.
 
-    Falls back to the most frequent spelling whenever the context model has never seen the
-    key, so it can only differ from the lexicon on words it has actually learned.
+    The most frequent spelling is already right about four times out of five, so the
+    context only overrules it when it scores at least ``margin`` higher. With a margin of
+    zero the model decides on its own; raising it makes the model speak up only where the
+    evidence is clear. Keys the model never saw fall back to the lexicon.
     """
 
     name = "context"
 
-    def __init__(self, lexicon: Lexicon, model: ContextModel) -> None:
+    def __init__(self, lexicon: Lexicon, model: ContextModel, margin: float = 0.0) -> None:
         self.lexicon = lexicon
         self.model = model
+        self.margin = margin
+        if margin:
+            self.name = f"context (margin {margin:g})"
 
     def form_for(self, key: str, left: str, right: str) -> str | None:
-        return self.model.best(key, left, right) or self.lexicon.best(key)
+        fallback = self.lexicon.best(key)
+        chosen = self.model.best(key, left, right)
+
+        if chosen is None or chosen == fallback:
+            return fallback
+        if fallback is None:
+            return chosen
+
+        gap = self.model.score(key, chosen, left, right) - self.model.score(
+            key, fallback, left, right
+        )
+        return chosen if gap >= self.margin else fallback

@@ -75,16 +75,27 @@ class ContextModel:
 
         total = sum(model.forms.values())
         score = math.log(model.forms[form] / total)
-        score += self._conditional(model.left[form], self.feature(left), model.forms[form])
-        score += self._conditional(model.right[form], self.feature(right), model.forms[form])
+        score += self._conditional(model.left[form], self.feature(left))
+        score += self._conditional(model.right[form], self.feature(right))
         return score
 
-    def _conditional(self, counts: Counter[str], neighbour: str, form_total: int) -> float:
-        """Smoothed log P(neighbour | form)."""
-        vocabulary = max(len(counts), 1)
+    def _conditional(self, counts: Counter[str], neighbour: str) -> float:
+        """Smoothed log P(neighbour | form).
+
+        Normalised by the counts actually kept for this form rather than by how often the
+        form was seen. Pruning removes most contexts, so the two differ by a lot, and
+        dividing by the wrong one makes forms with heavily pruned tables look impossible.
+        The smoothing vocabulary is the same for every form for the same reason.
+        """
+        kept = sum(counts.values())
         numerator = counts.get(neighbour, 0) + self.smoothing
-        denominator = form_total + self.smoothing * vocabulary
+        denominator = kept + self.smoothing * self.feature_count
         return math.log(numerator / denominator)
+
+    @property
+    def feature_count(self) -> int:
+        """Size of the feature space used for smoothing, shared by every form."""
+        return len(self.vocabulary) + 3 if self.vocabulary else 50_000
 
     def best(self, key: str, left: str, right: str) -> str | None:
         """Return the highest scoring form for ``key``, or None if the key is unknown."""

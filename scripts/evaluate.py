@@ -28,19 +28,37 @@ def build_systems(
     context_path: Path,
     margins: list[float],
     smoothings: list[float],
+    tagger_path: Path | None = None,
 ) -> list[Restorer]:
     systems: list[Restorer] = [IdentityRestorer(), LexiconRestorer(lexicon)]
-    if not context_path.exists():
-        return systems
 
-    for smoothing in smoothings:
-        model = ContextModel.load(context_path, smoothing=smoothing)
-        for margin in margins:
-            restorer = ContextRestorer(lexicon, model, margin)
-            if len(smoothings) > 1:
-                restorer.name = f"{restorer.name}, smoothing {smoothing:g}"
-            systems.append(restorer)
+    if context_path.exists():
+        for smoothing in smoothings:
+            model = ContextModel.load(context_path, smoothing=smoothing)
+            for margin in margins:
+                restorer = ContextRestorer(lexicon, model, margin)
+                if len(smoothings) > 1:
+                    restorer.name = f"{restorer.name}, smoothing {smoothing:g}"
+                systems.append(restorer)
+
+    if tagger_path is not None and tagger_path.exists():
+        from duzelt.tagger import TaggerRestorer
+
+        systems.append(TaggerRestorer.from_checkpoint(tagger_path))
+
     return systems
+
+
+def run(system: Restorer, texts: list[str]) -> list[str]:
+    """Restore every text, in batches where the system supports them."""
+    batched = getattr(system, "restore_many", None)
+    if batched is None:
+        return [system.restore(text) for text in texts]
+    return [
+        restored
+        for start in range(0, len(texts), 512)
+        for restored in batched(texts[start : start + 512])
+    ]
 
 
 def as_markdown(split: str, rows: list[dict]) -> str:
@@ -59,6 +77,7 @@ def as_markdown(split: str, rows: list[dict]) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--split", default="dev", choices=["dev", "test"])
+    parser.add_argument("--tagger", type=Path, default=Path("models/tagger.pt"))
     parser.add_argument("--data", type=Path, default=DEFAULT_DATA)
     parser.add_argument("--limit", type=int, default=0, help="score only the first N sentences")
     parser.add_argument(
@@ -93,9 +112,9 @@ def main() -> int:
     rows = []
 
     context_path = args.data / "context.jsonl"
-    for system in build_systems(lexicon, context_path, args.margins, args.smoothings):
+    for system in build_systems(lexicon, context_path, args.margins, args.smoothings, args.tagger):
         started = time.perf_counter()
-        predictions = [system.restore(sentence) for sentence in typed]
+        predictions = run(system, typed)
         elapsed = time.perf_counter() - started
 
         scores = evaluate(references, predictions, lexicon)

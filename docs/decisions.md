@@ -89,3 +89,38 @@ higher than the most frequent spelling before its answer is used.
 **Why.** It makes the trade-off measurable instead of implicit. On dev, margins of 0, 1 and
 3 score 85.7%, 85.4% and 83.6%, so the model is trusted outright — but the knob stays in
 the open, and it is the first thing to revisit once the real-world set exists.
+
+## 8. The tagger's loss ignores characters that could not carry a diacritic
+
+**Context.** Only seven letters have an accented form. In running text they are a minority
+of the characters; the rest are punctuation, digits, spaces and letters with no alternative.
+
+**Decision.** Those positions are masked out of the loss.
+
+**Why.** Learning to answer "keep" where no other answer exists teaches nothing and buries
+the real decisions under easy ones. The same masking makes the training metric honest: the
+reported accuracy is the share of correct answers among characters that actually needed one.
+
+## 9. The extension ships with no content script and no site permission
+
+**Context.** The obvious way to build it is a content script on `<all_urls>` that watches
+what you type.
+
+**Decision.** Nothing is declared. When you use the context menu or the shortcut, two short
+functions are injected into that one tab under `activeTab`, do their work and disappear.
+
+**Why.** It is the smallest permission set that can still do the job, the page cannot be read
+at any other moment, and a store reviewer has nothing to question. It also matches what the
+service promises: text leaves the browser only on an explicit action and is never stored.
+
+## 10. Restoration runs through the browser's own editing path
+
+**Context.** Replacing text in a field by assigning `value` is simple, but React-based sites
+— WhatsApp Web, Instagram, Gmail — keep their own copy of the state and ignore it.
+
+**Decision.** Use `insertText` through the editing command, falling back to assignment plus
+a synthetic input event only where that fails.
+
+**Why.** The page sees the same events it would see from a human typing, so its state stays
+correct, and the browser's undo stack keeps working: `Ctrl+Z` puts back what you wrote.
+

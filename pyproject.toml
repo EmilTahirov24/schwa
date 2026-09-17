@@ -1,0 +1,36 @@
+[project]
+name = "duzelt-workspace"
+version = "0.0.0"
+description = "Development workspace for duzelt"
+requires-python = ">=3.12"
+dependencies = ["duzelt"]
+
+[tool.uv.workspace]
+members = ["packages/core"]
+
+[tool.uv.sources]
+duzelt = { workspace = true }
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "hypothesis>=6.100",
+    "ruff>=0.6",
+    "poethepoet>=0.29",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["packages/core/tests"]
+
+[tool.poe.tasks]
+test = "pytest"
+lint = "ruff check ."
+fmt = "ruff format ."
+check = ["lint", "test"]

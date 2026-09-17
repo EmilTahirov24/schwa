@@ -1,0 +1,28 @@
+[project]
+name = "duzelt"
+version = "0.1.0.dev0"
+description = "Restore Azerbaijani diacritics in text typed without them"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { file = "LICENSE" }
+authors = [{ name = "Emil Tahirov" }]
+keywords = ["azerbaijani", "diacritics", "nlp", "text-restoration"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Text Processing :: Linguistic",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/EmilTahirov24/duzelt"
+Issues = "https://github.com/EmilTahirov24/duzelt/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["duzelt"]

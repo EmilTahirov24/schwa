@@ -1,0 +1,32 @@
+# Data (downloaded or generated, never committed)
+data/raw/
+data/processed/
+*.bz2
+*.xml
+
+# Models and artifacts
+models/
+*.pt
+*.onnx
+runs/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
+# Node
+node_modules/
+.next/
+out/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

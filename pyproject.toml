@@ -25,6 +25,7 @@ dev = [
     "mwparserfromhell>=0.7.2",
 ]
 train = [
+    "numpy>=2.5.2",
     "torch>=2.6.0",
 ]
 

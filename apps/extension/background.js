@@ -8,6 +8,8 @@
  * moment, and only to the service you configured.
  */
 
+import { localTagger } from "./lib/local.js";
+
 const DEFAULT_API = "http://127.0.0.1:8000";
 const MENU_ID = "duzelt-fix-selection";
 
@@ -42,12 +44,26 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 });
 
 async function settings() {
-  const stored = await chrome.storage.sync.get({ apiUrl: DEFAULT_API });
-  return { apiUrl: stored.apiUrl.replace(/\/$/, "") };
+  const stored = await chrome.storage.sync.get({ apiUrl: DEFAULT_API, preferLocal: true });
+  return { apiUrl: stored.apiUrl.replace(/\/$/, ""), preferLocal: stored.preferLocal };
 }
 
+/**
+ * Restore text, in the browser where the model is bundled and through the service where it
+ * is not. Locally is both faster and private, so it is the default; the setting exists for
+ * comparing the two.
+ */
 async function restore(text) {
-  const { apiUrl } = await settings();
+  const { apiUrl, preferLocal } = await settings();
+
+  if (preferLocal) {
+    const tagger = await localTagger();
+    if (tagger) {
+      const restored = await tagger.restore(text);
+      return { text: restored, changes: changesBetween(text, restored), local: true };
+    }
+  }
+
   const response = await fetch(`${apiUrl}/v1/restore`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -58,7 +74,24 @@ async function restore(text) {
     throw new Error(response.status === 429 ? "too many requests" : `service said ${response.status}`);
   }
 
-  return response.json();
+  return { ...(await response.json()), local: false };
+}
+
+/** Word spans that differ between the two texts, matching what the service returns. */
+function changesBetween(typed, restored) {
+  const changes = [];
+  const word = /[^\W\d_]+(?:['’][^\W\d_]+)*/gu;
+
+  for (const match of typed.matchAll(word)) {
+    const start = match.index;
+    const end = start + match[0].length;
+    const after = restored.slice(start, end);
+    if (after !== match[0]) {
+      changes.push({ start, end, from: match[0], to: after });
+    }
+  }
+
+  return changes;
 }
 
 async function fixTab(tabId) {

@@ -30,3 +30,7 @@ out/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Extension: vendored runtime and generated model, both reproducible
+apps/extension/vendor/
+apps/extension/model/

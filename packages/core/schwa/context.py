@@ -41,7 +41,8 @@ class ContextModel:
     """Scores the candidate spellings of ambiguous words from their neighbours."""
 
     #: Add-k smoothing weight. Tuned on dev over 0.01 to 20: accuracy on ambiguous words
-    #: peaks at 1.0 (85.8%) and falls off on both sides, to 80.6% at 0.01 and 84.1% at 20.
+    #: peaks at 1.0 (85.0%) and falls off on both sides, to 80.5% at 0.01 and 83.3% at 20.
+    #: `evaluate.py --split dev --tagger none --smoothings 0.01 0.1 0.5 1 2 5 20 --no-report`
     DEFAULT_SMOOTHING = 1.0
 
     def __init__(

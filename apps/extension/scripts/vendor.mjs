@@ -27,6 +27,8 @@ const MODELS = [
   ["models/tagger.int8.json", "model/tagger.json"],
   // Built by scripts/build_bundle.py: the words the training text was unanimous about.
   ["packages/core/schwa/data/lexicon.tsv.gz", "model/lexicon.tsv.gz"],
+  // The spell checker: every common word, and the endings that make rare forms plausible.
+  ["packages/core/schwa/data/vocabulary.tsv.gz", "model/vocabulary.tsv.gz"],
 ];
 
 function copy(from, to) {

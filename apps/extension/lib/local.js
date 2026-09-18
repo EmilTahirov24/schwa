@@ -12,6 +12,7 @@
 
 import { restoreWithLabels, stripDiacritics } from "./alphabet.js";
 import { applyLexicon, explain, parseLexicon } from "./hybrid.js";
+import { parseVocabulary, Speller } from "./spelling.js";
 import { LocalTagger } from "./tagger.js";
 
 async function loadLexicon(url) {
@@ -95,4 +96,28 @@ export function localRestorer(base, runtime) {
 /** Inside the extension, the files are packaged with it. */
 export function localTagger() {
   return localRestorer(chrome.runtime.getURL("model/"), chrome.runtime.getURL("vendor/"));
+}
+
+const spelling = new Map();
+
+/**
+ * The spell checker, or null when the vocabulary is missing. It is optional: diacritic
+ * restoration works without it, so a failure here never takes the restorer down with it.
+ */
+export function localSpeller(base) {
+  if (!spelling.has(base)) {
+    spelling.set(
+      base,
+      (async () => {
+        const response = await fetch(`${base}vocabulary.tsv.gz`);
+        if (!response.ok) return null;
+        const unpacked = response.body.pipeThrough(new DecompressionStream("gzip"));
+        return new Speller(parseVocabulary(await new Response(unpacked).text()));
+      })().catch((error) => {
+        console.warn("schwa: no spell checker", error);
+        return null;
+      }),
+    );
+  }
+  return spelling.get(base);
 }

@@ -6,7 +6,30 @@
  * is sent anywhere.
  */
 
-import { localRestorer } from "@/lib/schwa/local.js";
+import { wordSpans as spans } from "@/lib/schwa/changes.js";
+import { localRestorer, localSpeller } from "@/lib/schwa/local.js";
+
+/** A word that may be misspelt: only ever a suggestion, never applied on its own. */
+export type Suggestion = {
+  start: number;
+  end: number;
+  typed: string;
+  options: string[];
+};
+
+export type Speller = {
+  check: (text: string) => Suggestion[];
+};
+
+/** Load the spell checker; null when its vocabulary is missing. */
+export function loadSpeller(): Promise<Speller | null> {
+  return localSpeller(`${base}/model/`) as Promise<Speller | null>;
+}
+
+/** The [start, end) span of every word in `text`. */
+export function wordSpans(text: string): Array<[number, number]> {
+  return spans(text) as Array<[number, number]>;
+}
 
 /** One changed word, with where its spelling came from and how sure the model was. */
 export type Word = {

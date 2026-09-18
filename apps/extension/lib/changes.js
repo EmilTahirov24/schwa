@@ -21,3 +21,8 @@ export function changesBetween(typed, restored) {
   }
   return changes;
 }
+
+/** The [start, end) span of every word, by the same rule the rest of the code uses. */
+export function wordSpans(text) {
+  return [...text.matchAll(WORD)].map((match) => [match.index, match.index + match[0].length]);
+}

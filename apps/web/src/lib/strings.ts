@@ -8,7 +8,7 @@ export const strings = {
   az: {
     heroTitle: "Hərfsiz yazılmış mətni düzəldir.",
     heroLead:
-      "Klaviaturada ə, ı, ğ, ş, ç, ö, ü yoxdursa, mətn hərfsiz yazılır. Schwa onları kontekstə baxaraq geri qaytarır.",
+      "Klaviaturada ə, ı, ğ, ş, ç, ö, ü yoxdursa, mətn hərfsiz yazılır. Schwa onları kontekstə baxaraq geri qaytarır — hərf səhvlərini də tapıb düzəliş təklif edir.",
     heroPrivate: "Model sənin brauzerində işləyir — yazdığın heç yerə göndərilmir.",
 
     editorTitle: "Özün yaz",
@@ -26,6 +26,9 @@ export const strings = {
     fromDictionary: "lüğətdən · həmişə belə yazılır",
     keepHint: "kliklə: yazdığın kimi saxla",
     undoHint: "kliklə: düzəldilmiş formaya qaytar",
+    didYouMean: "Bunu nəzərdə tuturdun?",
+    keepAsIs: "Yazdığım kimi qalsın",
+    possibleTypos: (count: number) => `${count} söz yoxlanmalıdır`,
 
     howTitle: "Necə işləyir",
     how: "Yeddi hərf klaviaturasız yazılanda bir ASCII hərfə çevrilir və hər birinin cəmi bir alternativi var. Ona görə model cümləni yenidən yazmır — hər hərf üçün tək bir suala cavab verir: burada diakritik varmı? Nəticədə diakritikdən başqa heç nə dəyişə bilmir.",
@@ -62,7 +65,7 @@ export const strings = {
   en: {
     heroTitle: "Puts the Azerbaijani letters back.",
     heroLead:
-      "Without the right keyboard, ə, ı, ğ, ş, ç, ö and ü simply get dropped. Schwa restores them by reading the context.",
+      "Without the right keyboard, ə, ı, ğ, ş, ç, ö and ü simply get dropped. Schwa restores them by reading the context — and points out typos, with a fix to pick.",
     heroPrivate: "The model runs in your browser — nothing you type is sent anywhere.",
 
     editorTitle: "Try it",
@@ -80,6 +83,9 @@ export const strings = {
     fromDictionary: "dictionary · always spelled this way",
     keepHint: "click to keep what you typed",
     undoHint: "click to restore it again",
+    didYouMean: "Did you mean",
+    keepAsIs: "Keep what I typed",
+    possibleTypos: (count: number) => `${count} word${count === 1 ? "" : "s"} to check`,
 
     howTitle: "How it works",
     how: "The seven letters collapse to one ASCII letter each when typed without the layout, and every collapsed letter has exactly one alternative. So the model never rewrites the sentence — it answers one question per character: does this one carry a diacritic? Nothing but diacritics can change.",
@@ -129,6 +135,7 @@ export const DEMO_PAIRS: ReadonlyArray<readonly [string, string]> = [
 
 export const EXAMPLES = [
   "sence neden basliyaq?",
+  "xayis edirem, mektbe gec qalmisam",
   "usaqlar bagcada oynayir, men ise evde kitab oxuyuram",
   "sabah gorusek, saat altida zeng edecem",
   "Bakida hava cox isti idi, denize getdik",

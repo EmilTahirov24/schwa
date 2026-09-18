@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { loadRestorer, type Restorer } from "@/lib/restorer";
+import { loadRestorer, loadSpeller, type Restorer, type Speller } from "@/lib/restorer";
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
@@ -11,11 +11,12 @@ const FILES = [
   `${base}/ort/ort-wasm-simd-threaded.wasm`,
   `${base}/model/tagger.onnx`,
   `${base}/model/lexicon.tsv.gz`,
+  `${base}/model/vocabulary.tsv.gz`,
 ];
 
 export type RestorerState =
   | { status: "loading"; loaded: number; total: number }
-  | { status: "ready"; restorer: Restorer }
+  | { status: "ready"; restorer: Restorer; speller: Speller | null }
   | { status: "failed" };
 
 /**
@@ -63,10 +64,10 @@ export function useRestorer(): RestorerState {
 
     download()
       .catch(() => undefined) // a failed preload only costs the progress bar
-      .then(() => loadRestorer())
-      .then((restorer) => {
+      .then(() => Promise.all([loadRestorer(), loadSpeller()]))
+      .then(([restorer, speller]) => {
         if (cancelled) return;
-        setState(restorer ? { status: "ready", restorer } : { status: "failed" });
+        setState(restorer ? { status: "ready", restorer, speller } : { status: "failed" });
       });
 
     return () => {

@@ -1,0 +1,302 @@
+[
+ {
+  "text": "Ayaqciq aciq-cehrayi, ekssentrik, 1-3 x 0,3-0,7sm, duz ve ya eyilmis, yuxari hissesi dilikli, asagisi hamar ve ya zolaqlidir.",
+  "expected": [
+   {
+    "start": 85,
+    "end": 92,
+    "typed": "dilikli",
+    "options": [
+     "bilikli",
+     "dilimli",
+     "dəlikli"
+    ]
+   }
+  ]
+ },
+ {
+  "text": "Vladimir Pavlovic Basov (; ) — Sovet kinorejissoru, aktyoru ve ssenaristi, SSRI xalq artisti (1983).",
+  "expected": []
+ },
+ {
+  "text": "Bu ulduzun etrafinda bir nece kicik toreme ulduz da askar edilmisdir.",
+  "expected": []
+ },
+ {
+  "text": "Memmedov Tofiq Musa oglu",
+  "expected": []
+ },
+ {
+  "text": "J. B. Molyer \"Skapenin kelekleri\" (rejissor ve ressam) Tedris teatri 1972",
+  "expected": []
+ },
+ {
+  "text": "Belelikle Cenubi Osetiyanin 2009-cu ilde ehalisinin sayi 54.500 nefer kimi endi.",
+  "expected": []
+ },
+ {
+  "text": "Termin tez-tez bu cur teftislerin esassiz olduguna inanan marksistler terefinden marksizmi yumsaltmaga ve ya onu parcalamaga calisanlari temsil etmek ucun istifade olunur.",
+  "expected": []
+ },
+ {
+  "text": "Belelikle narezushi yeyilerken cox gozel tam verir.",
+  "expected": [
+   {
+    "start": 20,
+    "end": 30,
+    "typed": "yeyilerken",
+    "options": [
+     "deyilərkən"
+    ]
+   }
+  ]
+ },
+ {
+  "text": "Xursud aganin 200-den cox silahli adamlarini kordinasiya etmisdir.",
+  "expected": []
+ },
+ {
+  "text": "Brekciya ortuyunun orta qalinligi 45 m olub, 25 ha saheni tutur.",
+  "expected": []
+ },
+ {
+  "text": "Mir Celalin \"Dirilen adam\" eseri",
+  "expected": []
+ },
+ {
+  "text": "Kendde 2006-ci il siyahiya alinmaya gore 402 nefer yasayir (99 aile).",
+  "expected": []
+ },
+ {
+  "text": "Ona gore de bir nece kelme izahat vermek istiyoruz.",
+  "expected": [
+   {
+    "start": 41,
+    "end": 50,
+    "typed": "istiyoruz",
+    "options": [
+     "istiyorum",
+     "istiyor üz"
+    ]
+   }
+  ]
+ },
+ {
+  "text": "Rammstein — Alman rok qrupudur.",
+  "expected": []
+ },
+ {
+  "text": "Bayati–Qacar oz xarakteri etibarile dinleyicide qem-qusse, keder hissleri oyadir.",
+  "expected": []
+ },
+ {
+  "text": "Kateqoriya:Nyu-York statindaki metropoliten eraziler",
+  "expected": []
+ },
+ {
+  "text": "Danisiqlarda vasiteci olan diger sovet numayendeleri Karl Radek, Leonid Krasin, Kristyan Rakovski, Viktor Kopp ve Adolf Coff idi.",
+  "expected": []
+ },
+ {
+  "text": "Xristianliq: tarix ve felsefe.",
+  "expected": []
+ },
+ {
+  "text": "On a Research of Symmetric Equations of Volterra Type.",
+  "expected": []
+ },
+ {
+  "text": "Rus, fars, alman, gurcu, ermeni dillerini bilirdi.",
+  "expected": []
+ },
+ {
+  "text": "Turqut Ozatay — aktyor, Turkiye ermenisi.",
+  "expected": []
+ },
+ {
+  "text": "Avropa ve Asiya sakinlerinde hantavirus infeksiyasi boyrek sindromlu hemorragik qizdirmanin yungul formasi kimi ozunu gosterir, lakin son dovrlerde olum hallari da qeyde alinmisdir.",
+  "expected": []
+ },
+ {
+  "text": "O, hec bir seirinde Islami teblig etmir, insanlari dine cagirmir ancaq Islamin boyukluyunu, muqeddesliyini ve toxunulmazligini urekden gelen sozlerle bedii sekilde ifade edir.",
+  "expected": [
+   {
+    "start": 56,
+    "end": 64,
+    "typed": "cagirmir",
+    "options": [
+     "çağırır",
+     "çağırmış",
+     "çağır mir"
+    ]
+   }
+  ]
+ },
+ {
+  "text": "Bu prosesde, bir erkek gamet yumurta huceyresini mayalandiraraq ziqot emele getirir, diger erkek gamet ise iki qutb nuvesini mayalandiraraq endosperm emele getirir.",
+  "expected": [
+   {
+    "start": 23,
+    "end": 28,
+    "typed": "gamet",
+    "options": [
+     "games",
+     "game",
+     "qamet"
+    ]
+   },
+   {
+    "start": 49,
+    "end": 63,
+    "typed": "mayalandiraraq",
+    "options": [
+     "may adlandıraraq",
+     "maya yandıraraq",
+     "mayalanır araq"
+    ]
+   },
+   {
+    "start": 97,
+    "end": 102,
+    "typed": "gamet",
+    "options": [
+     "games",
+     "game",
+     "qamet"
+    ]
+   },
+   {
+    "start": 125,
+    "end": 139,
+    "typed": "mayalandiraraq",
+    "options": [
+     "may adlandıraraq",
+     "maya yandıraraq",
+     "mayalanır araq"
+    ]
+   }
+  ]
+ },
+ {
+  "text": "Sarov kendi Gence-Qazax duzenliyindedir.",
+  "expected": []
+ },
+ {
+  "text": "Sah Ismail Xetai Kulliyati (turk dilinde).",
+  "expected": []
+ },
+ {
+  "text": "O, beynelxalq teskilatin katib-xezinedari Emili Qrin Balc ile birlikde Vyanada kecirilen ucuncu WILPF konqresinin esas koordinatoru ve teskilatcisi idi.",
+  "expected": []
+ },
+ {
+  "text": "Yuqoslaviya muharibede en boyuk itkiler veren olkelerden biri idi: 1.700.000 nefer (ehalinin 10,8%-i) helak olmus, milli zerer ise hemin dovrun qiymetleri ile 9,1 milyard ABS dollari olaraq qiymetlendirilmisdir.",
+  "expected": []
+ },
+ {
+  "text": "Cuco (esl adi: Omar Banos; ) — ABS mugennisi.",
+  "expected": [
+   {
+    "start": 0,
+    "end": 4,
+    "typed": "Cuco",
+    "options": [
+     "Cüdo",
+     "Cü co",
+     "Cuci"
+    ]
+   }
+  ]
+ },
+ {
+  "text": "Maddenin butun xasselerini ozunde cemleyen ve atomlardan ibaret mikrohissecik.",
+  "expected": [
+   {
+    "start": 64,
+    "end": 77,
+    "typed": "mikrohissecik",
+    "options": [
+     "mikro hissəcik",
+     "makro hissəcik",
+     "mikrob hissəcik"
+    ]
+   }
+  ]
+ },
+ {
+  "text": "sabah mektbe gedecem, xayis edirem",
+  "expected": [
+   {
+    "start": 6,
+    "end": 12,
+    "typed": "mektbe",
+    "options": [
+     "məktəb",
+     "məktəbə"
+    ]
+   },
+   {
+    "start": 22,
+    "end": 27,
+    "typed": "xayis",
+    "options": [
+     "xahiş",
+     "xalis",
+     "mayıs"
+    ]
+   }
+  ]
+ },
+ {
+  "text": "men getmedim, nembilim",
+  "expected": [
+   {
+    "start": 14,
+    "end": 22,
+    "typed": "nembilim",
+    "options": [
+     "həm bilim",
+     "nəm bilir",
+     "nə bilim"
+    ]
+   }
+  ]
+ },
+ {
+  "text": "Mektb uzaqdir. Mektb",
+  "expected": [
+   {
+    "start": 0,
+    "end": 5,
+    "typed": "Mektb",
+    "options": [
+     "Məktəb",
+     "Məktub",
+     "Mək tb"
+    ]
+   },
+   {
+    "start": 15,
+    "end": 20,
+    "typed": "Mektb",
+    "options": [
+     "Məktəb",
+     "Məktub",
+     "Mək tb"
+    ]
+   }
+  ]
+ },
+ {
+  "text": "dunen Mektb geldi",
+  "expected": []
+ },
+ {
+  "text": "kitablarin hamisi burdadi",
+  "expected": []
+ },
+ {
+  "text": "",
+  "expected": []
+ }
+]

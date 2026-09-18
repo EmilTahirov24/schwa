@@ -4,6 +4,7 @@
 
 ```bash
 uv sync                          # Python environment
+uv run poe ci                    # exactly what CI runs: lint, format check, tests - run before pushing
 uv run poe test                  # tests (torch-dependent ones skip without the train group)
 uv run poe lint && uv run poe fmt
 uv run poe reproduce             # corpus -> lexicon -> context model -> results

@@ -70,3 +70,14 @@ def test_which_reports_the_restorer(lexicon_file, capsys):
 def test_reports_a_missing_lexicon_file(tmp_path, capsys):
     assert main(["--lexicon", str(tmp_path / "nope.jsonl"), "sence"]) == 1
     assert "not found" in capsys.readouterr().err
+
+
+def test_spell_lists_suspect_words(capsys):
+    pytest.importorskip("onnxruntime")
+    from schwa import bundled
+
+    if not bundled.is_bundled():
+        pytest.skip("run `poe bundle` first")
+
+    assert main(["--spell", "men mektbe gedirem"]) == 0
+    assert capsys.readouterr().out.startswith("mektbe -> ")

@@ -70,3 +70,15 @@ class TestTheBundle:
     def test_it_never_changes_anything_but_diacritics(self):
         for text in ["sence neden", "QIZ MEKTEBE GETDI", "123 !? salam", ""]:
             assert strip_diacritics(bundled.restore(text)) == strip_diacritics(text)
+
+    def test_the_spell_checker_ships_too(self):
+        from schwa.bundled import check
+
+        [found] = check("men mektbe gedirem")
+        assert found.typed == "mektbe"
+        assert "məktəbə" in found.options
+
+    def test_the_spell_checker_leaves_correct_text_alone(self):
+        from schwa.bundled import check
+
+        assert check("Mən bu gün məktəbə getmədim.") == []

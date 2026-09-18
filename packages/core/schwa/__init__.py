@@ -18,7 +18,7 @@ from schwa.alphabet import (
     strip_diacritics,
     to_labels,
 )
-from schwa.bundled import default_restorer, is_bundled, restore
+from schwa.bundled import check, default_restorer, is_bundled, restore
 
 __version__ = "0.1.0.dev0"
 
@@ -28,6 +28,7 @@ __all__ = [
     "LABEL_MARK",
     "STRIP_MAP",
     "__version__",
+    "check",
     "default_restorer",
     "is_bundled",
     "restore",

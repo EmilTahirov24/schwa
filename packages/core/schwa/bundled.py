@@ -20,12 +20,21 @@ from pathlib import Path
 
 from schwa.lexicon import Lexicon
 from schwa.restore import HybridRestorer, LexiconRestorer, Restorer
+from schwa.spelling import Speller, Suggestion
 
 DATA = Path(__file__).parent / "data"
 MODEL = DATA / "tagger.onnx"
 LEXICON = DATA / "lexicon.tsv.gz"
+VOCABULARY = DATA / "vocabulary.tsv.gz"
 
-__all__ = ["bundled_lexicon", "default_restorer", "is_bundled", "restore"]
+__all__ = [
+    "bundled_lexicon",
+    "check",
+    "default_restorer",
+    "default_speller",
+    "is_bundled",
+    "restore",
+]
 
 
 class MissingBundle(RuntimeError):
@@ -80,3 +89,20 @@ def default_restorer() -> Restorer:
 def restore(text: str) -> str:
     """Restore Azerbaijani diacritics in ``text``."""
     return default_restorer().restore(text)
+
+
+@lru_cache(maxsize=1)
+def default_speller() -> Speller:
+    """The spell checker built from the shipped vocabulary."""
+    if not VOCABULARY.exists():
+        raise MissingBundle(f"no vocabulary in this installation: {VOCABULARY}")
+    return Speller.load(VOCABULARY)
+
+
+def check(text: str) -> list[Suggestion]:
+    """Words in ``text`` that look misspelt, each with up to three suggestions.
+
+    Unlike :func:`restore`, this never changes the text: spelling corrections change letters,
+    and a wrong one is worse than none, so the caller decides which to apply.
+    """
+    return default_speller().check(text)

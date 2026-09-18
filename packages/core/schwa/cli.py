@@ -14,7 +14,7 @@ import os
 import sys
 from pathlib import Path
 
-from schwa.bundled import MissingBundle, default_restorer
+from schwa.bundled import MissingBundle, default_restorer, default_speller
 from schwa.lexicon import Lexicon
 from schwa.restore import LexiconRestorer, Restorer
 
@@ -38,7 +38,25 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="print which restorer would be used, and exit",
     )
+    parser.add_argument(
+        "--spell",
+        action="store_true",
+        help="list words that look misspelt, with suggestions, instead of restoring",
+    )
     return parser
+
+
+def print_suggestions(text: str) -> int:
+    """One line per word that looks misspelt: `typed -> first, second, third`."""
+    try:
+        suggestions = default_speller().check(text)
+    except MissingBundle:
+        print("this installation has no bundled vocabulary", file=sys.stderr)
+        return 2
+
+    for suggestion in suggestions:
+        print(f"{suggestion.typed} -> {', '.join(suggestion.options)}")
+    return 0
 
 
 def pick_restorer(lexicon_path: Path | None) -> Restorer:
@@ -54,6 +72,10 @@ def pick_restorer(lexicon_path: Path | None) -> Restorer:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+
+    if args.spell:
+        text = " ".join(args.text) if args.text else sys.stdin.read()
+        return print_suggestions(text)
 
     try:
         restorer = pick_restorer(args.lexicon)

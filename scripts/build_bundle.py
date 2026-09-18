@@ -17,6 +17,7 @@ import sys
 from pathlib import Path
 
 from schwa.lexicon import Lexicon
+from schwa.spelling import Speller
 
 DEFAULT_MODEL = Path("models/tagger.int8.onnx")
 DEFAULT_LEXICON = Path("data/processed/lexicon.jsonl")
@@ -63,7 +64,18 @@ def main() -> int:
     shutil.copyfile(args.model, args.out / "tagger.onnx")
     shutil.copyfile(args.model.with_suffix(".json"), args.out / "tagger.json")
 
-    entries, size = write_confident_lexicon(Lexicon.load(args.lexicon), args.out / "lexicon.tsv.gz")
+    lexicon = Lexicon.load(args.lexicon)
+    entries, size = write_confident_lexicon(lexicon, args.out / "lexicon.tsv.gz")
+
+    # The spell checker needs every common word, not only the ones with diacritics, plus the
+    # endings that make a rare inflected form plausible.
+    speller = Speller.from_lexicon(lexicon)
+    vocabulary = args.out / "vocabulary.tsv.gz"
+    words = speller.save(vocabulary)
+    print(
+        f"vocabulary {vocabulary.stat().st_size / 1e6:.1f} MB ({words} words, "
+        f"{len(speller.suffixes)} endings)"
+    )
 
     total = sum(path.stat().st_size for path in args.out.iterdir())
     print(f"model      {(args.out / 'tagger.onnx').stat().st_size / 1e6:.1f} MB")

@@ -82,3 +82,14 @@ class TestTheBundle:
         from schwa.bundled import check
 
         assert check("Mən bu gün məktəbə getmədim.") == []
+
+    def test_the_examples_in_the_docstrings_are_true(self):
+        # They said "başlayaq" for input that can only become "başlıyaq" - the restorer never
+        # turns an i into an a - and nothing noticed. Now the examples run.
+        import doctest
+
+        import schwa
+        import schwa.bundled
+
+        for module in (schwa, schwa.bundled):
+            assert doctest.testmod(module).failed == 0, module.__name__

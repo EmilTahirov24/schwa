@@ -158,7 +158,7 @@ pip install "schwa-az[onnx]"
 ```python
 from schwa import restore
 
-restore("sence neden basliyaq")  # 'səncə nədən başlayaq'
+restore("sence neden basliyaq")  # 'səncə nədən başlıyaq'
 ```
 
 ```bash

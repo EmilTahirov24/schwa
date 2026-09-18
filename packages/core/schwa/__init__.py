@@ -2,7 +2,7 @@
 
 >>> from schwa import restore
 >>> restore("sence neden basliyaq")
-'səncə nədən başlayaq'
+'səncə nədən başlıyaq'
 """
 
 from schwa.alphabet import (

@@ -4,7 +4,7 @@ The point of this module is that ``pip install schwa-az`` is enough:
 
     >>> from schwa import restore
     >>> restore("sence neden basliyaq")
-    'səncə nədən başlayaq'
+    'səncə nədən başlıyaq'
 
 Two files travel with the package — the quantised tagger and the part of the lexicon that
 can be applied without context. Loading them is deferred until the first call and cached

@@ -3,17 +3,21 @@
 ## Commands
 
 ```bash
-uv sync                          # Python environment
-uv run poe ci                    # exactly what CI runs: lint, format check, tests - run before pushing
-uv run poe test                  # tests (torch-dependent ones skip without the train group)
+uv sync                             # Python environment
+uv run poe ci                       # exactly what CI runs: lint, format check, tests - run before pushing
+uv run poe test                     # tests (torch-dependent ones skip without the train group)
 uv run poe lint && uv run poe fmt
-uv run poe reproduce             # corpus -> lexicon -> context model -> results
-uv run --group train poe tagger  # train the character tagger (GPU)
-uv run poe serve                 # the service on :8000
-cd apps/web && npm run dev       # the demo page
+uv run --group train poe reproduce  # everything: data, models, every number in the docs (GPU)
+uv run --group train poe tagger     # train the character tagger (GPU)
+uv run --group train poe eval       # re-measure; rewrites docs/results.md and results.json
+uv run poe serve                    # the service on :8000
+cd apps/web && npm run dev          # the demo page
 ```
 
 The Wikipedia dump belongs in `data/raw/`; nothing under `data/` or `models/` is committed.
+The model the package ships, `packages/core/schwa/data`, is: it is what the extension and
+the demo page copy, and what CI tests them against. After changing it, run
+`scripts/make_fixtures.py` and `poe eval`.
 
 ## Layout
 

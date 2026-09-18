@@ -53,22 +53,40 @@ check = ["lint", "test"]
 # Exactly what CI runs, so a push is not the first place a check fails.
 format-check = "ruff format --check ."
 ci = ["lint", "format-check", "test"]
+serve = "uvicorn schwa_api.main:app --reload"
+icons = "python scripts/make_icons.py"
 
-# The pipeline, in order. Each step reads what the previous one wrote.
+# The pipeline, in order. Each step reads what the previous one wrote. `reproduce` runs all
+# of it and rewrites every number in docs/results.md; it needs the train group and a GPU.
 extract = "python scripts/extract_wiki.py"
 corpus = "python scripts/build_corpus.py"
 lexicon = "python scripts/build_lexicon.py"
+web = "python scripts/fetch_web.py"
 context = "python scripts/train_context.py"
-eval = "python scripts/evaluate.py --split dev"
 tagger = "python scripts/train_tagger.py"
-serve = "uvicorn schwa_api.main:app --reload"
+tagger-web = "python scripts/train_tagger.py --train data/processed/web_train.txt --dev data/processed/web_dev.txt --out models/tagger_web.pt"
+tagger-both = "python scripts/train_tagger.py --train data/processed/train.txt data/processed/web_train.txt --dev data/processed/dev.txt data/processed/web_dev.txt --out models/tagger_both.pt"
+tagger-caps = "python scripts/train_tagger.py --caps 0.05 --out models/tagger_caps.pt"
 export = "python scripts/export_onnx.py"
 quantize = "python scripts/quantize_onnx.py"
 bundle = "python scripts/build_bundle.py"
-icons = "python scripts/make_icons.py"
-data = ["extract", "corpus", "lexicon"]
-train = ["context", "tagger"]
-reproduce = ["data", "train", "eval"]
+eval = [
+    { cmd = "python scripts/evaluate.py --split dev" },
+    { cmd = "python scripts/evaluate.py --split test" },
+    { cmd = "python scripts/evaluate.py --split web_test" },
+    { cmd = "python scripts/evaluate_spelling.py --split dev" },
+    { cmd = "python scripts/evaluate_spelling.py --split test" },
+    { cmd = "python scripts/error_analysis.py --split test" },
+    { cmd = "python scripts/error_analysis.py --split web_test" },
+    { cmd = "python scripts/text_stats.py --split dev" },
+    { cmd = "python scripts/text_stats.py --split test" },
+    { cmd = "python scripts/text_stats.py --split web_test" },
+]
+domain = "python scripts/domain_shift.py --models wikipedia=models/tagger.pt web=models/tagger_web.pt both=models/tagger_both.pt capitals=models/tagger_caps.pt"
+data = ["extract", "corpus", "lexicon", "web"]
+train = ["context", "tagger", "tagger-web", "tagger-both", "tagger-caps"]
+ship = ["export", "quantize", "bundle"]
+reproduce = ["data", "train", "ship", "eval", "domain"]
 
 [tool.ruff.lint.flake8-bugbear]
 # FastAPI's Depends() in a default is the framework's own idiom, not a mutable default.

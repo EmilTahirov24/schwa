@@ -6,13 +6,16 @@ Restore Azerbaijani diacritics in text typed without them.
 sence neden basliyaq   ->   səncə nədən başlayaq
 ```
 
+**Try it: [emiltahirov24.github.io/duzelt](https://emiltahirov24.github.io/duzelt/)** — the model
+runs in your browser, so nothing you type is sent anywhere.
+
 Azerbaijani has seven letters a plain keyboard cannot produce — `ç ə ğ ı ö ş ü` — so people
 drop them and type `sence` for `səncə`. Putting them back is not a lookup: `qiz` is either
 `qız` ("girl") or `qiz`, and only the surrounding words decide which.
 
-**Status:** in development. The pipeline, three restorers, the service, the demo page and the
-browser extension work and are measured. Still to come: the evaluation set of real informal
-sentences, in-browser inference, and the store release.
+**Status:** working and measured on Wikipedia. The demo page, the browser extension and the
+Python package all carry the model and run it locally. Still to come: the evaluation set of
+real informal sentences, and the extension's store release.
 
 ## What is in here
 
@@ -150,9 +153,15 @@ cd apps/web && npm install && npm run dev
 
 ## Privacy
 
-The service holds text in memory for the length of one request and writes it nowhere — not
-to disk, not to the logs. The extension declares no permission for any website and runs
-nothing on a page until you invoke it. Details: [privacy](apps/web/src/app/privacy/page.tsx).
+The demo page and the extension run the model in the browser: the text never leaves the
+machine it was typed on. The extension also declares no permission for any website and runs
+nothing on a page until you invoke it. The optional HTTP service holds text in memory for the
+length of one request and writes it nowhere. Details:
+[privacy](https://emiltahirov24.github.io/duzelt/privacy/).
+
+The browser and the Python package run the same model through different code, so an
+integration test runs the shipped model through onnxruntime-web and checks that every answer
+matches the Python package exactly. It is what caught the two cutting long text differently.
 
 ## Data and licensing
 

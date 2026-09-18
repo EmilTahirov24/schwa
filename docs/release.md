@@ -49,10 +49,27 @@ restorer reports `lexicon` instead of `hybrid`.
 
 ## The demo
 
-The site reads the service address from `NEXT_PUBLIC_API_URL`, and the service picks its
-restorer from `DUZELT_TAGGER` and `DUZELT_LEXICON`. `/v1/info` reports which one is loaded, so
-after every deployment that endpoint is the check: if it says `lexicon` where it should say
-`hybrid`, the model did not make it into the image.
+The demo is a static site: the model runs in the visitor's browser, so there is nothing to
+host but files. It lives on GitHub Pages, served from the `gh-pages` branch.
+
+```bash
+cd apps/extension && npm run vendor           # model + runtime, if not already there
+cd ../web && NEXT_PUBLIC_BASE_PATH=/duzelt npm run build
+# publish apps/web/out, plus an empty .nojekyll, as the gh-pages branch
+```
+
+`.nojekyll` matters: without it Pages runs Jekyll, which drops every folder starting with an
+underscore — including `_next`, where all the page's code lives.
+
+After publishing, check that the model files come back at their full size
+(`model/tagger.onnx` is 2,345,956 bytes). A binary mangled on the way would load, fail
+quietly, and leave the page stuck on "loading the model".
+
+## The service
+
+The optional HTTP service picks its restorer from `DUZELT_TAGGER` and `DUZELT_LEXICON`.
+`/v1/info` reports which one is loaded, so after every deployment that endpoint is the check:
+if it says `lexicon` where it should say `hybrid`, the model did not make it into the image.
 
 ## After releasing
 

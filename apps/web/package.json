@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "sync": "node scripts/sync.mjs",
+    "predev": "node scripts/sync.mjs",
+    "prebuild": "node scripts/sync.mjs"
   },
   "dependencies": {
     "next": "16.3.5",

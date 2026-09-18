@@ -11,7 +11,13 @@ from pathlib import Path
 import torch
 from torch import nn
 
-from duzelt.tagger import CharVocabulary, TaggerConfig, config_from_dict, config_to_dict
+from duzelt.tagger import (
+    CharVocabulary,
+    TaggerConfig,
+    config_from_dict,
+    config_to_dict,
+    window_bounds,
+)
 
 __all__ = ["CharTagger", "encode_batch", "load_predictor", "save_checkpoint"]
 
@@ -65,29 +71,8 @@ def encode_batch(
     return ids.to(device), mask.to(device)
 
 
-def _window_bounds(length: int, window: int, overlap: int) -> list[tuple[int, int, int, int]]:
-    """Split a long text into overlapping windows.
-
-    Returns (start, end, commit_start, commit_end) per window: the model reads the whole
-    window but only the committed part of it is used, so every predicted character had
-    context on both sides.
-    """
-    if length <= window:
-        return [(0, length, 0, length)]
-
-    stride = window - overlap
-    half = overlap // 2
-    bounds: list[tuple[int, int, int, int]] = []
-
-    for start in range(0, length, stride):
-        end = min(start + window, length)
-        commit_start = start if start == 0 else start + half
-        commit_end = end if end == length else end - half
-        bounds.append((start, end, commit_start, commit_end))
-        if end == length:
-            break
-
-    return bounds
+# Shared with the ONNX runtimes, so every one of them cuts long text the same way.
+_window_bounds = window_bounds
 
 
 @torch.inference_mode()

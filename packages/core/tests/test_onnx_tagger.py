@@ -26,6 +26,11 @@ CONFIG = TaggerConfig(embedding=8, hidden=8, layers=1, dropout=0.0, window=32, o
 
 TEXTS = ["sence neden", "a", "isiq sondu ve hec kim gelmedi", "salam dunya"] * 20
 
+# Longer than one 32-character window, so the windowing itself is under test. The first ONNX
+# predictor fed long text through whole while torch and the browser cut it into windows, and
+# the three disagreed only on input like this.
+LONG_TEXTS = ["sence neden basliyaq, isiq sondu ve hec kim gelmedi. " * 3, "x" * 100]
+
 
 @pytest.fixture(scope="module")
 def exported(tmp_path_factory):
@@ -60,6 +65,14 @@ def test_it_agrees_with_the_checkpoint(exported):
     predict, config = load_onnx_predictor(path)
     assert config == CONFIG
     assert predict(TEXTS) == predict_labels(model, VOCABULARY, TEXTS, CONFIG, device="cpu")
+
+
+def test_it_cuts_long_text_the_way_the_checkpoint_does(exported):
+    path, model = exported
+    predict, _ = load_onnx_predictor(path)
+    expected = predict_labels(model, VOCABULARY, LONG_TEXTS, CONFIG, device="cpu")
+    assert predict(LONG_TEXTS) == expected
+    assert [len(row) for row in expected] == [len(text) for text in LONG_TEXTS]
 
 
 def test_it_agrees_across_batch_sizes(exported):

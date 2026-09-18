@@ -40,3 +40,8 @@ packages/core/duzelt/data/
 
 # Build output
 dist/
+
+# The demo page's copies of the extension's code, runtime and model (apps/web/scripts/sync.mjs)
+apps/web/src/lib/duzelt/
+apps/web/public/ort/
+apps/web/public/model/

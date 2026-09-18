@@ -119,7 +119,7 @@ pip install "duzelt[onnx]"
 ```python
 from duzelt import restore
 
-restore("sence neden basliyaq")   # 'səncə nədən başlayaq'
+restore("sence neden basliyaq")  # 'səncə nədən başlayaq'
 ```
 
 ```bash

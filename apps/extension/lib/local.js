@@ -23,7 +23,7 @@ async function loadLexicon(url) {
 }
 
 async function create(base, runtime) {
-  const ort = await import(/* webpackIgnore: true */ `${runtime}ort.wasm.min.mjs`);
+  const ort = await import(/* webpackIgnore: true */ /* turbopackIgnore: true */ `${runtime}ort.wasm.min.mjs`);
 
   // The runtime files sit next to the page, never on a CDN; one thread is all a service
   // worker can have anyway, and it starts faster.

@@ -2,8 +2,16 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { applyChanges, info, restore, type Change } from "@/lib/api";
+import {
+  applyChanges,
+  loadRestorer,
+  restore,
+  type Change,
+  type Restorer,
+} from "@/lib/restorer";
 import { EXAMPLE, strings, type Language } from "@/lib/strings";
+
+type ModelState = "loading" | "ready" | "failed";
 
 export default function Page() {
   const [language, setLanguage] = useState<Language>("az");
@@ -14,28 +22,31 @@ export default function Page() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const [model, setModel] = useState<string | null>(null);
+  const [restorer, setRestorer] = useState<Restorer | null>(null);
+  const [modelState, setModelState] = useState<ModelState>("loading");
 
   const text = strings[language];
 
+  // The model is fetched once, in the background, while the visitor reads the page.
   useEffect(() => {
-    info()
-      .then((service) => setModel(service.restorer))
-      .catch(() => setModel(null));
+    loadRestorer().then((loaded) => {
+      setRestorer(loaded);
+      setModelState(loaded ? "ready" : "failed");
+    });
   }, []);
 
   const output = useMemo(() => applyChanges(typed, changes, rejected), [typed, changes, rejected]);
   const accepted = changes.length - rejected.size;
 
   const submit = useCallback(async () => {
-    if (!input.trim() || busy) return;
+    if (!input.trim() || busy || !restorer) return;
 
     setBusy(true);
     setError(null);
     setCopied(false);
 
     try {
-      const result = await restore(input);
+      const result = await restore(restorer, input);
       setTyped(input);
       setChanges(result.changes);
       setRejected(new Set());
@@ -44,7 +55,7 @@ export default function Page() {
     } finally {
       setBusy(false);
     }
-  }, [busy, input, text.offline]);
+  }, [busy, input, restorer, text.offline]);
 
   const toggle = (index: number) => {
     setRejected((current) => {
@@ -97,10 +108,10 @@ export default function Page() {
           <button
             type="button"
             onClick={() => void submit()}
-            disabled={busy || !input.trim()}
+            disabled={busy || !input.trim() || modelState !== "ready"}
             className="rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
           >
-            {busy ? text.working : text.restore}
+            {modelState === "loading" ? text.loadingModel : busy ? text.working : text.restore}
           </button>
           <button
             type="button"
@@ -203,7 +214,8 @@ export default function Page() {
           >
             github.com/EmilTahirov24/duzelt
           </a>
-          {model && <span>{text.running(model)}</span>}
+          {modelState === "ready" && <span>{text.local}</span>}
+          {modelState === "failed" && <span>{text.modelFailed}</span>}
         </p>
       </footer>
     </main>

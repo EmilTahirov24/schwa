@@ -92,6 +92,35 @@ def restore_with_labels(text: str, predicted: Sequence[int]) -> str:
     return apply_labels(typed, labels)
 
 
+def window_bounds(length: int, window: int, overlap: int) -> list[tuple[int, int, int, int]]:
+    """Split a long text into overlapping windows.
+
+    Returns (start, end, commit_start, commit_end) per window: the model reads the whole
+    window but only the committed part of it is used, so every predicted character had
+    context on both sides.
+
+    Every runtime - torch, onnxruntime in Python, onnxruntime in the browser - has to cut
+    text the same way, or the same model gives different answers on long input. Keeping
+    this in the torch-free module is what lets all of them share it.
+    """
+    if length <= window:
+        return [(0, length, 0, length)]
+
+    stride = window - overlap
+    half = overlap // 2
+    bounds: list[tuple[int, int, int, int]] = []
+
+    for start in range(0, length, stride):
+        end = min(start + window, length)
+        commit_start = start if start == 0 else start + half
+        commit_end = end if end == length else end - half
+        bounds.append((start, end, commit_start, commit_end))
+        if end == length:
+            break
+
+    return bounds
+
+
 def foldable_positions(text: str) -> list[int]:
     """Indices where a decision is actually needed."""
     return [index for index, char in enumerate(text) if is_foldable(char)]

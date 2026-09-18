@@ -17,12 +17,14 @@ export const strings = {
     result: "Nəticə",
     changes: (count: number) => `${count} söz dəyişdi`,
     noChanges: "Heç nə dəyişmədi",
-    offline: "Servisə qoşulmaq alınmadı. API işləyirmi?",
+    offline: "Mətni emal etmək alınmadı. Səhifəni yeniləyib yenidən cəhd et.",
+    loadingModel: "Model yüklənir…",
+    local: "Model sənin brauzerində işləyir — yazdığın heç yerə göndərilmir.",
+    modelFailed: "Model yüklənmədi. Brauzerin WebAssembly-ni dəstəkləyirmi?",
     howTitle: "Necə işləyir",
     how: "Hər hərf üçün bir sual var: burada diakritik varmı? Yeddi hərf cütü hərfsiz yazılanda üst-üstə düşür, hər birinin isə yalnız bir alternativi var. Ona görə model mətni yenidən yazmır — yalnız hərflərə etiket qoyur. Buna görə də diakritikdən başqa heç nə dəyişə bilmir.",
     ambiguity:
       "Çətinlik ondadır ki, qiz sözü həm qız, həm də qiz ola bilər. Doğru variantı yalnız yanındakı sözlər müəyyən edir.",
-    running: (name: string) => `İşləyən model: ${name}`,
     resultsTitle: "Nə qədər dəqiqdir",
     results:
       "Rəqəmlər test setindən gəlir: 172 328 cümlə, öyrətmədə heç görünməmiş məqalələrdən, bir dəfə ölçülüb.",
@@ -49,12 +51,14 @@ export const strings = {
     result: "Result",
     changes: (count: number) => `${count} word${count === 1 ? "" : "s"} changed`,
     noChanges: "Nothing changed",
-    offline: "Could not reach the service. Is the API running?",
+    offline: "Could not process the text. Reload the page and try again.",
+    loadingModel: "Loading the model…",
+    local: "The model runs in your browser — nothing you type is sent anywhere.",
+    modelFailed: "The model did not load. Does this browser support WebAssembly?",
     howTitle: "How it works",
     how: "Every character gets one question: does it carry a diacritic? The seven letter pairs collapse to a single ASCII letter each, and each collapsed form has exactly one alternative, so the model never rewrites the sentence — it only labels characters. That is why nothing but diacritics can change.",
     ambiguity:
       "The hard part is that qiz can be either qız or qiz. Only the surrounding words decide which one is meant.",
-    running: (name: string) => `Running the ${name} model`,
     resultsTitle: "How accurate it is",
     results:
       "Measured on the test split: 172,328 sentences from articles never seen in training, scored once.",

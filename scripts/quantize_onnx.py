@@ -15,6 +15,7 @@ import sys
 import time
 from pathlib import Path
 
+from results_page import write_section
 from schwa.alphabet import is_foldable, strip_diacritics, to_labels
 from schwa.onnx_tagger import load_onnx_predictor, sidecar_path
 
@@ -73,7 +74,22 @@ def main() -> int:
 
     lost = results["float32"][1] - results["int8"][1]
     smaller = results["float32"][0] / results["int8"][0]
+    faster = results["float32"][2] / results["int8"][2]
     print(f"\nint8 is {smaller:.1f}x smaller and loses {lost * 100:.2f} points of accuracy")
+
+    rows = "".join(
+        f"| {name} | {size:.1f} MB | {accuracy:.2%} | {elapsed:.1f} s |\n"
+        for name, (size, accuracy, elapsed) in results.items()
+    )
+    write_section(
+        "quantisation",
+        f"The tagger through onnxruntime on the CPU, {len(sentences):,} dev sentences. "
+        "Decisions: the characters that could carry a diacritic.\n\n"
+        "| Model | Size | Decisions correct | Time |\n|---|---|---|---|\n"
+        f"{rows}\n"
+        f"int8 is {smaller:.1f}× smaller and {faster:.1f}× faster, and loses "
+        f"{lost * 100:.2f} points.",
+    )
     return 0
 
 

@@ -2,20 +2,22 @@
 
 Every number so far comes from Wikipedia, which is edited, formal and third person. CC-100
 (Conneau et al., 2020; built with CCNet, Wenzek et al., 2020) is Azerbaijani text crawled
-from the open web. Most of it is news, and news quotes people, in the first and second person
-Wikipedia never uses. It is still written with its diacritics, so it can serve as a
+from the open web: news, interviews, blogs. News quotes people, in the first and second
+person Wikipedia never uses. It is still written with its diacritics, so it can serve as a
 reference.
 
 The file is 1.3 GB compressed, so it is streamed and only the start is read. Three filters
 decide what may serve as a reference, and each one's effect is counted and reported:
 
 * the same prose filter as the Wikipedia corpus;
-* a sentence of 25 letters or more must contain "ə". Much of the web is typed without
-  diacritics, and some of CC-100's "Azerbaijani" is Turkish, which has no "ə" at all. Either
-  would make a wrong reference. The cost is a bias: a genuine Azerbaijani sentence of that
-  length lacks "ə" only a few percent of the time, and those are dropped;
 * any sentence that also appears in the Wikipedia corpus is removed, so the model is never
-  tested on something it was trained on.
+  tested on something it was trained on;
+* in the train and dev splits only, a sentence of 25 letters or more must contain "ə". It
+  is insurance against text typed without diacritics, or Turkish labelled as Azerbaijani,
+  teaching the model or choosing its checkpoint. Read, what it drops is mostly genuine
+  sentences that happen to have no "ə" - a loss a training set does not feel. In the test
+  split the same filter would be a bias, since 5.8% of the long sentences in Wikipedia's dev
+  split have no "ə", so the test split is measured as it comes.
 
 Documents, not sentences, are split into train, dev and test, for the same reason as before.
 Next to each split goes a `.groups` file naming the document of every sentence: the
@@ -101,14 +103,18 @@ def split_name(document_index: int) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--megabytes", type=int, default=400, help="text to read from the start")
+    parser.add_argument("--out", type=Path, default=DATA, help="where the splits are written")
     args = parser.parse_args()
 
     print("indexing the Wikipedia corpus to keep it out of the web sample", flush=True)
     wikipedia = wikipedia_fingerprints()
 
+    args.out.mkdir(parents=True, exist_ok=True)
     splits = ("train", "dev", "test")
-    files = {name: (DATA / f"web_{name}.txt").open("w", encoding="utf-8") for name in splits}
-    groups = {name: (DATA / f"web_{name}.groups").open("w", encoding="utf-8") for name in splits}
+    files = {name: (args.out / f"web_{name}.txt").open("w", encoding="utf-8") for name in splits}
+    groups = {
+        name: (args.out / f"web_{name}.groups").open("w", encoding="utf-8") for name in splits
+    }
     counts: Counter[str] = Counter()
     seen: set[bytes] = set()
 
@@ -123,7 +129,11 @@ def main() -> int:
                     counts["dropped_prose_filter"] += 1
                     continue
                 letters = sum(char.isalpha() for char in sentence)
-                if letters >= MIN_LETTERS_FOR_SCHWA and "ə" not in az_lower(sentence):
+                if (
+                    target != "test"
+                    and letters >= MIN_LETTERS_FOR_SCHWA
+                    and "ə" not in az_lower(sentence)
+                ):
                     counts["dropped_no_schwa"] += 1
                     continue
                 mark = fingerprint(sentence)
@@ -143,8 +153,8 @@ def main() -> int:
     for handle in (*files.values(), *groups.values()):
         handle.close()
 
-    stats = dict(counts)
-    (DATA / "web_stats.json").write_text(json.dumps(stats, indent=2), encoding="utf-8")
+    stats = dict(sorted(counts.items()))
+    (args.out / "web_stats.json").write_text(json.dumps(stats, indent=2), encoding="utf-8")
     print(json.dumps(stats, indent=2))
     return 0
 

@@ -1,6 +1,8 @@
 # Decisions
 
-Short records of the choices that shaped this project, with the reasoning behind them.
+Short records of the choices that shaped this project, with the reasoning behind them. A
+number in a record is the one measured when the decision was made, with the code of that
+day; the current numbers are in [results.md](results.md).
 
 ## 1. Restoration is a per-character binary decision, not sequence-to-sequence
 
@@ -48,9 +50,10 @@ accuracy is high before any model exists.
 **Decision.** Report overall accuracy, but lead with accuracy on words whose stripped form
 maps to more than one real word.
 
-**Why.** That subset is the entire problem. Doing nothing at all already scores 33% on all
-words; the same system scores 37% on the ambiguous ones, and that is the number worth
-moving.
+**Why.** That subset is the entire problem. On the dev split, always writing the commonest
+spelling already gets 97.1% of all words right, but only 79.2% of the ambiguous ones; the
+character tagger gets 98.7% and 93.8%. Over all words the two systems are 1.6 points apart,
+over ambiguous words 14.5. Only the second number says how much better one of them is.
 
 ## 5. The context model sees its neighbours as keys, not as spellings
 
@@ -167,8 +170,10 @@ costs a click.
 
 ## 14. Most of the spell checker is about not flagging correct words
 
-**Context.** A plain word-list checker built from Wikipedia flagged 6.6% of the words in clean
-Wikipedia text. Nobody keeps using a checker that underlines one word in fifteen.
+**Context.** The first version of the checker - a word list that also suspected rare words
+one letter from much commoner ones - flagged 6.8% of the words in clean dev text. Nobody keeps
+using a checker that underlines one word in fifteen. (A bare word list, which does not look
+for such mistakes at all, flags 4.5%.)
 
 **Decision.** Three rules, each aimed at a cause found by reading what got flagged:
 common words are never suspected just for being near a commoner one; a capitalised word in

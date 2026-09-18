@@ -1,11 +1,10 @@
 """Command line entry point.
 
-    duzelt --lexicon data/processed/lexicon.jsonl "sence neden basliyaq"
-    cat notes.txt | duzelt --lexicon data/processed/lexicon.jsonl
+    duzelt "sence neden basliyaq"
+    cat notes.txt | duzelt
 
-The lexicon has to be pointed at for now, either with ``--lexicon`` or through the
-``DUZELT_LEXICON`` environment variable. Once the trained model ships with the package,
-it becomes the default and the flag turns optional.
+The model that ships with the package is used unless ``--lexicon`` points somewhere else,
+which is how a freshly trained model gets tried out before it is bundled.
 """
 
 from __future__ import annotations
@@ -15,8 +14,9 @@ import os
 import sys
 from pathlib import Path
 
+from duzelt.bundled import MissingBundle, default_restorer
 from duzelt.lexicon import Lexicon
-from duzelt.restore import LexiconRestorer
+from duzelt.restore import LexiconRestorer, Restorer
 
 ENV_LEXICON = "DUZELT_LEXICON"
 
@@ -31,31 +31,50 @@ def build_parser() -> argparse.ArgumentParser:
         "--lexicon",
         type=Path,
         default=os.environ.get(ENV_LEXICON),
-        help=f"path to a lexicon file (default: ${ENV_LEXICON})",
+        help=f"use this lexicon instead of the bundled model (default: ${ENV_LEXICON})",
+    )
+    parser.add_argument(
+        "--which",
+        action="store_true",
+        help="print which restorer would be used, and exit",
     )
     return parser
+
+
+def pick_restorer(lexicon_path: Path | None) -> Restorer:
+    """The restorer the arguments ask for."""
+    if lexicon_path is None:
+        return default_restorer()
+
+    path = Path(lexicon_path)
+    if not path.exists():
+        raise FileNotFoundError(path)
+    return LexiconRestorer(Lexicon.load(path))
 
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
 
-    if args.lexicon is None:
+    try:
+        restorer = pick_restorer(args.lexicon)
+    except FileNotFoundError as missing:
+        print(f"lexicon not found: {missing}", file=sys.stderr)
+        return 1
+    except MissingBundle:
         print(
-            f"no lexicon given; pass --lexicon or set {ENV_LEXICON}",
+            f"this installation has no bundled model; pass --lexicon or set {ENV_LEXICON}",
             file=sys.stderr,
         )
         return 2
 
-    lexicon_path = Path(args.lexicon)
-    if not lexicon_path.exists():
-        print(f"lexicon not found: {lexicon_path}", file=sys.stderr)
-        return 1
+    if args.which:
+        print(restorer.name)
+        return 0
 
     text = " ".join(args.text) if args.text else sys.stdin.read()
     if not text.strip():
         return 0
 
-    restorer = LexiconRestorer(Lexicon.load(lexicon_path))
     sys.stdout.write(restorer.restore(text))
     if args.text:
         sys.stdout.write("\n")

@@ -34,3 +34,9 @@ Thumbs.db
 # Extension: vendored runtime and generated model, both reproducible
 apps/extension/vendor/
 apps/extension/model/
+
+# The model bundled into the Python package, built by scripts/build_bundle.py
+packages/core/duzelt/data/
+
+# Build output
+dist/

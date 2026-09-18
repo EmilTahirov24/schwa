@@ -110,6 +110,26 @@ hints at the size of that gap without measuring it.
 [docs/annotation.md](docs/annotation.md) describes the hand-annotated set of real sentences
 that will put a number on it.
 
+## Use it
+
+```bash
+pip install "duzelt[onnx]"
+```
+
+```python
+from duzelt import restore
+
+restore("sence neden basliyaq")   # 'səncə nədən başlayaq'
+```
+
+```bash
+duzelt "sence neden basliyaq"
+cat notes.txt | duzelt
+```
+
+The model travels with the package — 3.5 MB, no downloads, no configuration. Without the
+`[onnx]` extra the package still installs and falls back to the lexicon alone.
+
 ## Run it locally
 
 ```bash

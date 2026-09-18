@@ -53,7 +53,8 @@ def encode_batch(
 ) -> tuple[torch.Tensor, torch.Tensor]:
     """Return padded character ids and a mask marking the real characters."""
     encoded = [vocabulary.encode(text) for text in texts]
-    width = max((len(row) for row in encoded), default=1)
+    # At least one column: an LSTM cannot be given a zero-length sequence.
+    width = max((len(row) for row in encoded), default=1) or 1
 
     ids = torch.full((len(encoded), width), PAD_ID, dtype=torch.long)
     mask = torch.zeros((len(encoded), width), dtype=torch.bool)

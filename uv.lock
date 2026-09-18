@@ -75,6 +75,19 @@ name = "duzelt"
 version = "0.1.0.dev0"
 source = { editable = "packages/core" }
 
+[package.optional-dependencies]
+onnx = [
+    { name = "numpy" },
+    { name = "onnxruntime" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "numpy", marker = "extra == 'onnx'", specifier = ">=1.26" },
+    { name = "onnxruntime", marker = "extra == 'onnx'", specifier = ">=1.17" },
+]
+provides-extras = ["onnx"]
+
 [[package]]
 name = "duzelt-api"
 version = "0.1.0.dev0"

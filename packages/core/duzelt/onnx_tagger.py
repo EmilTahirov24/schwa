@@ -39,7 +39,13 @@ def load_onnx_predictor(model_path: Path, batch_size: int = 64):
         for start in range(0, len(texts), batch_size):
             batch = texts[start : start + batch_size]
             encoded = [vocabulary.encode(text) for text in batch]
-            width = max((len(row) for row in encoded), default=1)
+            width = max((len(row) for row in encoded), default=0)
+
+            # An empty batch has nothing to decide, and a zero-length sequence makes the
+            # graph's reshape fail rather than return nothing.
+            if width == 0:
+                labels.extend([] for _ in batch)
+                continue
 
             ids = np.zeros((len(batch), width), dtype=np.int64)
             for row, values in enumerate(encoded):

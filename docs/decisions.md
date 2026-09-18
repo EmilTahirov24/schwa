@@ -150,3 +150,49 @@ accuracy, measured on 3,000 dev sentences. That trade turns "send your text to a
 "the model runs in your browser", which is the stronger product and the stronger privacy
 claim at once.
 
+
+## 13. Spelling is suggested, never applied
+
+**Context.** Once diacritics worked, the natural next step was fixing typos too.
+
+**Decision.** Spelling is a separate layer that only suggests. Diacritic restoration stays
+automatic.
+
+**Why.** The first layer has a guarantee the second cannot: it only ever adds accents, so the
+worst it can do is put one on the wrong letter. Correcting spelling changes letters, and a
+wrong correction silently turns a correct rare word - a name, a borrowing, an unusual
+inflection - into a common one. With the false alarm rate at 1.4%, applying corrections
+automatically would damage roughly one word in seventy. As a suggestion, the same mistake
+costs a click.
+
+## 14. Most of the spell checker is about not flagging correct words
+
+**Context.** A plain word-list checker built from Wikipedia flagged 6.6% of the words in clean
+Wikipedia text. Nobody keeps using a checker that underlines one word in fifteen.
+
+**Decision.** Three rules, each aimed at a cause found by reading what got flagged:
+common words are never suspected just for being near a commoner one; a capitalised word in
+mid-sentence is taken for a name; and a known stem followed by an ending seen after at least
+1,000 different stems is accepted as a real word.
+
+**Why.** The first cause was words like "ev" (house, 8,895 occurrences) flagged for sitting
+one letter from "və". The second was names, half of all unknown words. The third is the
+language itself: Azerbaijani stacks suffixes, so correct forms such as "cənazəsiylə" are too
+rare for any word list. Together they cut false alarms to 1.7% on dev and 1.4% on test. The
+1,000-stem threshold was the knee of a measured trade-off: 30 stems let too many real typos
+pass as plausible (84% top-3 recovery), 1,000 recovered 93% for 0.4 points more false alarms,
+and 3,000 bought little more at a further cost.
+
+## 15. Personal endings come from the grammar, not the counts
+
+**Context.** Suffixes are otherwise learned from the corpus - an ending counts when it follows
+enough known stems.
+
+**Decision.** First- and second-person endings (-m, -am, -n, -san, -q, -iq, -niz, -siniz and
+their vowel-harmony variants) are added by hand.
+
+**Why.** Wikipedia is written in the third person. "getmədi" is common in it; "getmədim" - I did
+not go - never occurs, and the checker flagged it as a typo. The corpus cannot teach what it
+does not contain, and these are exactly the forms people use in messages. On Wikipedia they
+cost 0.2 points of typo recall. Their benefit can only be measured on real informal text,
+which is what the hand-annotated set is for.

@@ -4,6 +4,13 @@
 
 ### Added
 
+- Spelling suggestions: words that look misspelt get up to three corrections, shown as
+  suggestions and never applied on their own. `schwa --spell`, `schwa.check()`, and a wavy
+  amber underline on the demo page.
+- Renamed to Schwa; the Python distribution is `schwa-az`, the import and command `schwa`.
+- The demo page restores as you type, with each restored letter animated into place and a
+  per-word note on where its spelling came from.
+
 - The Python package carries the model: `pip install "schwa-az[onnx]"` and `restore()` works
   with nothing to download and no flags to pass.
 - The browser extension carries it too, so text is restored inside the browser and is not
@@ -13,6 +20,9 @@
   the hybrid of the tagger and the lexicon.
 
 ### Measured
+
+- Spell checker, test split: 90.5% of single-letter typos recovered in the top three
+  suggestions, with 1.41% of correct words flagged.
 
 - Test split, 172,328 sentences, scored once: 93.8% on ambiguous words, 98.9% of all words,
   88.1% of sentences exactly right. Dev agrees within 0.2 points.

@@ -103,6 +103,33 @@ Two details behind the numbers:
 - Sentences are split into train, dev and test **per article**, so near-copies inside one
   article cannot land on both sides of the split.
 
+## Spelling
+
+Diacritics are only half of what goes wrong when typing fast. Schwa also points out words
+that look misspelt — `xayis` → *xahiş*, `mektbe` → *məktəb, məktəbə* — but it never applies
+those on its own. Restoring accents can only add accents; correcting spelling changes
+letters, and a wrong correction turns a correct rare word into a common one. So typos are
+**suggested** (a wavy amber underline in the demo) and diacritics are **applied**.
+
+It is a noisy-channel spell checker over the same Wikipedia vocabulary: candidates one or two
+edits away, and two words run together, ranked by frequency against the chance of that many
+slips. Test split, typos made by dropping, adding, swapping or replacing letters in real words:
+
+| | Top-1 correct | Top-3 correct |
+| --- | --- | --- |
+| One slip | 84.8% | 90.5% |
+| Two slips | 54.0% | 66.0% |
+
+**False alarms: 1.41%** of 12,674 correct words. Getting there took three measured fixes to a
+plain word list that flagged 6.6%: common words are never suspected just for sitting next to
+a commoner one (`ev`, *house*, is one letter from `və`); a capitalised word mid-sentence is
+taken for a name; and since Azerbaijani stacks suffixes, a known stem plus an ending seen
+after a thousand other stems counts as a real word.
+
+Wikipedia is third person, so *getmədim* (I did not go) never appears in it and was flagged.
+Personal endings are therefore added from the grammar rather than learned from counts. How
+much that helps can only be measured on the kind of text people actually write.
+
 ## Where it still fails
 
 Two different things, worth keeping apart.
@@ -137,6 +164,14 @@ restore("sence neden basliyaq")  # 'səncə nədən başlayaq'
 ```bash
 schwa "sence neden basliyaq"
 cat notes.txt | schwa
+schwa --spell "xayis edirem, mektbe gec qalmisam"   # xayis -> xahiş, xalis, mayıs ...
+```
+
+```python
+from schwa import check
+
+for suggestion in check("xayis edirem"):
+    print(suggestion.typed, suggestion.options)      # xayis ('xahiş', 'xalis', 'mayıs')
 ```
 
 The model travels with the package — 3.5 MB, no downloads, no configuration. Without the

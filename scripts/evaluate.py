@@ -40,9 +40,11 @@ def build_systems(
     smoothings: list[float],
     tagger_path: Path | None = None,
     hybrid_counts: list[int] | None = None,
+    hybrid_context: bool = False,
 ) -> list[Restorer]:
     systems: list[Restorer] = [IdentityRestorer(), LexiconRestorer(lexicon)]
 
+    model = None
     if context_path.exists():
         for smoothing in smoothings:
             model = ContextModel.load(context_path, smoothing=smoothing)
@@ -58,14 +60,17 @@ def build_systems(
         tagger = TaggerRestorer.from_checkpoint(tagger_path)
         systems.append(tagger)
 
-        # The context model is deliberately not wired into the hybrid: measured on dev it
-        # drags ambiguous accuracy from 92.9% down to its own 85.9%, because the tagger is
-        # the better judge of exactly the words the context model was built for.
         for min_count in hybrid_counts or []:
             hybrid = HybridRestorer(tagger, lexicon, None, min_count=min_count)
             if len(hybrid_counts) > 1:
                 hybrid.name = f"hybrid (min count {min_count})"
             systems.append(hybrid)
+
+        # The context model is deliberately left out of the hybrid; this measures why.
+        if hybrid_context and model is not None:
+            combined = HybridRestorer(tagger, lexicon, model)
+            combined.name = "hybrid + context"
+            systems.append(combined)
 
     return systems
 
@@ -185,6 +190,11 @@ def main() -> int:
         action="store_true",
         help="print the scores and write nothing, for comparing settings",
     )
+    parser.add_argument(
+        "--hybrid-context",
+        action="store_true",
+        help="also score the hybrid with the context model deciding ambiguous words",
+    )
     args = parser.parse_args()
 
     split_path = args.data / f"{args.split}.txt"
@@ -217,6 +227,7 @@ def main() -> int:
         args.smoothings,
         args.tagger,
         args.hybrid_counts,
+        args.hybrid_context,
     ):
         started = time.perf_counter()
         predictions = run(system, typed)

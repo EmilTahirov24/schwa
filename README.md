@@ -1,13 +1,22 @@
-# schwa
+# Schwa
+
+[![CI](https://github.com/EmilTahirov24/schwa/actions/workflows/ci.yml/badge.svg)](https://github.com/EmilTahirov24/schwa/actions/workflows/ci.yml)
+[![Demo](https://img.shields.io/badge/demo-live-10b981)](https://emiltahirov24.github.io/schwa/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Restore Azerbaijani diacritics in text typed without them.
 
 ```
-sence neden basliyaq   ->   səncə nədən başlayaq
+sence neden basliyaq   ->   səncə nədən başlıyaq
 ```
 
-**Try it: [emiltahirov24.github.io/schwa](https://emiltahirov24.github.io/schwa/)** — the model
-runs in your browser, so nothing you type is sent anywhere.
+**Try it: [emiltahirov24.github.io/schwa](https://emiltahirov24.github.io/schwa/)** — type
+without the letters and watch them come back. The model runs in your browser, so nothing you
+type is sent anywhere.
+
+The name is the letter: *schwa* is what linguists call **ə**. It is the third most common
+letter in Azerbaijani text, and on its own more common than the other six letters a plain
+keyboard lacks put together — 8.8% of all letters against 8.5%, counted on the dev split.
 
 Azerbaijani has seven letters a plain keyboard cannot produce — `ç ə ğ ı ö ş ü` — so people
 drop them and type `sence` for `səncə`. Putting them back is not a lookup: `qiz` is either

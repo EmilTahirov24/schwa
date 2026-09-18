@@ -1,227 +1,223 @@
 [
  {
-  "text": "Ayaqciq aciq-cehrayi, ekssentrik, 1-3 x 0,3-0,7sm, duz ve ya eyilmis, yuxari hissesi dilikli, asagisi hamar ve ya zolaqlidir.",
+  "text": "Ultima fermata: Alaska (Railroad Alaska)",
+  "expected": []
+ },
+ {
+  "text": "Aleksandr Misarin — komissar Sanahan",
+  "expected": []
+ },
+ {
+  "text": "Baltik denizinde cixarilan ringa baliglari hemin dovrde Istanbul bazarlarinda bele satilirdi.",
   "expected": [
    {
-    "start": 85,
-    "end": 92,
-    "typed": "dilikli",
+    "start": 33,
+    "end": 42,
+    "typed": "baliglari",
     "options": [
-     "bilikli",
-     "dilimli",
-     "dəlikli"
+     "balıqları"
     ]
    }
   ]
  },
  {
-  "text": "Vladimir Pavlovic Basov (; ) — Sovet kinorejissoru, aktyoru ve ssenaristi, SSRI xalq artisti (1983).",
+  "text": "Amerikan hisseleri 73 000 nefer hesablanirdi: 23 250 deniz desanti Yuta sahiline, 34 250 — Omaxa sahiline ve 15 500 — hava desanti.",
   "expected": []
  },
  {
-  "text": "Bu ulduzun etrafinda bir nece kicik toreme ulduz da askar edilmisdir.",
-  "expected": []
- },
- {
-  "text": "Memmedov Tofiq Musa oglu",
-  "expected": []
- },
- {
-  "text": "J. B. Molyer \"Skapenin kelekleri\" (rejissor ve ressam) Tedris teatri 1972",
-  "expected": []
- },
- {
-  "text": "Belelikle Cenubi Osetiyanin 2009-cu ilde ehalisinin sayi 54.500 nefer kimi endi.",
-  "expected": []
- },
- {
-  "text": "Termin tez-tez bu cur teftislerin esassiz olduguna inanan marksistler terefinden marksizmi yumsaltmaga ve ya onu parcalamaga calisanlari temsil etmek ucun istifade olunur.",
-  "expected": []
- },
- {
-  "text": "Belelikle narezushi yeyilerken cox gozel tam verir.",
+  "text": "Sonraki arasdirmalar yaddas ve mekan idraki arasinda parcalanma kimi hipokampik funksiyanin iki esas baxisi arasindaki elaqeni kesmeye calismaga yoneldi.",
   "expected": [
    {
-    "start": 20,
-    "end": 30,
-    "typed": "yeyilerken",
+    "start": 69,
+    "end": 79,
+    "typed": "hipokampik",
     "options": [
-     "deyilərkən"
+     "hipokampus"
     ]
    }
   ]
  },
  {
-  "text": "Xursud aganin 200-den cox silahli adamlarini kordinasiya etmisdir.",
+  "text": "Sonraki hokumetin formalasmasi zamani o, Avropa, miqrasiya, inteqrasiya ve tehlukesizlik sahelerinde danisiqlar apardi.",
   "expected": []
  },
  {
-  "text": "Brekciya ortuyunun orta qalinligi 45 m olub, 25 ha saheni tutur.",
-  "expected": []
- },
- {
-  "text": "Mir Celalin \"Dirilen adam\" eseri",
-  "expected": []
- },
- {
-  "text": "Kendde 2006-ci il siyahiya alinmaya gore 402 nefer yasayir (99 aile).",
-  "expected": []
- },
- {
-  "text": "Ona gore de bir nece kelme izahat vermek istiyoruz.",
-  "expected": [
-   {
-    "start": 41,
-    "end": 50,
-    "typed": "istiyoruz",
-    "options": [
-     "istiyorum",
-     "istiyor üz"
-    ]
-   }
-  ]
- },
- {
-  "text": "Rammstein — Alman rok qrupudur.",
-  "expected": []
- },
- {
-  "text": "Bayati–Qacar oz xarakteri etibarile dinleyicide qem-qusse, keder hissleri oyadir.",
-  "expected": []
- },
- {
-  "text": "Kateqoriya:Nyu-York statindaki metropoliten eraziler",
-  "expected": []
- },
- {
-  "text": "Danisiqlarda vasiteci olan diger sovet numayendeleri Karl Radek, Leonid Krasin, Kristyan Rakovski, Viktor Kopp ve Adolf Coff idi.",
-  "expected": []
- },
- {
-  "text": "Xristianliq: tarix ve felsefe.",
-  "expected": []
- },
- {
-  "text": "On a Research of Symmetric Equations of Volterra Type.",
-  "expected": []
- },
- {
-  "text": "Rus, fars, alman, gurcu, ermeni dillerini bilirdi.",
-  "expected": []
- },
- {
-  "text": "Turqut Ozatay — aktyor, Turkiye ermenisi.",
-  "expected": []
- },
- {
-  "text": "Avropa ve Asiya sakinlerinde hantavirus infeksiyasi boyrek sindromlu hemorragik qizdirmanin yungul formasi kimi ozunu gosterir, lakin son dovrlerde olum hallari da qeyde alinmisdir.",
-  "expected": []
- },
- {
-  "text": "O, hec bir seirinde Islami teblig etmir, insanlari dine cagirmir ancaq Islamin boyukluyunu, muqeddesliyini ve toxunulmazligini urekden gelen sozlerle bedii sekilde ifade edir.",
-  "expected": [
-   {
-    "start": 56,
-    "end": 64,
-    "typed": "cagirmir",
-    "options": [
-     "çağırır",
-     "çağırmış",
-     "çağır mir"
-    ]
-   }
-  ]
- },
- {
-  "text": "Bu prosesde, bir erkek gamet yumurta huceyresini mayalandiraraq ziqot emele getirir, diger erkek gamet ise iki qutb nuvesini mayalandiraraq endosperm emele getirir.",
-  "expected": [
-   {
-    "start": 23,
-    "end": 28,
-    "typed": "gamet",
-    "options": [
-     "games",
-     "game",
-     "qamet"
-    ]
-   },
-   {
-    "start": 49,
-    "end": 63,
-    "typed": "mayalandiraraq",
-    "options": [
-     "may adlandıraraq",
-     "maya yandıraraq",
-     "mayalanır araq"
-    ]
-   },
-   {
-    "start": 97,
-    "end": 102,
-    "typed": "gamet",
-    "options": [
-     "games",
-     "game",
-     "qamet"
-    ]
-   },
-   {
-    "start": 125,
-    "end": 139,
-    "typed": "mayalandiraraq",
-    "options": [
-     "may adlandıraraq",
-     "maya yandıraraq",
-     "mayalanır araq"
-    ]
-   }
-  ]
- },
- {
-  "text": "Sarov kendi Gence-Qazax duzenliyindedir.",
-  "expected": []
- },
- {
-  "text": "Sah Ismail Xetai Kulliyati (turk dilinde).",
-  "expected": []
- },
- {
-  "text": "O, beynelxalq teskilatin katib-xezinedari Emili Qrin Balc ile birlikde Vyanada kecirilen ucuncu WILPF konqresinin esas koordinatoru ve teskilatcisi idi.",
-  "expected": []
- },
- {
-  "text": "Yuqoslaviya muharibede en boyuk itkiler veren olkelerden biri idi: 1.700.000 nefer (ehalinin 10,8%-i) helak olmus, milli zerer ise hemin dovrun qiymetleri ile 9,1 milyard ABS dollari olaraq qiymetlendirilmisdir.",
-  "expected": []
- },
- {
-  "text": "Cuco (esl adi: Omar Banos; ) — ABS mugennisi.",
+  "text": "Kasko sigortasi ve ya bir teyyarenin emlak novu kimi sigortasi;",
   "expected": [
    {
     "start": 0,
-    "end": 4,
-    "typed": "Cuco",
+    "end": 5,
+    "typed": "Kasko",
     "options": [
-     "Cüdo",
-     "Cü co",
-     "Cuci"
+     "Vasko",
+     "Kask",
+     "Kusko"
     ]
    }
   ]
  },
  {
-  "text": "Maddenin butun xasselerini ozunde cemleyen ve atomlardan ibaret mikrohissecik.",
+  "text": "Gulencilik Fetullah Gulenin basciligi ile 1960-ci ilin sonlarinda Turkiye Respublikasinin Izmir seherinde ortaya cixmis, sonradan fealiyyetlerini butun Turkiye erazisinde ve bir sira diger olkelerde heyata kecirmeye baslamislar.",
   "expected": [
    {
-    "start": 64,
-    "end": 77,
-    "typed": "mikrohissecik",
+    "start": 0,
+    "end": 10,
+    "typed": "Gulencilik",
     "options": [
-     "mikro hissəcik",
-     "makro hissəcik",
-     "mikrob hissəcik"
+     "Dilənçilik",
+     "Güləşçi lik",
+     "Gələn cilik"
     ]
    }
   ]
+ },
+ {
+  "text": "Emal senayesi butun mulkiyyet formali teserrufatlar, muessise ve teskilatlar esasinda inkisaf edir.",
+  "expected": []
+ },
+ {
+  "text": "Myammi adeten, soyuq halda, uzerine seker tozu elave edilmekle yeyilir.",
+  "expected": [
+   {
+    "start": 0,
+    "end": 6,
+    "typed": "Myammi",
+    "options": [
+     "Mammi"
+    ]
+   }
+  ]
+ },
+ {
+  "text": "O, 1992-ci ilde vefat etmisdir.",
+  "expected": []
+ },
+ {
+  "text": "ABS Dovlet Departamenti onlarin Irandan salamat cixarilmasi ucun planlar hazirlayir ve nezerden kecirirler.",
+  "expected": []
+ },
+ {
+  "text": "PASA Heyat — Azerbaycanin heyat sigortasi uzre ixtisaslasmis sigorta sirketi.",
+  "expected": []
+ },
+ {
+  "text": "Kosmik yaris — SSRI ve ABS arasinda 1957–1975-ci illerde kosmosun fethi sahesinde geden gergin mubarize.",
+  "expected": []
+ },
+ {
+  "text": "Antarctica / Jeff Rubin.",
+  "expected": []
+ },
+ {
+  "text": "Sok eleyhine terapiya cox zaman az effektivdir.",
+  "expected": []
+ },
+ {
+  "text": "Bu iki debutden daha evvel 16 noyabr 2003-cu ilde 16 yas ve 145 gunluyunde Messi \"Barselona\"nin esas komandasinin heyetinde \"Portu\"ya qarsi yoldasliq gorusunde ilk resmi oyununu kecirmisdi.",
+  "expected": []
+ },
+ {
+  "text": "O, atasi ile yaxin munasibetde qaldi ve atasi onun is muqavilelerine nezaret etdi ve 1475-ci ilde azadliga buraxilmaq ucun muraciet etdi.",
+  "expected": []
+ },
+ {
+  "text": "Fener ve ya sam isigi ile isiqlandirma agla ilk evvel dini fikirler getirse de \"Madridde 3 may 1808\"'deki fener hec bir mocizeni aciqlamaz.",
+  "expected": [
+   {
+    "start": 120,
+    "end": 128,
+    "typed": "mocizeni",
+    "options": [
+     "möcüzəvi",
+     "möcüzəsi",
+     "möcüzəli"
+    ]
+   },
+   {
+    "start": 129,
+    "end": 138,
+    "typed": "aciqlamaz",
+    "options": [
+     "açıqlama",
+     "açıqlamaq",
+     "açıqla maz"
+    ]
+   }
+  ]
+ },
+ {
+  "text": "Avqustda Enver pasa doyusde demek olar ki, butun desteni itirdi.",
+  "expected": []
+ },
+ {
+  "text": "Qanad ortukleri daha tund zeytun-qehveyi olub, kicik ag uclara malikdir.",
+  "expected": []
+ },
+ {
+  "text": "Ilk defe olaraq \"Amerika\" adina bu kitabda rast gelinir.",
+  "expected": []
+ },
+ {
+  "text": "Kusov adasi — Santar adalari qrupuna daxil olan ada.",
+  "expected": [
+   {
+    "start": 0,
+    "end": 5,
+    "typed": "Kusov",
+    "options": [
+     "Kuzov",
+     "Kurov",
+     "Kulov"
+    ]
+   }
+  ]
+ },
+ {
+  "text": "Bakiya qayitdiqdan sonra yeniden ictimai-siyasi heyata qatilmisdir.",
+  "expected": []
+ },
+ {
+  "text": "Ktitorlarin tutdugu kilse modellerinde gelince, sag terefdeki fiqurun tutdugu model cetir yox konik gunbeze malik olsa da, profil ve qurulusuna gore Genceser monasitirinin Muqeddes Iohann kilsesini xatirladir.",
+  "expected": [
+   {
+    "start": 0,
+    "end": 11,
+    "typed": "Ktitorlarin",
+    "options": [
+     "Ki torların",
+     "İti torların",
+     "Klitor ların"
+    ]
+   },
+   {
+    "start": 158,
+    "end": 171,
+    "typed": "monasitirinin",
+    "options": [
+     "monastırının"
+    ]
+   }
+  ]
+ },
+ {
+  "text": "Adada coxlu goller vardir.",
+  "expected": []
+ },
+ {
+  "text": "Hekayeci / hekim rolunu Bulqakovun eserlerinin perestiskarlari Jon Hamm ve Daniel Radcliffe oynayir.",
+  "expected": []
+ },
+ {
+  "text": "Eyni zamanda \"\" ucun \"Insaniquarium\"u daha da inkisaf etdirmis ve 2004-cu ilde oyunun \"Deluks\" versiyasini teqdim etmisdir.",
+  "expected": []
+ },
+ {
+  "text": "Fatma xanim Ata xan qizi Ebraxanova — Teymur bey Hesenbeyov heyat yoldasi.",
+  "expected": []
+ },
+ {
+  "text": "Burada dord yerde ocaq qaliqlari askar olunub.",
+  "expected": []
  },
  {
   "text": "sabah mektbe gedecem, xayis edirem",

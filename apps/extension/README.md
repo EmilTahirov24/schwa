@@ -20,9 +20,9 @@ npm run vendor     # copies onnxruntime and the model into the extension
 npm test
 ```
 
-`npm run vendor` looks for `models/tagger.int8.onnx` in the repository root — produced by
-`scripts/export_onnx.py` and `scripts/quantize_onnx.py`. Without it the extension still
-works, through the service.
+The model comes from the Python package's bundle in `packages/core/schwa/data`, which is
+committed, so the package, the extension and the demo page always carry the same four files.
+The integration test then checks that this folder answers exactly as the Python package does.
 
 Then open `chrome://extensions`, turn on developer mode, choose **Load unpacked**, and pick
 this folder.

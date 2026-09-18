@@ -8,20 +8,20 @@ the README belong to a specific model file, so a release starts by rebuilding it
 
 ```bash
 uv run --group train poe tagger      # only when the model itself changed
-uv run --group train poe export      # checkpoint -> ONNX, refuses if answers differ
-uv run --group train poe quantize    # int8, reports what it costs
-uv run --group train poe bundle      # into the Python package
+uv run --group train poe ship        # ONNX (refuses if answers differ), int8, bundle
 cd apps/extension && npm run vendor  # into the extension
 ```
 
-Then re-run the evaluation and update the tables:
+`packages/core/schwa/data` is committed: it is the one copy of the model that everything
+else is built from, and CI runs the browser-against-Python parity tests on it. Regenerate
+the fixtures those tests compare against whenever it changes. Then re-run the evaluation,
+which rewrites `docs/results.md`, and copy what changed into the README:
 
 ```bash
 uv run --group train poe eval
-uv run --group train python scripts/evaluate.py --split test
 ```
 
-The test split is scored once per released model, not during development.
+The test splits are scored once per released model, not during development.
 
 ## The Python package
 

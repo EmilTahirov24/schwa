@@ -9,6 +9,8 @@ models/
 *.pt
 *.onnx
 runs/
+# ... except the model the package ships, which everything else is built from
+!packages/core/schwa/data/tagger.onnx
 
 # Python
 __pycache__/
@@ -31,12 +33,9 @@ out/
 .DS_Store
 Thumbs.db
 
-# Extension: vendored runtime and generated model, both reproducible
+# Extension: vendored runtime and its copy of the model, both reproducible
 apps/extension/vendor/
 apps/extension/model/
-
-# The model bundled into the Python package, built by scripts/build_bundle.py
-packages/core/schwa/data/
 
 # Build output
 dist/

@@ -214,3 +214,17 @@ the truth; a test pins that grouped resampling widens them when errors cluster. 
 comparison is paired because two intervals that overlap can still hide a consistent
 difference: scoring both systems on the same resamples and taking the interval of their
 difference answers "is the hybrid better than the tagger?" directly.
+
+## 17. The bundled model is committed
+
+**Context.** The model files were generated artefacts and ignored by git, like the data. CI
+therefore never saw them, and the tests that check the browser build against the Python
+package - the ones that exist because the two once disagreed - were skipped on every push.
+
+**Decision.** `packages/core/schwa/data`, the four files the package ships (5.7 MB), is
+committed. The extension and the demo page copy their model from it.
+
+**Why.** It is the one copy everything else is built from, so committing it makes every
+distribution provably the same model, lets CI run the parity tests, and makes
+`pip install` from the repository work before any release. The training data and the float
+checkpoints stay out: they are large, and a command rebuilds them.

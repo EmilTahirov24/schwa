@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  check:
+  python:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,5 +23,61 @@ jobs:
       - name: Format check
         run: uv run ruff format --check .
 
+      # The bundled model is committed, so this includes the tests that run it.
       - name: Test
         run: uv run pytest -q
+
+  extension:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/extension
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: apps/extension/package-lock.json
+
+      - run: npm ci
+
+      - name: Copy in the runtime and the bundled model
+        run: npm run vendor
+
+      # Includes the parity tests: the shipped model through onnxruntime-web must answer
+      # exactly as the Python package recorded in test/fixtures.
+      - run: npm test
+
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            apps/extension/package-lock.json
+            apps/web/package-lock.json
+
+      # The page runs the extension's code, runtime and model; its build copies them over.
+      - name: Prepare the extension
+        working-directory: apps/extension
+        run: npm ci && npm run vendor
+
+      - name: Install
+        working-directory: apps/web
+        run: npm ci
+
+      - name: Lint
+        working-directory: apps/web
+        run: npm run lint
+
+      - name: Build
+        working-directory: apps/web
+        run: npm run build
+        env:
+          NEXT_PUBLIC_BASE_PATH: /schwa

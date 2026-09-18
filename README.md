@@ -1,4 +1,4 @@
-# duzelt
+# schwa
 
 Restore Azerbaijani diacritics in text typed without them.
 
@@ -6,7 +6,7 @@ Restore Azerbaijani diacritics in text typed without them.
 sence neden basliyaq   ->   səncə nədən başlayaq
 ```
 
-**Try it: [emiltahirov24.github.io/duzelt](https://emiltahirov24.github.io/duzelt/)** — the model
+**Try it: [emiltahirov24.github.io/schwa](https://emiltahirov24.github.io/schwa/)** — the model
 runs in your browser, so nothing you type is sent anywhere.
 
 Azerbaijani has seven letters a plain keyboard cannot produce — `ç ə ğ ı ö ş ü` — so people
@@ -116,18 +116,18 @@ that will put a number on it.
 ## Use it
 
 ```bash
-pip install "duzelt[onnx]"
+pip install "schwa-az[onnx]"
 ```
 
 ```python
-from duzelt import restore
+from schwa import restore
 
 restore("sence neden basliyaq")  # 'səncə nədən başlayaq'
 ```
 
 ```bash
-duzelt "sence neden basliyaq"
-cat notes.txt | duzelt
+schwa "sence neden basliyaq"
+cat notes.txt | schwa
 ```
 
 The model travels with the package — 3.5 MB, no downloads, no configuration. Without the
@@ -147,7 +147,7 @@ uv run poe serve                 # the service on :8000
 README comes out of that run. The CLI and the demo page:
 
 ```bash
-uv run duzelt --lexicon data/processed/lexicon.jsonl "sence neden basliyaq"
+uv run schwa --lexicon data/processed/lexicon.jsonl "sence neden basliyaq"
 cd apps/web && npm install && npm run dev
 ```
 
@@ -157,7 +157,7 @@ The demo page and the extension run the model in the browser: the text never lea
 machine it was typed on. The extension also declares no permission for any website and runs
 nothing on a page until you invoke it. The optional HTTP service holds text in memory for the
 length of one request and writes it nowhere. Details:
-[privacy](https://emiltahirov24.github.io/duzelt/privacy/).
+[privacy](https://emiltahirov24.github.io/schwa/privacy/).
 
 The browser and the Python package run the same model through different code, so an
 integration test runs the shipped model through onnxruntime-web and checks that every answer

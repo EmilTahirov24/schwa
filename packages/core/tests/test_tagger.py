@@ -5,8 +5,8 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 import pytest
-from duzelt.alphabet import LABEL_KEEP, LABEL_MARK, strip_diacritics
-from duzelt.tagger import (
+from schwa.alphabet import LABEL_KEEP, LABEL_MARK, strip_diacritics
+from schwa.tagger import (
     PAD,
     UNKNOWN,
     CharVocabulary,

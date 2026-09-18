@@ -11,15 +11,15 @@ torch = pytest.importorskip("torch")
 pytest.importorskip("onnx")
 pytest.importorskip("onnxruntime")
 
-from duzelt._tagger_model import CharTagger, predict_labels  # noqa: E402
-from duzelt.alphabet import strip_diacritics  # noqa: E402
-from duzelt.onnx_tagger import (  # noqa: E402
+from schwa._tagger_model import CharTagger, predict_labels  # noqa: E402
+from schwa.alphabet import strip_diacritics  # noqa: E402
+from schwa.onnx_tagger import (  # noqa: E402
     load_onnx_predictor,
     load_onnx_restorer,
     sidecar_path,
     write_sidecar,
 )
-from duzelt.tagger import CharVocabulary, TaggerConfig  # noqa: E402
+from schwa.tagger import CharVocabulary, TaggerConfig  # noqa: E402
 
 VOCABULARY = CharVocabulary(list("abcdefghijklmnopqrstuvwxyz ,."))
 CONFIG = TaggerConfig(embedding=8, hidden=8, layers=1, dropout=0.0, window=32, overlap=8)

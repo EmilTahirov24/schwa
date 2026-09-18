@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import pytest
-from duzelt.lexicon import Lexicon
-from duzelt.restore import LexiconRestorer
-from duzelt_api.main import MAX_CHARACTERS, RateLimiter, app, get_restorer
-from duzelt_api.restorers import Loaded
 from fastapi.testclient import TestClient
+from schwa.lexicon import Lexicon
+from schwa.restore import LexiconRestorer
+from schwa_api.main import MAX_CHARACTERS, RateLimiter, app, get_restorer
+from schwa_api.restorers import Loaded
 
 SENTENCES = ["Səncə nədən başlayaq?", "İşıq söndü.", "Qız məktəbə getdi."]
 

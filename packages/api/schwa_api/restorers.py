@@ -12,9 +12,9 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
-from duzelt.context import ContextModel
-from duzelt.lexicon import Lexicon
-from duzelt.restore import (
+from schwa.context import ContextModel
+from schwa.lexicon import Lexicon
+from schwa.restore import (
     ContextRestorer,
     HybridRestorer,
     IdentityRestorer,
@@ -22,9 +22,9 @@ from duzelt.restore import (
     Restorer,
 )
 
-ENV_LEXICON = "DUZELT_LEXICON"
-ENV_CONTEXT = "DUZELT_CONTEXT"
-ENV_TAGGER = "DUZELT_TAGGER"
+ENV_LEXICON = "SCHWA_LEXICON"
+ENV_CONTEXT = "SCHWA_CONTEXT"
+ENV_TAGGER = "SCHWA_TAGGER"
 
 
 @dataclass(frozen=True)
@@ -59,11 +59,11 @@ def load_restorer() -> Loaded:
         # An .onnx file runs on onnxruntime alone, which is what lets the image ship
         # without torch; a checkpoint is still accepted for a machine that has it.
         if tagger_path.suffix == ".onnx":
-            from duzelt.onnx_tagger import load_onnx_restorer
+            from schwa.onnx_tagger import load_onnx_restorer
 
             tagger: Restorer = load_onnx_restorer(tagger_path)
         else:
-            from duzelt.tagger import TaggerRestorer
+            from schwa.tagger import TaggerRestorer
 
             tagger = TaggerRestorer.from_checkpoint(tagger_path)
 

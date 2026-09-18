@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import pytest
-from duzelt.context import ContextModel
-from duzelt.lexicon import Lexicon
-from duzelt.restore import IdentityRestorer
-from duzelt_api.restorers import ENV_CONTEXT, ENV_LEXICON, ENV_TAGGER, load_restorer
+from schwa.context import ContextModel
+from schwa.lexicon import Lexicon
+from schwa.restore import IdentityRestorer
+from schwa_api.restorers import ENV_CONTEXT, ENV_LEXICON, ENV_TAGGER, load_restorer
 
 SENTENCES = ["Səncə nədən başlayaq?", "İşıq söndü."]
 
@@ -70,7 +70,7 @@ def test_an_empty_variable_is_ignored(monkeypatch):
 @pytest.fixture
 def onnx_stand_in(monkeypatch, tmp_path):
     """An .onnx path that routes past torch, without needing a real model file."""
-    import duzelt.onnx_tagger as onnx_tagger
+    import schwa.onnx_tagger as onnx_tagger
 
     stand_in = IdentityRestorer()
     stand_in.name = "tagger (onnx)"

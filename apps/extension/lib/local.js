@@ -71,7 +71,7 @@ export function localRestorer(base, runtime) {
     loading.set(
       cacheKey,
       create(base, runtime).catch((error) => {
-        console.warn("duzelt: no local model", error);
+        console.warn("schwa: no local model", error);
         return null;
       }),
     );

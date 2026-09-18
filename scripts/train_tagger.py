@@ -19,9 +19,9 @@ from collections.abc import Iterator, Sequence
 from pathlib import Path
 
 import torch
-from duzelt._tagger_model import PAD_ID, CharTagger, predict_labels, save_checkpoint
-from duzelt.alphabet import is_foldable, strip_diacritics, to_labels
-from duzelt.tagger import CharVocabulary, TaggerConfig
+from schwa._tagger_model import PAD_ID, CharTagger, predict_labels, save_checkpoint
+from schwa.alphabet import is_foldable, strip_diacritics, to_labels
+from schwa.tagger import CharVocabulary, TaggerConfig
 from torch import nn
 
 DEFAULT_TRAIN = Path("data/processed/train.txt")

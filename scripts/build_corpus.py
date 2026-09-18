@@ -17,8 +17,8 @@ import unicodedata
 from collections import Counter
 from pathlib import Path
 
-from duzelt.alphabet import az_lower, is_foldable
-from duzelt.segment import split_sentences
+from schwa.alphabet import az_lower, is_foldable
+from schwa.segment import split_sentences
 
 DEFAULT_IN = Path("data/processed/articles.jsonl")
 DEFAULT_OUT_DIR = Path("data/processed")

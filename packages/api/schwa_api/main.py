@@ -11,19 +11,19 @@ import time
 from collections import deque
 from functools import lru_cache
 
-from duzelt import __version__
-from duzelt.changes import changes_between
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
+from schwa import __version__
+from schwa.changes import changes_between
 
-from duzelt_api.restorers import Loaded, load_restorer
+from schwa_api.restorers import Loaded, load_restorer
 
 MAX_CHARACTERS = 10_000
 REQUESTS_PER_MINUTE = 60
 
 app = FastAPI(
-    title="duzelt",
+    title="schwa",
     version=__version__,
     summary="Restore Azerbaijani diacritics in text typed without them",
 )

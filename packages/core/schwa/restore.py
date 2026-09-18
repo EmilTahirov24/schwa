@@ -9,10 +9,10 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import Protocol, runtime_checkable
 
-from duzelt.alphabet import az_upper, strip_diacritics
-from duzelt.context import END, START, ContextModel
-from duzelt.lexicon import Lexicon
-from duzelt.tokenize import iter_words, key_of
+from schwa.alphabet import az_upper, strip_diacritics
+from schwa.context import END, START, ContextModel
+from schwa.lexicon import Lexicon
+from schwa.tokenize import iter_words, key_of
 
 __all__ = [
     "HybridRestorer",

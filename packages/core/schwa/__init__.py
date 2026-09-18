@@ -1,11 +1,11 @@
-"""duzelt - restore Azerbaijani diacritics in text typed without them.
+"""schwa - restore Azerbaijani diacritics in text typed without them.
 
->>> from duzelt import restore
+>>> from schwa import restore
 >>> restore("sence neden basliyaq")
 'səncə nədən başlayaq'
 """
 
-from duzelt.alphabet import (
+from schwa.alphabet import (
     FOLD_PAIRS,
     LABEL_KEEP,
     LABEL_MARK,
@@ -18,7 +18,7 @@ from duzelt.alphabet import (
     strip_diacritics,
     to_labels,
 )
-from duzelt.bundled import default_restorer, is_bundled, restore
+from schwa.bundled import default_restorer, is_bundled, restore
 
 __version__ = "0.1.0.dev0"
 

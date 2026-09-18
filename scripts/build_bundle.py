@@ -1,6 +1,6 @@
 """Put the shipped model inside the Python package.
 
-`pip install duzelt` should restore text on the first line of code, with no files to fetch
+`pip install schwa-az` should restore text on the first line of code, with no files to fetch
 and no flags to pass. That means carrying two things: the quantised tagger, and the part of
 the lexicon that is safe to apply without context — the words the training text was unanimous
 about. Together they are the same "hybrid" that scores best, at about 4 MB.
@@ -16,11 +16,11 @@ import shutil
 import sys
 from pathlib import Path
 
-from duzelt.lexicon import Lexicon
+from schwa.lexicon import Lexicon
 
 DEFAULT_MODEL = Path("models/tagger.int8.onnx")
 DEFAULT_LEXICON = Path("data/processed/lexicon.jsonl")
-DEFAULT_OUT = Path("packages/core/duzelt/data")
+DEFAULT_OUT = Path("packages/core/schwa/data")
 
 MIN_COUNT = 2
 

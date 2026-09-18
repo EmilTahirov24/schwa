@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import pytest
-from duzelt.alphabet import (
+from hypothesis import given
+from hypothesis import strategies as st
+from schwa.alphabet import (
     FOLD_PAIRS,
     LABEL_KEEP,
     LABEL_MARK,
@@ -14,8 +16,6 @@ from duzelt.alphabet import (
     strip_diacritics,
     to_labels,
 )
-from hypothesis import given
-from hypothesis import strategies as st
 
 AZ_LOWER = "abcçdeəfgğhxıijkqlmnoöprsştuüvyz"
 AZ_UPPER = "ABCÇDEƏFGĞHXIİJKQLMNOÖPRSŞTUÜVYZ"

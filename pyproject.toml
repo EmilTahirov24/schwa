@@ -1,16 +1,16 @@
 [project]
-name = "duzelt-workspace"
+name = "schwa-workspace"
 version = "0.0.0"
-description = "Development workspace for duzelt"
+description = "Development workspace for schwa"
 requires-python = ">=3.12"
-dependencies = ["duzelt", "duzelt-api"]
+dependencies = ["schwa-az", "schwa-api"]
 
 [tool.uv.workspace]
 members = ["packages/core", "packages/api"]
 
 [tool.uv.sources]
-duzelt = { workspace = true }
-duzelt-api = { workspace = true }
+schwa-az = { workspace = true }
+schwa-api = { workspace = true }
 torch = { index = "pytorch" }
 
 [[tool.uv.index]]
@@ -58,7 +58,7 @@ lexicon = "python scripts/build_lexicon.py"
 context = "python scripts/train_context.py"
 eval = "python scripts/evaluate.py --split dev"
 tagger = "python scripts/train_tagger.py"
-serve = "uvicorn duzelt_api.main:app --reload"
+serve = "uvicorn schwa_api.main:app --reload"
 export = "python scripts/export_onnx.py"
 quantize = "python scripts/quantize_onnx.py"
 bundle = "python scripts/build_bundle.py"

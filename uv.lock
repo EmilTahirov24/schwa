@@ -9,9 +9,9 @@ resolution-markers = [
 
 [manifest]
 members = [
-    "duzelt",
-    "duzelt-api",
-    "duzelt-workspace",
+    "schwa-api",
+    "schwa-az",
+    "schwa-workspace",
 ]
 
 [[package]]
@@ -68,92 +68,6 @@ version = "0.4.6"
 source = { registry = "https://download.pytorch.org/whl/cu124" }
 wheels = [
     { url = "https://download.pytorch.org/whl/colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6", upload-time = "2023-10-05T23:50:34Z" },
-]
-
-[[package]]
-name = "duzelt"
-version = "0.1.0.dev0"
-source = { editable = "packages/core" }
-
-[package.optional-dependencies]
-onnx = [
-    { name = "numpy" },
-    { name = "onnxruntime" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "numpy", marker = "extra == 'onnx'", specifier = ">=1.26" },
-    { name = "onnxruntime", marker = "extra == 'onnx'", specifier = ">=1.17" },
-]
-provides-extras = ["onnx"]
-
-[[package]]
-name = "duzelt-api"
-version = "0.1.0.dev0"
-source = { editable = "packages/api" }
-dependencies = [
-    { name = "duzelt" },
-    { name = "fastapi" },
-    { name = "uvicorn" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "duzelt", editable = "packages/core" },
-    { name = "fastapi", specifier = ">=0.115" },
-    { name = "uvicorn", specifier = ">=0.32" },
-]
-
-[[package]]
-name = "duzelt-workspace"
-version = "0.0.0"
-source = { virtual = "." }
-dependencies = [
-    { name = "duzelt" },
-    { name = "duzelt-api" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "httpx" },
-    { name = "hypothesis" },
-    { name = "mwparserfromhell" },
-    { name = "numpy" },
-    { name = "onnxruntime" },
-    { name = "poethepoet" },
-    { name = "pytest" },
-    { name = "ruff" },
-]
-train = [
-    { name = "numpy" },
-    { name = "onnx" },
-    { name = "pillow" },
-    { name = "torch" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "duzelt", editable = "packages/core" },
-    { name = "duzelt-api", editable = "packages/api" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "httpx", specifier = ">=0.28.1" },
-    { name = "hypothesis", specifier = ">=6.100" },
-    { name = "mwparserfromhell", specifier = ">=0.7.2" },
-    { name = "numpy", specifier = ">=2.5.2" },
-    { name = "onnxruntime", specifier = ">=1.30.0" },
-    { name = "poethepoet", specifier = ">=0.29" },
-    { name = "pytest", specifier = ">=8.0" },
-    { name = "ruff", specifier = ">=0.6" },
-]
-train = [
-    { name = "numpy", specifier = ">=2.5.2" },
-    { name = "onnx", specifier = ">=1.22.0" },
-    { name = "pillow", specifier = ">=12.3.0" },
-    { name = "torch", specifier = ">=2.6.0", index = "https://download.pytorch.org/whl/cu124" },
 ]
 
 [[package]]
@@ -1003,6 +917,92 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/3d/02/7f10ef4700bc223c30a3fdd10631a29830c45524b810a3c7ed947af64591/ruff-0.16.8-py3-none-win32.whl", hash = "sha256:55793ba85c69921e89be061426d91a78652d6e50317c962240922747a4eb713f", size = 10093472, upload-time = "2026-09-16T15:54:37.47Z" },
     { url = "https://files.pythonhosted.org/packages/1e/5d/a509c07d714b6da88f2c518b4637cf6f1d46b074be8f0f1e5fb9ff5126fe/ruff-0.16.8-py3-none-win_amd64.whl", hash = "sha256:a6b85621fd3c81e31fc5f5add09c9c078b430db3595ca632efafdec9e64ebfaa", size = 10586899, upload-time = "2026-09-16T15:54:40.488Z" },
     { url = "https://files.pythonhosted.org/packages/fe/a0/50787329e4f20bf9dc9f6230015d46ec69c51a97ace5bc202dae4755365d/ruff-0.16.8-py3-none-win_arm64.whl", hash = "sha256:d075e820af612102ce217f07cc93e69f9490b10ec13ea85fa87bd03d996cef8a", size = 10386316, upload-time = "2026-09-16T15:54:43.332Z" },
+]
+
+[[package]]
+name = "schwa-api"
+version = "0.1.0.dev0"
+source = { editable = "packages/api" }
+dependencies = [
+    { name = "fastapi" },
+    { name = "schwa-az" },
+    { name = "uvicorn" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "fastapi", specifier = ">=0.115" },
+    { name = "schwa-az", editable = "packages/core" },
+    { name = "uvicorn", specifier = ">=0.32" },
+]
+
+[[package]]
+name = "schwa-az"
+version = "0.1.0.dev0"
+source = { editable = "packages/core" }
+
+[package.optional-dependencies]
+onnx = [
+    { name = "numpy" },
+    { name = "onnxruntime" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "numpy", marker = "extra == 'onnx'", specifier = ">=1.26" },
+    { name = "onnxruntime", marker = "extra == 'onnx'", specifier = ">=1.17" },
+]
+provides-extras = ["onnx"]
+
+[[package]]
+name = "schwa-workspace"
+version = "0.0.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "schwa-api" },
+    { name = "schwa-az" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "httpx" },
+    { name = "hypothesis" },
+    { name = "mwparserfromhell" },
+    { name = "numpy" },
+    { name = "onnxruntime" },
+    { name = "poethepoet" },
+    { name = "pytest" },
+    { name = "ruff" },
+]
+train = [
+    { name = "numpy" },
+    { name = "onnx" },
+    { name = "pillow" },
+    { name = "torch" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "schwa-api", editable = "packages/api" },
+    { name = "schwa-az", editable = "packages/core" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "httpx", specifier = ">=0.28.1" },
+    { name = "hypothesis", specifier = ">=6.100" },
+    { name = "mwparserfromhell", specifier = ">=0.7.2" },
+    { name = "numpy", specifier = ">=2.5.2" },
+    { name = "onnxruntime", specifier = ">=1.30.0" },
+    { name = "poethepoet", specifier = ">=0.29" },
+    { name = "pytest", specifier = ">=8.0" },
+    { name = "ruff", specifier = ">=0.6" },
+]
+train = [
+    { name = "numpy", specifier = ">=2.5.2" },
+    { name = "onnx", specifier = ">=1.22.0" },
+    { name = "pillow", specifier = ">=12.3.0" },
+    { name = "torch", specifier = ">=2.6.0", index = "https://download.pytorch.org/whl/cu124" },
 ]
 
 [[package]]

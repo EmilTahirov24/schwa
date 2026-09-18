@@ -4,7 +4,7 @@ Unlike the lexicon and the context model, this one does not need to have seen a 
 That is the point: most remaining errors are rare proper nouns that never appear in the
 training text, and a word-level system can only leave those as typed.
 
-Torch is imported lazily, so installing ``duzelt`` does not drag a deep learning framework
+Torch is imported lazily, so installing ``schwa`` does not drag a deep learning framework
 onto machines that only want to restore text with the lexicon.
 """
 
@@ -16,7 +16,7 @@ from collections.abc import Callable, Iterable, Sequence
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-from duzelt.alphabet import (
+from schwa.alphabet import (
     LABEL_KEEP,
     LABEL_MARK,
     apply_labels,
@@ -161,7 +161,7 @@ class TaggerRestorer:
     @classmethod
     def from_checkpoint(cls, path: Path, device: str | None = None) -> TaggerRestorer:
         """Load a trained checkpoint. Requires torch."""
-        from duzelt._tagger_model import load_predictor  # noqa: PLC0415
+        from schwa._tagger_model import load_predictor  # noqa: PLC0415
 
         predict, config = load_predictor(path, device=device)
         return cls(predict, config)

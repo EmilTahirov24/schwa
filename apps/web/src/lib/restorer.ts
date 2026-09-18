@@ -6,8 +6,8 @@
  * is sent anywhere.
  */
 
-import { changesBetween } from "@/lib/duzelt/changes.js";
-import { localRestorer } from "@/lib/duzelt/local.js";
+import { changesBetween } from "@/lib/schwa/changes.js";
+import { localRestorer } from "@/lib/schwa/local.js";
 
 export type Change = {
   start: number;

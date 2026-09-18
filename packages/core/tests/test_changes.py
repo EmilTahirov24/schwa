@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import pytest
-from duzelt.changes import changes_between
+from schwa.changes import changes_between
 
 
 def test_lists_only_the_words_that_differ():

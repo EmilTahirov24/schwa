@@ -19,9 +19,9 @@ import json
 import sys
 from pathlib import Path
 
-from duzelt.alphabet import strip_diacritics
-from duzelt.lexicon import Lexicon
-from duzelt.restore import IdentityRestorer, LexiconRestorer, Restorer
+from schwa.alphabet import strip_diacritics
+from schwa.lexicon import Lexicon
+from schwa.restore import IdentityRestorer, LexiconRestorer, Restorer
 
 DEFAULT_RAW = Path("data/real/raw.txt")
 DEFAULT_OUT = Path("data/real/annotated.jsonl")

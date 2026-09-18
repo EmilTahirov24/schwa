@@ -17,10 +17,10 @@ import argparse
 import sys
 from pathlib import Path
 
-from duzelt.alphabet import az_lower
-from duzelt.context import END, START, ContextModel
-from duzelt.lexicon import Lexicon
-from duzelt.tokenize import key_of, words_of
+from schwa.alphabet import az_lower
+from schwa.context import END, START, ContextModel
+from schwa.lexicon import Lexicon
+from schwa.tokenize import key_of, words_of
 
 DEFAULT_TRAIN = Path("data/processed/train.txt")
 DEFAULT_LEXICON = Path("data/processed/lexicon.jsonl")

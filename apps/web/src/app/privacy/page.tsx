@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "duzelt — privacy",
-  description: "What the duzelt service and browser extension do with the text you give them.",
+  title: "schwa — privacy",
+  description: "What the schwa service and browser extension do with the text you give them.",
 };
 
 export default function PrivacyPage() {
@@ -11,7 +11,7 @@ export default function PrivacyPage() {
       <header>
         <h1 className="text-2xl font-semibold tracking-tight">Privacy</h1>
         <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-          duzelt — Azerbaijani diacritic restoration
+          schwa — Azerbaijani diacritic restoration
         </p>
       </header>
 
@@ -48,9 +48,9 @@ export default function PrivacyPage() {
           All of this is verifiable:{" "}
           <a
             className="underline underline-offset-2"
-            href="https://github.com/EmilTahirov24/duzelt"
+            href="https://github.com/EmilTahirov24/schwa"
           >
-            github.com/EmilTahirov24/duzelt
+            github.com/EmilTahirov24/schwa
           </a>
           .
         </p>

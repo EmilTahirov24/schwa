@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import pytest
-from duzelt.context import END, START, UNKNOWN, ContextModel
-from duzelt.lexicon import Lexicon
-from duzelt.restore import ContextRestorer
-from duzelt.tokenize import key_of
+from schwa.context import END, START, UNKNOWN, ContextModel
+from schwa.lexicon import Lexicon
+from schwa.restore import ContextRestorer
+from schwa.tokenize import key_of
 
 # "qiz" is genuinely ambiguous: "qız" (girl) and "qiz" both occur, and which one is meant
 # shows in the neighbours.

@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import re
 
-from duzelt.alphabet import az_lower, strip_diacritics
+from schwa.alphabet import az_lower, strip_diacritics
 
 __all__ = ["iter_words", "key_of", "words_of"]
 

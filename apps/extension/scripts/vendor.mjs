@@ -26,7 +26,7 @@ const MODELS = [
   ["models/tagger.int8.onnx", "model/tagger.onnx"],
   ["models/tagger.int8.json", "model/tagger.json"],
   // Built by scripts/build_bundle.py: the words the training text was unanimous about.
-  ["packages/core/duzelt/data/lexicon.tsv.gz", "model/lexicon.tsv.gz"],
+  ["packages/core/schwa/data/lexicon.tsv.gz", "model/lexicon.tsv.gz"],
 ];
 
 function copy(from, to) {

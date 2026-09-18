@@ -1,6 +1,6 @@
 """The torch side of the character tagger: the network, batching and checkpoints.
 
-Kept apart from :mod:`duzelt.tagger` so that importing the package never imports torch.
+Kept apart from :mod:`schwa.tagger` so that importing the package never imports torch.
 """
 
 from __future__ import annotations
@@ -11,7 +11,7 @@ from pathlib import Path
 import torch
 from torch import nn
 
-from duzelt.tagger import (
+from schwa.tagger import (
     CharVocabulary,
     TaggerConfig,
     config_from_dict,

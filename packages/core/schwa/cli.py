@@ -1,7 +1,7 @@
 """Command line entry point.
 
-    duzelt "sence neden basliyaq"
-    cat notes.txt | duzelt
+    schwa "sence neden basliyaq"
+    cat notes.txt | schwa
 
 The model that ships with the package is used unless ``--lexicon`` points somewhere else,
 which is how a freshly trained model gets tried out before it is bundled.
@@ -14,16 +14,16 @@ import os
 import sys
 from pathlib import Path
 
-from duzelt.bundled import MissingBundle, default_restorer
-from duzelt.lexicon import Lexicon
-from duzelt.restore import LexiconRestorer, Restorer
+from schwa.bundled import MissingBundle, default_restorer
+from schwa.lexicon import Lexicon
+from schwa.restore import LexiconRestorer, Restorer
 
-ENV_LEXICON = "DUZELT_LEXICON"
+ENV_LEXICON = "SCHWA_LEXICON"
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="duzelt",
+        prog="schwa",
         description="Restore Azerbaijani diacritics in text typed without them.",
     )
     parser.add_argument("text", nargs="*", help="text to fix; read from stdin when omitted")

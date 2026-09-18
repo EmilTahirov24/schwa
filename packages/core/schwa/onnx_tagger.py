@@ -11,7 +11,7 @@ import json
 from collections.abc import Sequence
 from pathlib import Path
 
-from duzelt.tagger import (
+from schwa.tagger import (
     CharVocabulary,
     TaggerConfig,
     TaggerRestorer,
@@ -82,7 +82,7 @@ def load_onnx_restorer(model_path: Path) -> TaggerRestorer:
 
 def write_sidecar(model_path: Path, vocabulary: CharVocabulary, config: TaggerConfig) -> Path:
     """Store what the ONNX graph does not carry: the character ids and the window sizes."""
-    from duzelt.tagger import config_to_dict
+    from schwa.tagger import config_to_dict
 
     path = sidecar_path(model_path)
     path.write_text(

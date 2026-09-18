@@ -4,11 +4,11 @@
 
 ### Added
 
-- The Python package carries the model: `pip install "duzelt[onnx]"` and `restore()` works
+- The Python package carries the model: `pip install "schwa-az[onnx]"` and `restore()` works
   with nothing to download and no flags to pass.
 - The browser extension carries it too, so text is restored inside the browser and is not
   sent anywhere. The service remains as a fallback.
-- `duzelt` command line tool, FastAPI service, demo page, Chrome extension.
+- `schwa` command line tool, FastAPI service, demo page, Chrome extension.
 - Four restorers, measured against each other: lexicon, context model, character tagger, and
   the hybrid of the tagger and the lexicon.
 

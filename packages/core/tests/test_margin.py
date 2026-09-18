@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import pytest
-from duzelt.context import START, ContextModel
-from duzelt.lexicon import Lexicon
-from duzelt.restore import ContextRestorer
+from schwa.context import START, ContextModel
+from schwa.lexicon import Lexicon
+from schwa.restore import ContextRestorer
 
 TRAINING = ["Qız gəldi."] * 90 + ["Qiz sözü qədimdir."] * 10
 

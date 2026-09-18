@@ -15,8 +15,8 @@ import sys
 import time
 from pathlib import Path
 
-from duzelt.alphabet import is_foldable, strip_diacritics, to_labels
-from duzelt.onnx_tagger import load_onnx_predictor, sidecar_path
+from schwa.alphabet import is_foldable, strip_diacritics, to_labels
+from schwa.onnx_tagger import load_onnx_predictor, sidecar_path
 
 DEFAULT_IN = Path("models/tagger.onnx")
 DEFAULT_OUT = Path("models/tagger.int8.onnx")

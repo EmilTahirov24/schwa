@@ -16,7 +16,7 @@ const web = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const extension = resolve(web, "..", "extension");
 
 const COPIES = [
-  [join(extension, "lib"), join(web, "src", "lib", "duzelt"), (name) => name.endsWith(".js")],
+  [join(extension, "lib"), join(web, "src", "lib", "schwa"), (name) => name.endsWith(".js")],
   [join(extension, "vendor"), join(web, "public", "ort"), () => true],
   [join(extension, "model"), join(web, "public", "model"), () => true],
 ];

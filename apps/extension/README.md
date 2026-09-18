@@ -1,4 +1,4 @@
-# Düzəlt — browser extension
+# Schwa — browser extension
 
 Restores Azerbaijani letters in whatever you are typing: select the text and use the context
 menu, or press `Ctrl+Shift+E` in the field you are writing in.

@@ -3,13 +3,13 @@
 from __future__ import annotations
 
 import pytest
-from duzelt.alphabet import strip_diacritics
-from duzelt.lexicon import Lexicon
-from duzelt.metrics import evaluate
-from duzelt.restore import IdentityRestorer, LexiconRestorer, restore_case
-from duzelt.tokenize import key_of, words_of
 from hypothesis import given
 from hypothesis import strategies as st
+from schwa.alphabet import strip_diacritics
+from schwa.lexicon import Lexicon
+from schwa.metrics import evaluate
+from schwa.restore import IdentityRestorer, LexiconRestorer, restore_case
+from schwa.tokenize import key_of, words_of
 
 SENTENCES = [
     "Səncə nədən başlayaq?",

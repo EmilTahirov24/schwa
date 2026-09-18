@@ -1,6 +1,6 @@
 """Tests for the model that ships with the package.
 
-The whole point of the bundle is that `pip install duzelt` restores text on the first line of
+The whole point of the bundle is that `pip install schwa-az` restores text on the first line of
 code, so these tests check exactly that path. They skip where the bundle was not built, which
 is the case in a fresh clone before `poe bundle` has run.
 """
@@ -10,9 +10,9 @@ from __future__ import annotations
 import gzip
 
 import pytest
-from duzelt import bundled
-from duzelt.alphabet import strip_diacritics
-from duzelt.lexicon import Lexicon
+from schwa import bundled
+from schwa.alphabet import strip_diacritics
+from schwa.lexicon import Lexicon
 
 bundle = pytest.mark.skipif(not bundled.is_bundled(), reason="run `poe bundle` first")
 

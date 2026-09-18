@@ -36,12 +36,12 @@ apps/extension/vendor/
 apps/extension/model/
 
 # The model bundled into the Python package, built by scripts/build_bundle.py
-packages/core/duzelt/data/
+packages/core/schwa/data/
 
 # Build output
 dist/
 
 # The demo page's copies of the extension's code, runtime and model (apps/web/scripts/sync.mjs)
-apps/web/src/lib/duzelt/
+apps/web/src/lib/schwa/
 apps/web/public/ort/
 apps/web/public/model/

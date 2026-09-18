@@ -6,7 +6,7 @@ review stalls, so each one below names the exact feature it serves.
 
 ## Name
 
-Düzəlt — Azerbaijani diacritics
+Schwa — Azerbaijani diacritics
 
 ## Short description (132 characters)
 
@@ -30,7 +30,7 @@ spelling.
 The model runs inside your browser. Your text is not sent to any server, and the extension
 works with no connection at all.
 
-Open source: https://github.com/EmilTahirov24/duzelt
+Open source: https://github.com/EmilTahirov24/schwa
 
 ## Single purpose
 

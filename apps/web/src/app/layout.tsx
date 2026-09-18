@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "duzelt — Azərbaycan hərflərini bərpa edir",
+  title: "schwa — Azərbaycan hərflərini bərpa edir",
   description:
     "Restores Azerbaijani diacritics in text typed without them: sence neden basliyaq becomes səncə nədən başlayaq.",
 };

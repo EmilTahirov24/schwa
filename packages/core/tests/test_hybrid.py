@@ -5,9 +5,9 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 import pytest
-from duzelt.alphabet import strip_diacritics
-from duzelt.lexicon import Lexicon
-from duzelt.restore import HybridRestorer, IdentityRestorer
+from schwa.alphabet import strip_diacritics
+from schwa.lexicon import Lexicon
+from schwa.restore import HybridRestorer, IdentityRestorer
 
 # "sulaveri" is unanimous in training; "qiz" has two real readings; "tsxenitskali" is unknown.
 TRAINING = (
@@ -71,7 +71,7 @@ def test_it_passes_whole_batches_to_the_tagger(lexicon: Lexicon):
 
 
 def test_the_context_model_can_take_the_ambiguous_words(lexicon: Lexicon):
-    from duzelt.context import END, START, ContextModel
+    from schwa.context import END, START, ContextModel
 
     model = ContextModel()
     for _ in range(20):

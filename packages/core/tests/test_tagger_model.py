@@ -10,7 +10,7 @@ import pytest
 
 torch = pytest.importorskip("torch")
 
-from duzelt._tagger_model import (  # noqa: E402
+from schwa._tagger_model import (  # noqa: E402
     CharTagger,
     _window_bounds,
     encode_batch,
@@ -18,7 +18,7 @@ from duzelt._tagger_model import (  # noqa: E402
     predict_labels,
     save_checkpoint,
 )
-from duzelt.tagger import CharVocabulary, TaggerConfig, TaggerRestorer  # noqa: E402
+from schwa.tagger import CharVocabulary, TaggerConfig, TaggerRestorer  # noqa: E402
 
 VOCABULARY = CharVocabulary(list("abcdefghijklmnopqrstuvwxyz "))
 CONFIG = TaggerConfig(embedding=8, hidden=8, layers=1, dropout=0.0, window=16, overlap=4)
@@ -64,7 +64,7 @@ class TestPrediction:
         assert set(labels[0]) <= {0, 1}
 
     def test_an_untrained_model_still_only_changes_diacritics(self, model: CharTagger):
-        from duzelt.alphabet import strip_diacritics
+        from schwa.alphabet import strip_diacritics
 
         restorer = TaggerRestorer(
             lambda texts: predict_labels(model, VOCABULARY, texts, CONFIG), CONFIG

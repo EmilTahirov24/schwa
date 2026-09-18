@@ -17,7 +17,7 @@ The Wikipedia dump belongs in `data/raw/`; nothing under `data/` or `models/` is
 ## Layout
 
 - `packages/core` — the library. No heavy dependency at import time: torch and onnxruntime are
-  imported inside the functions that need them, so `pip install duzelt` stays small.
+  imported inside the functions that need them, so `pip install schwa-az` stays small.
 - `packages/api` — FastAPI service.
 - `apps/web`, `apps/extension` — demo page and Chrome extension.
 - `scripts` — the pipeline, one step per file, each runnable on its own.

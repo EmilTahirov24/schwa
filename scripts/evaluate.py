@@ -13,11 +13,11 @@ import sys
 import time
 from pathlib import Path
 
-from duzelt.alphabet import strip_diacritics
-from duzelt.context import ContextModel
-from duzelt.lexicon import Lexicon
-from duzelt.metrics import evaluate
-from duzelt.restore import (
+from schwa.alphabet import strip_diacritics
+from schwa.context import ContextModel
+from schwa.lexicon import Lexicon
+from schwa.metrics import evaluate
+from schwa.restore import (
     ContextRestorer,
     HybridRestorer,
     IdentityRestorer,
@@ -49,7 +49,7 @@ def build_systems(
                 systems.append(restorer)
 
     if tagger_path is not None and tagger_path.exists():
-        from duzelt.tagger import TaggerRestorer
+        from schwa.tagger import TaggerRestorer
 
         tagger = TaggerRestorer.from_checkpoint(tagger_path)
         systems.append(tagger)

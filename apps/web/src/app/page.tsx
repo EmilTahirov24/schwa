@@ -76,7 +76,7 @@ export default function Page() {
     <main className="mx-auto flex min-h-screen max-w-3xl flex-col gap-8 px-4 py-12 sm:px-6">
       <header className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">duzelt</h1>
+          <h1 className="text-3xl font-semibold tracking-tight">schwa</h1>
           <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">{text.tagline}</p>
         </div>
         <button
@@ -209,10 +209,10 @@ export default function Page() {
         <p className="leading-relaxed">{text.ambiguity}</p>
         <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-neutral-500 dark:text-neutral-500">
           <a
-            href="https://github.com/EmilTahirov24/duzelt"
+            href="https://github.com/EmilTahirov24/schwa"
             className="underline underline-offset-2 hover:text-neutral-900 dark:hover:text-neutral-100"
           >
-            github.com/EmilTahirov24/duzelt
+            github.com/EmilTahirov24/schwa
           </a>
           {modelState === "ready" && <span>{text.local}</span>}
           {modelState === "failed" && <span>{text.modelFailed}</span>}

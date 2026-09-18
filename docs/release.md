@@ -26,11 +26,11 @@ The test split is scored once per released model, not during development.
 ## The Python package
 
 1. Bump `version` in `packages/core/pyproject.toml`.
-2. `uv build --package duzelt --out-dir dist`
+2. `uv build --package schwa-az --out-dir dist`
 3. Check the wheel in a clean environment:
    ```bash
-   uv run --no-project --with "dist/duzelt-<version>-py3-none-any.whl[onnx]" \
-     python -c "from duzelt import restore; print(restore('sence neden'))"
+   uv run --no-project --with "dist/schwa_az-<version>-py3-none-any.whl[onnx]" \
+     python -c "from schwa import restore; print(restore('sence neden'))"
    ```
 4. `uv publish --token <pypi token>`
 
@@ -54,7 +54,7 @@ host but files. It lives on GitHub Pages, served from the `gh-pages` branch.
 
 ```bash
 cd apps/extension && npm run vendor           # model + runtime, if not already there
-cd ../web && NEXT_PUBLIC_BASE_PATH=/duzelt npm run build
+cd ../web && NEXT_PUBLIC_BASE_PATH=/schwa npm run build
 # publish apps/web/out, plus an empty .nojekyll, as the gh-pages branch
 ```
 
@@ -67,7 +67,7 @@ quietly, and leave the page stuck on "loading the model".
 
 ## The service
 
-The optional HTTP service picks its restorer from `DUZELT_TAGGER` and `DUZELT_LEXICON`.
+The optional HTTP service picks its restorer from `SCHWA_TAGGER` and `SCHWA_LEXICON`.
 `/v1/info` reports which one is loaded, so after every deployment that endpoint is the check:
 if it says `lexicon` where it should say `hybrid`, the model did not make it into the image.
 

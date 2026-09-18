@@ -1,5 +1,5 @@
 [project]
-name = "duzelt"
+name = "schwa-az"
 version = "0.1.0.dev0"
 description = "Restore Azerbaijani diacritics in text typed without them"
 readme = "README.md"
@@ -20,9 +20,13 @@ dependencies = []
 # The tagger needs a runtime; without it the package falls back to the lexicon alone.
 onnx = ["onnxruntime>=1.17", "numpy>=1.26"]
 
+[project.scripts]
+schwa = "schwa.cli:main"
+
 [project.urls]
-Homepage = "https://github.com/EmilTahirov24/duzelt"
-Issues = "https://github.com/EmilTahirov24/duzelt/issues"
+Homepage = "https://emiltahirov24.github.io/schwa/"
+Source = "https://github.com/EmilTahirov24/schwa"
+Issues = "https://github.com/EmilTahirov24/schwa/issues"
 
 [build-system]
 requires = ["hatchling"]
@@ -30,7 +34,7 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build]
 # The bundled model is generated, so it is not in git and has to be named explicitly.
-artifacts = ["duzelt/data/*"]
+artifacts = ["schwa/data/*"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["duzelt"]
+packages = ["schwa"]

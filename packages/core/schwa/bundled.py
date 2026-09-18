@@ -1,14 +1,14 @@
 """The model that ships with the package.
 
-The point of this module is that ``pip install duzelt`` is enough:
+The point of this module is that ``pip install schwa-az`` is enough:
 
-    >>> from duzelt import restore
+    >>> from schwa import restore
     >>> restore("sence neden basliyaq")
     'səncə nədən başlayaq'
 
 Two files travel with the package — the quantised tagger and the part of the lexicon that
 can be applied without context. Loading them is deferred until the first call and cached
-afterwards, so importing ``duzelt`` stays instant.
+afterwards, so importing ``schwa`` stays instant.
 """
 
 from __future__ import annotations
@@ -18,8 +18,8 @@ from collections import Counter
 from functools import lru_cache
 from pathlib import Path
 
-from duzelt.lexicon import Lexicon
-from duzelt.restore import HybridRestorer, LexiconRestorer, Restorer
+from schwa.lexicon import Lexicon
+from schwa.restore import HybridRestorer, LexiconRestorer, Restorer
 
 DATA = Path(__file__).parent / "data"
 MODEL = DATA / "tagger.onnx"
@@ -65,7 +65,7 @@ def default_restorer() -> Restorer:
         return LexiconRestorer(lexicon)
 
     try:
-        from duzelt.onnx_tagger import load_onnx_restorer
+        from schwa.onnx_tagger import load_onnx_restorer
     except ImportError:
         return LexiconRestorer(lexicon)
 

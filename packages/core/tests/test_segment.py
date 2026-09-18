@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from duzelt.segment import split_sentences
+from schwa.segment import split_sentences
 
 
 def test_splits_on_sentence_punctuation():

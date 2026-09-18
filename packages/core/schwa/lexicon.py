@@ -12,8 +12,8 @@ from collections import Counter, defaultdict
 from collections.abc import Iterable, Iterator
 from pathlib import Path
 
-from duzelt.alphabet import az_lower
-from duzelt.tokenize import key_of, words_of
+from schwa.alphabet import az_lower
+from schwa.tokenize import key_of, words_of
 
 __all__ = ["Lexicon"]
 

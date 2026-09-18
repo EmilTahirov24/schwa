@@ -10,9 +10,9 @@ from __future__ import annotations
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 
-from duzelt.alphabet import strip_diacritics
-from duzelt.lexicon import Lexicon
-from duzelt.tokenize import iter_words, key_of
+from schwa.alphabet import strip_diacritics
+from schwa.lexicon import Lexicon
+from schwa.tokenize import iter_words, key_of
 
 __all__ = ["Scores", "evaluate"]
 

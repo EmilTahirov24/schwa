@@ -12,7 +12,7 @@ import { changesBetween } from "./lib/changes.js";
 import { localTagger } from "./lib/local.js";
 
 const DEFAULT_API = "http://127.0.0.1:8000";
-const MENU_ID = "duzelt-fix-selection";
+const MENU_ID = "schwa-fix-selection";
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from duzelt.tokenize import iter_words
+from schwa.tokenize import iter_words
 
 __all__ = ["Change", "changes_between"]
 

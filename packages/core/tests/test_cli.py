@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import pytest
-from duzelt.cli import ENV_LEXICON, main
-from duzelt.lexicon import Lexicon
+from schwa.cli import ENV_LEXICON, main
+from schwa.lexicon import Lexicon
 
 
 @pytest.fixture
@@ -33,9 +33,9 @@ def test_takes_the_lexicon_from_the_environment(lexicon_file, capsys, monkeypatc
 
 
 def test_it_uses_the_bundled_model_when_nothing_is_configured(capsys, monkeypatch):
-    # The whole point of bundling: `duzelt "sence"` works on a fresh install.
+    # The whole point of bundling: `schwa "sence"` works on a fresh install.
     pytest.importorskip("onnxruntime")
-    from duzelt import bundled
+    from schwa import bundled
 
     if not bundled.is_bundled():
         pytest.skip("run `poe bundle` first")
@@ -46,7 +46,7 @@ def test_it_uses_the_bundled_model_when_nothing_is_configured(capsys, monkeypatc
 
 
 def test_it_explains_itself_when_there_is_no_bundle(capsys, monkeypatch):
-    from duzelt import bundled, cli
+    from schwa import bundled, cli
 
     monkeypatch.delenv(ENV_LEXICON, raising=False)
     monkeypatch.setattr(cli, "default_restorer", _raise_missing_bundle)
@@ -57,7 +57,7 @@ def test_it_explains_itself_when_there_is_no_bundle(capsys, monkeypatch):
 
 
 def _raise_missing_bundle():
-    from duzelt.bundled import MissingBundle
+    from schwa.bundled import MissingBundle
 
     raise MissingBundle("no bundle in this installation")
 

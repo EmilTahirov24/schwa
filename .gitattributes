@@ -1,0 +1,11 @@
+# Every text file is stored and checked out with LF, whatever the machine. Without this, a
+# Windows checkout converts on every commit and git warns about it each time.
+* text=auto eol=lf
+
+# Binaries are never touched.
+*.png binary
+*.ico binary
+*.onnx binary
+*.gz binary
+*.wasm binary
+*.bundle binary

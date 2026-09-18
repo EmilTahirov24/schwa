@@ -233,3 +233,23 @@ committed. The extension and the demo page copy their model from it.
 distribution provably the same model, lets CI run the parity tests, and makes
 `pip install` from the repository work before any release. The training data and the float
 checkpoints stay out: they are large, and a command rebuilds them.
+
+## 18. Web text is a second test set, measured as it comes
+
+**Context.** Every number described Wikipedia. The hand-annotated set of real messages is
+still to be made, and will be small; a large sample of text that is not an encyclopedia was
+needed first.
+
+**Decision.** Stream the first 400 MB of CC-100's Azerbaijani text, drop every sentence that
+also occurs in Wikipedia, and split the rest by document into train, dev and test. In train
+and dev a sentence of 25 letters or more must also contain ə; the test split is kept as it
+comes.
+
+**Why.** The ə filter was meant to keep out text typed without diacritics, and Turkish
+labelled as Azerbaijani: either would make a wrong reference. Read, what it dropped was
+mostly genuine sentences that simply have no ə - as 5.8% of the long sentences in
+Wikipedia's dev split do. On the test split that made it a bias rather than a safeguard, so
+it was taken off there: 3,828 sentences came back, and the hybrid's accuracy on ambiguous
+words moved from 93.25% to 93.22%, far inside its interval. In train and dev it stays, where
+losing a few good sentences costs nothing. What web text cannot stand in for is chat: it is
+still edited, which is why the hand-annotated set remains the last missing measurement.

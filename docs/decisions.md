@@ -124,3 +124,29 @@ a synthetic input event only where that fails.
 **Why.** The page sees the same events it would see from a human typing, so its state stays
 correct, and the browser's undo stack keeps working: `Ctrl+Z` puts back what you wrote.
 
+
+## 11. The tagger and the lexicon are combined; the context model is left out of it
+
+**Context.** Once the tagger existed, the obvious move was to stack everything.
+
+**Decision.** The lexicon overrules the tagger where it is unanimous and well attested. The
+context model is not part of the combination.
+
+**Why.** Measured, not assumed. The lexicon override is worth 1.4 points of whole-sentence
+accuracy, because the tagger garbles rare names the training text is unanimous about
+(`Sulaveri` against nine occurrences of `Şulaveri`). Adding the context model on top dragged
+accuracy on ambiguous words from 93.8% down to its own 85.1% — the tagger turned out to be
+the better judge of exactly the words the context model was built for. The context model
+stays in the repository as a measured baseline, not as part of the product.
+
+## 12. The shipped model is quantised to int8
+
+**Context.** The browser extension can only carry the model if the model is small.
+
+**Decision.** Ship the int8 ONNX file, 2.3 MB.
+
+**Why.** It is 3.9× smaller and 1.6× faster than the float version and loses 0.01 points of
+accuracy, measured on 3,000 dev sentences. That trade turns "send your text to a server" into
+"the model runs in your browser", which is the stronger product and the stronger privacy
+claim at once.
+

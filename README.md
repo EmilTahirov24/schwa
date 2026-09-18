@@ -40,32 +40,45 @@ Wikipedia dump ──► articles ──► sentences ──┬──► lexicon
                                                        evaluation ◄───────────┘
 ```
 
-Three systems, measured the same way:
+Four systems, measured the same way:
 
 | System | What it does |
 | --- | --- |
 | `lexicon` | always picks the spelling seen most often in training |
 | `context` | scores each candidate spelling by the words around it |
 | `tagger` | a character-level BiLSTM; it does not need to have seen the word before |
+| `hybrid` | the tagger, overruled where the training text was unanimous about a word |
+
+The last one exists because the first and the third fail in opposite places. The tagger reads
+letters rather than vocabulary, so it handles words nothing is known about — but it still
+garbled names it had seen only a few times, writing `Sulaveri` where the training text says
+`Şulaveri` nine times out of nine. Letting the lexicon overrule it on exactly those words,
+and nowhere else, is worth 1.4 points of whole-sentence accuracy.
 
 ## What I measured
 
-Dev split, 172,034 sentences from articles never seen in training:
+Test split, 172,328 sentences, scored once, from articles never seen in training:
 
-| System | Ambiguous word accuracy | Word accuracy | CER | Sentence accuracy | ms / sentence |
-| --- | --- | --- | --- | --- | --- |
-| identity | 41.0% | 36.5% | 14.56% | 3.7% | 0.00 |
-| lexicon | 79.2% | 97.1% | 0.60% | 72.1% | 0.05 |
-| context | 85.0% | 97.4% | 0.56% | 74.2% | 0.06 |
-| **tagger** | **93.8%** | **98.7%** | **0.20%** | **86.4%** | 0.31 |
+| System | Ambiguous word accuracy | Word accuracy | CER | Sentence accuracy |
+| --- | --- | --- | --- | --- |
+| identity | 40.1% | 36.0% | 14.72% | 3.5% |
+| lexicon | 79.3% | 97.1% | 0.59% | 71.9% |
+| context | 85.1% | 97.4% | 0.55% | 74.0% |
+| tagger | 93.8% | 98.7% | 0.19% | 86.7% |
+| **hybrid** | **93.8%** | **98.9%** | **0.16%** | **88.1%** |
+
+Dev comes out within 0.2 points of this everywhere, which is the point of having kept the two
+apart: nothing here was tuned against the split it is reported on.
 
 Corpus: 187,969 articles → 2,947,943 sentences. The lexicon holds 486,374 typed forms, of
-which 2,184 are genuinely ambiguous; those account for 96,077 of the 2,202,231 words in the
-dev split, or 4.4%. Another 3.2% of the words were never seen in training at all — the gap
-between the word models and the tagger is largely those.
+which 2,184 are genuinely ambiguous; those account for 4.4% of the words in the dev split.
+Another 3.2% were never seen in training at all — that is where the tagger pulls ahead of
+the word models, because it reads letters rather than vocabulary.
 
-The tagger is a 2.3M-parameter BiLSTM trained for two epochs over the full corpus, 9 MB as
-a checkpoint and the same as ONNX. It answers 0.3 ms per sentence on a CPU.
+The tagger is a 2.3M-parameter BiLSTM trained for two epochs over the full corpus. Quantised
+to int8 it is **2.3 MB**, 3.9× smaller and 1.6× faster than the float version, and loses 0.01
+points of accuracy — which is what lets the browser extension carry the model instead of
+sending your text anywhere.
 
 Accuracy on **ambiguous words** is the number that matters. Most words are unambiguous once
 the diacritics are gone, so overall word accuracy is already high before any model exists.

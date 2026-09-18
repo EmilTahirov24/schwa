@@ -31,6 +31,7 @@ dev = [
 train = [
     "numpy>=2.5.2",
     "onnx>=1.22.0",
+    "pillow>=12.3.0",
     "torch>=2.6.0",
 ]
 

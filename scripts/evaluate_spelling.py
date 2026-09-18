@@ -22,12 +22,12 @@ import sys
 import time
 from pathlib import Path
 
+from results_page import write_section
 from schwa.lexicon import Lexicon
 from schwa.spelling import LETTERS, Speller
 from schwa.tokenize import key_of, words_of
 
 DATA = Path("data/processed")
-RESULTS = Path("docs/results.md")
 
 
 def typo(key: str, rng: random.Random) -> str:
@@ -82,6 +82,13 @@ def false_alarms(speller: Speller, sentences: list[str]) -> tuple[float, int]:
     words = sum(len(words_of(sentence)) for sentence in sentences)
     flagged = sum(len(speller.check(sentence)) for sentence in sentences)
     return flagged / words, words
+
+
+def plain_false_alarms(speller: Speller, sentences: list[str]) -> float:
+    """The same, for a bare word list: any word of three letters or more it has not seen
+    `min_count` times is underlined. The baseline the checker's rules are measured against."""
+    keys = [key_of(word) for sentence in sentences for word in words_of(sentence)]
+    return sum(1 for key in keys if len(key) >= 3 and not speller.known(key)) / len(keys)
 
 
 def main() -> int:
@@ -151,6 +158,7 @@ def main() -> int:
             "suffix_stems": stems,
             "suffixes": len(suffixes[min_count, stems]),
             "clean_words": checked,
+            "plain_word_list_false_alarms": plain_false_alarms(speller, clean),
             "vocabulary": sum(1 for _, count in base.words.values() if count >= min_count),
             "one_edit": one,
             "two_edits": two,
@@ -174,7 +182,6 @@ def main() -> int:
 
 def write_results(split: str, row: dict, args: argparse.Namespace) -> None:
     section = (
-        f"### spelling ({split})\n\n"
         f"Synthetic typos in real words from the {split} split; {args.typos} with one edit, "
         f"{args.typos // 4} with two. Vocabulary: {row['vocabulary']:,} keys seen at least "
         f"{row['min_count']} times.\n\n"
@@ -182,12 +189,11 @@ def write_results(split: str, row: dict, args: argparse.Namespace) -> None:
         f"| One edit | {row['one_edit']['top1']:.1%} | {row['one_edit']['top3']:.1%} |\n"
         f"| Two edits | {row['two_edits']['top1']:.1%} | {row['two_edits']['top3']:.1%} |\n\n"
         f"False alarms on clean text: {row['false_alarms']:.2%} of the "
-        f"{row['clean_words']:,} words in {args.clean:,} sentences.\n"
+        f"{row['clean_words']:,} words in {args.clean:,} sentences. A plain word list, "
+        f"underlining every word of three letters or more seen fewer than {row['min_count']} "
+        f"times, would flag {row['plain_word_list_false_alarms']:.2%} of the same words.\n"
     )
-    previous = RESULTS.read_text(encoding="utf-8") if RESULTS.exists() else "# Results\n\n"
-    head, *sections = previous.split("### ")
-    kept = [f"### {part}" for part in sections if not part.startswith(f"spelling ({split})")]
-    RESULTS.write_text(head + "".join(kept) + "\n" + section, encoding="utf-8")
+    write_section(f"spelling ({split})", section)
 
 
 if __name__ == "__main__":

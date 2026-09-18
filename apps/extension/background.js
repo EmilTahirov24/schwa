@@ -8,6 +8,7 @@
  * moment, and only to the service you configured.
  */
 
+import { changesBetween } from "./lib/changes.js";
 import { localTagger } from "./lib/local.js";
 
 const DEFAULT_API = "http://127.0.0.1:8000";
@@ -77,22 +78,6 @@ async function restore(text) {
   return { ...(await response.json()), local: false };
 }
 
-/** Word spans that differ between the two texts, matching what the service returns. */
-function changesBetween(typed, restored) {
-  const changes = [];
-  const word = /[^\W\d_]+(?:['’][^\W\d_]+)*/gu;
-
-  for (const match of typed.matchAll(word)) {
-    const start = match.index;
-    const end = start + match[0].length;
-    const after = restored.slice(start, end);
-    if (after !== match[0]) {
-      changes.push({ start, end, from: match[0], to: after });
-    }
-  }
-
-  return changes;
-}
 
 async function fixTab(tabId) {
   const [collected] = await chrome.scripting.executeScript({

@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Copied in by scripts/sync.mjs: the onnxruntime build and the extension's code, which
+    // is linted and tested where it lives.
+    "public/ort/**",
+    "src/lib/schwa/**",
   ]),
 ]);
 

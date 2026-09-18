@@ -6,24 +6,28 @@
  * is sent anywhere.
  */
 
-import { changesBetween } from "@/lib/schwa/changes.js";
 import { localRestorer } from "@/lib/schwa/local.js";
 
-export type Change = {
+/** One changed word, with where its spelling came from and how sure the model was. */
+export type Word = {
   start: number;
   end: number;
   from: string;
   to: string;
+  source: "model" | "dictionary";
+  /** Probability of the least certain letter in the word; null for dictionary words. */
+  confidence: number | null;
 };
 
-export type RestoreResult = {
+export type Restored = {
   text: string;
-  changes: Change[];
+  words: Word[];
 };
 
 export type Restorer = {
   name: string;
   restore: (text: string) => Promise<string>;
+  restoreDetailed: (text: string) => Promise<Restored>;
 };
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
@@ -33,30 +37,26 @@ export function loadRestorer(): Promise<Restorer | null> {
   return localRestorer(`${base}/model/`, `${base}/ort/`) as Promise<Restorer | null>;
 }
 
-export async function restore(restorer: Restorer, text: string): Promise<RestoreResult> {
-  const restored = await restorer.restore(text);
-  return { text: restored, changes: changesBetween(text, restored) as Change[] };
-}
-
 /**
- * Rebuild the text with some changes turned down.
+ * Rebuild the text with some words turned back to what was typed.
  *
- * Every change covers the same span in both versions - a restorer may only swap letters for
- * their accented forms - so a rejected change is just the original slice put back.
+ * Every word covers the same span in both versions - a restorer may only swap letters for
+ * their accented forms - so a rejected word is just the original slice put back.
  */
-export function applyChanges(
-  typed: string,
-  changes: Change[],
-  rejected: ReadonlySet<number>,
-): string {
+export function withRejected(typed: string, words: Word[], rejected: ReadonlySet<string>): string {
   let result = "";
   let cursor = 0;
 
-  changes.forEach((change, index) => {
-    result += typed.slice(cursor, change.start);
-    result += rejected.has(index) ? change.from : change.to;
-    cursor = change.end;
-  });
+  for (const word of words) {
+    result += typed.slice(cursor, word.start);
+    result += rejected.has(wordKey(word)) ? word.from : word.to;
+    cursor = word.end;
+  }
 
   return result + typed.slice(cursor);
+}
+
+/** A word's identity across re-renders: where it starts and what was typed there. */
+export function wordKey(word: Pick<Word, "start" | "from">): string {
+  return `${word.start}:${word.from}`;
 }

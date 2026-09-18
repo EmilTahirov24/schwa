@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "schwa — privacy",
@@ -56,9 +57,9 @@ export default function PrivacyPage() {
         </p>
       </section>
 
-      <a href="/" className="text-sm underline underline-offset-2">
+      <Link href="/" className="text-sm underline underline-offset-2">
         ← back
-      </a>
+      </Link>
     </main>
   );
 }

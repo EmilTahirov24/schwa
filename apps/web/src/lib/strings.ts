@@ -2,66 +2,94 @@
 
 export type Language = "az" | "en";
 
+export type Strings = (typeof strings)[Language];
+
 export const strings = {
   az: {
-    tagline: "Azərbaycan hərflərini bərpa edir",
-    intro:
-      "Klaviaturada ə, ı, ğ, ş, ç, ö, ü yoxdursa, mətn hərfsiz yazılır. Bu alət onları geri qaytarır. Dəyişən sözlər altdan xətlənir — razı deyilsənsə, üstünə klikləyib əvvəlki halına qaytar.",
-    placeholder: "Mətni bura yaz və ya yapışdır",
-    restore: "Düzəlt",
-    working: "İşləyir…",
-    example: "Nümunə",
-    clear: "Təmizlə",
+    heroTitle: "Hərfsiz yazılmış mətni düzəldir.",
+    heroLead:
+      "Klaviaturada ə, ı, ğ, ş, ç, ö, ü yoxdursa, mətn hərfsiz yazılır. Schwa onları kontekstə baxaraq geri qaytarır.",
+    heroPrivate: "Model sənin brauzerində işləyir — yazdığın heç yerə göndərilmir.",
+
+    editorTitle: "Özün yaz",
+    placeholder: "Bura hərfsiz yaz… məsələn: sabah gorusek, sene zeng edecem",
+    examples: "Nümunələr",
     copy: "Kopyala",
     copied: "Kopyalandı",
-    result: "Nəticə",
-    changes: (count: number) => `${count} söz dəyişdi`,
-    noChanges: "Heç nə dəyişmədi",
-    offline: "Mətni emal etmək alınmadı. Səhifəni yeniləyib yenidən cəhd et.",
-    loadingModel: "Model yüklənir…",
-    local: "Model sənin brauzerində işləyir — yazdığın heç yerə göndərilmir.",
-    modelFailed: "Model yüklənmədi. Brauzerin WebAssembly-ni dəstəkləyirmi?",
+    clear: "Təmizlə",
+    restoredLetters: (count: number) => `${count} hərf bərpa olundu`,
+    nothingYet: "Yazdıqca burada düzəlmiş mətn görünəcək",
+    loading: (loaded: string, total: string) => `Model yüklənir… ${loaded} / ${total}`,
+    loadingSimple: "Model yüklənir…",
+    failed: "Model yüklənmədi. Brauzerin WebAssembly-ni dəstəkləyirmi?",
+    fromModel: (percent: number) => `model · ${percent}% əmin`,
+    fromDictionary: "lüğətdən · həmişə belə yazılır",
+    keepHint: "kliklə: yazdığın kimi saxla",
+    undoHint: "kliklə: düzəldilmiş formaya qaytar",
+
     howTitle: "Necə işləyir",
-    how: "Hər hərf üçün bir sual var: burada diakritik varmı? Yeddi hərf cütü hərfsiz yazılanda üst-üstə düşür, hər birinin isə yalnız bir alternativi var. Ona görə model mətni yenidən yazmır — yalnız hərflərə etiket qoyur. Buna görə də diakritikdən başqa heç nə dəyişə bilmir.",
+    how: "Yeddi hərf klaviaturasız yazılanda bir ASCII hərfə çevrilir və hər birinin cəmi bir alternativi var. Ona görə model cümləni yenidən yazmır — hər hərf üçün tək bir suala cavab verir: burada diakritik varmı? Nəticədə diakritikdən başqa heç nə dəyişə bilmir.",
+    ambiguityTitle: "Çətinlik haradadır",
     ambiguity:
-      "Çətinlik ondadır ki, qiz sözü həm qız, həm də qiz ola bilər. Doğru variantı yalnız yanındakı sözlər müəyyən edir.",
+      "“qiz” sözü həm “qız”, həm də “qiz” ola bilər. Hansı olduğunu yalnız yanındakı sözlər deyir — ona görə lüğət kifayət etmir, model lazımdır.",
+
     resultsTitle: "Nə qədər dəqiqdir",
     results:
-      "Rəqəmlər test setindən gəlir: 172 328 cümlə, öyrətmədə heç görünməmiş məqalələrdən, bir dəfə ölçülüb.",
+      "Test setindən: 172 328 cümlə, öyrətmədə heç görünməmiş məqalələrdən, bir dəfə ölçülüb.",
     resultsCaveat:
-      "Bu ölçmə Vikipediya mətnindədir. Gündəlik yazışmada rəqəm fərqli ola bilər — onu ölçmək növbəti işdir.",
+      "Bu ölçmə Vikipediya mətnindədir. Gündəlik yazışmada rəqəm fərqli ola bilər — onu ölçmək növbəti addımdır.",
     columnSystem: "Sistem",
     columnAmbiguous: "Çoxmənalı sözlər",
     columnSentences: "Tam düzgün cümlə",
     rowLexicon: "Lüğət",
     rowTagger: "Model",
     rowHybrid: "Model + lüğət",
+
+    getTitle: "İstifadə et",
+    getExtensionTitle: "Brauzer əlavəsi",
+    getExtension:
+      "WhatsApp Web, Instagram, Gmail — istənilən saytda mətni seç və Ctrl+Shift+E bas. Model brauzerin içindədir.",
+    getExtensionCta: "Mənbə kodu",
+    getPythonTitle: "Python",
+    getPython: "Öz layihəndə istifadə et. Model paketin içindədir, heç nə yükləmir.",
+    getSourceTitle: "Mənbə",
+    getSource: "Data, öyrətmə, ölçmələr və hər qərarın izahı — hamısı açıqdır.",
+    getSourceCta: "GitHub-da bax",
+
+    privacy: "Məxfilik",
+    madeBy: "Emil Tahirov",
   },
   en: {
-    tagline: "Restores Azerbaijani diacritics",
-    intro:
-      "Azerbaijani has seven letters a plain keyboard cannot produce, so people drop them. This puts them back. Changed words are underlined — click one to keep what you typed.",
-    placeholder: "Type or paste text here",
-    restore: "Restore",
-    working: "Working…",
-    example: "Example",
-    clear: "Clear",
+    heroTitle: "Puts the Azerbaijani letters back.",
+    heroLead:
+      "Without the right keyboard, ə, ı, ğ, ş, ç, ö and ü simply get dropped. Schwa restores them by reading the context.",
+    heroPrivate: "The model runs in your browser — nothing you type is sent anywhere.",
+
+    editorTitle: "Try it",
+    placeholder: "Type without the letters… e.g. sabah gorusek, sene zeng edecem",
+    examples: "Examples",
     copy: "Copy",
     copied: "Copied",
-    result: "Result",
-    changes: (count: number) => `${count} word${count === 1 ? "" : "s"} changed`,
-    noChanges: "Nothing changed",
-    offline: "Could not process the text. Reload the page and try again.",
-    loadingModel: "Loading the model…",
-    local: "The model runs in your browser — nothing you type is sent anywhere.",
-    modelFailed: "The model did not load. Does this browser support WebAssembly?",
+    clear: "Clear",
+    restoredLetters: (count: number) => `${count} letter${count === 1 ? "" : "s"} restored`,
+    nothingYet: "The restored text appears here as you type",
+    loading: (loaded: string, total: string) => `Loading the model… ${loaded} / ${total}`,
+    loadingSimple: "Loading the model…",
+    failed: "The model did not load. Does this browser support WebAssembly?",
+    fromModel: (percent: number) => `model · ${percent}% sure`,
+    fromDictionary: "dictionary · always spelled this way",
+    keepHint: "click to keep what you typed",
+    undoHint: "click to restore it again",
+
     howTitle: "How it works",
-    how: "Every character gets one question: does it carry a diacritic? The seven letter pairs collapse to a single ASCII letter each, and each collapsed form has exactly one alternative, so the model never rewrites the sentence — it only labels characters. That is why nothing but diacritics can change.",
+    how: "The seven letters collapse to one ASCII letter each when typed without the layout, and every collapsed letter has exactly one alternative. So the model never rewrites the sentence — it answers one question per character: does this one carry a diacritic? Nothing but diacritics can change.",
+    ambiguityTitle: "Where it gets hard",
     ambiguity:
-      "The hard part is that qiz can be either qız or qiz. Only the surrounding words decide which one is meant.",
+      "“qiz” can be “qız” (girl) or “qiz”. Only the surrounding words tell which — which is why a dictionary is not enough and a model is needed.",
+
     resultsTitle: "How accurate it is",
     results:
-      "Measured on the test split: 172,328 sentences from articles never seen in training, scored once.",
+      "Test split: 172,328 sentences from articles never seen in training, scored once.",
     resultsCaveat:
       "That is encyclopedic prose. How it does on everyday writing is the next thing to measure, not something to assume.",
     columnSystem: "System",
@@ -70,8 +98,40 @@ export const strings = {
     rowLexicon: "Dictionary",
     rowTagger: "Model",
     rowHybrid: "Model + dictionary",
-  },
-} satisfies Record<Language, Record<string, unknown>>;
 
-export const EXAMPLE =
-  "sence neden basliyaq? men dunen mektebe getdim, isiq sondu ve hec kim gelmedi. usaqlar bagcada oynayirdi.";
+    getTitle: "Use it",
+    getExtensionTitle: "Browser extension",
+    getExtension:
+      "WhatsApp Web, Instagram, Gmail — select text on any site and press Ctrl+Shift+E. The model lives inside the browser.",
+    getExtensionCta: "Source code",
+    getPythonTitle: "Python",
+    getPython: "Use it in your own project. The model ships inside the package — nothing to download.",
+    getSourceTitle: "Source",
+    getSource: "Data, training, measurements and the reasoning behind every decision — all open.",
+    getSourceCta: "See it on GitHub",
+
+    privacy: "Privacy",
+    madeBy: "Emil Tahirov",
+  },
+} as const;
+
+/**
+ * Sentences for the opening animation and the example chips. Each pair is what the model
+ * actually returns for that input - recorded from the shipped model, not written by hand.
+ */
+export const DEMO_PAIRS: ReadonlyArray<readonly [string, string]> = [
+  ["sence neden basliyaq", "səncə nədən başlıyaq"],
+  ["usaqlar bagcada oynayir", "uşaqlar bağçada oynayır"],
+  ["men bu gun mektebe getmedim", "mən bu gün məktəbə getmədim"],
+  ["telefonumu evde unutmusam", "telefonumu evdə unutmuşam"],
+  ["sabah gorusek", "sabah görüşək"],
+];
+
+export const EXAMPLES = [
+  "sence neden basliyaq?",
+  "usaqlar bagcada oynayir, men ise evde kitab oxuyuram",
+  "sabah gorusek, saat altida zeng edecem",
+  "Bakida hava cox isti idi, denize getdik",
+];
+
+export const GITHUB_URL = "https://github.com/EmilTahirov24/schwa";

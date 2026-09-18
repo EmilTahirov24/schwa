@@ -1,10 +1,11 @@
 """How much does it matter what the tagger read? Score taggers trained on different text on
 both test splits, Wikipedia and the web.
 
-Every tagger has the same architecture, settings and seed; only its training text differs.
-The comparison is the tagger alone, without the lexicon, so that nothing else in the table
-depends on Wikipedia. Intervals come from the same article- and document-level bootstrap as
-the main results, and each model is compared with the first on the same resamples.
+Every tagger has the same architecture, settings and seed; only what it read differs - which
+text, or the same text with some of it in capitals. The comparison is the tagger alone,
+without the lexicon, so that nothing else in the table depends on Wikipedia. Intervals come
+from the same article- and document-level bootstrap as the main results, and each model is
+compared with the first on the same resamples.
 
     uv run --group train python scripts/domain_shift.py \\
         --models wikipedia=models/tagger.pt web=models/tagger_web.pt both=models/tagger_both.pt
@@ -19,12 +20,32 @@ from pathlib import Path
 
 from evaluate import run
 from results_page import write_section
-from schwa.alphabet import strip_diacritics
+from schwa.alphabet import is_foldable, strip_diacritics
 from schwa.lexicon import Lexicon
 from schwa.metrics import Interval, Scores, bootstrap, evaluate
+from schwa.tokenize import iter_words, key_of
 
 DATA = Path("data/processed")
 SPLITS = {"test": "Wikipedia test", "web_test": "Web test"}
+
+
+def capitals(references: list[str], predictions: list[str]) -> tuple[int, int]:
+    """Words written entirely in capitals that could be wrong: how many, how many right.
+
+    The same words scripts/error_analysis.py counts as "all capitals".
+    """
+    total = right = 0
+    for reference, prediction in zip(references, predictions, strict=True):
+        for start, end in iter_words(reference):
+            word = reference[start:end]
+            letters = [char for char in word if char.isalpha()]
+            if len(letters) < 2 or not all(char.isupper() for char in letters):
+                continue
+            if not any(is_foldable(char) for char in key_of(word)):
+                continue
+            total += 1
+            right += word == prediction[start:end]
+    return total, right
 
 
 def cell(value: float, interval: Interval) -> str:
@@ -70,11 +91,15 @@ def main() -> int:
         typed = [strip_diacritics(sentence) for sentence in references]
 
         scores: list[Scores] = []
+        shouted: list[tuple[int, int]] = []
         for name, tagger in taggers.items():
-            scores.append(evaluate(references, run(tagger, typed), lexicon, groups=groups))
+            predictions = run(tagger, typed)
+            scores.append(evaluate(references, predictions, lexicon, groups=groups))
+            shouted.append(capitals(references, predictions))
             print(
                 f"{split:>9} {name:>10}: ambiguous {scores[-1].ambiguous_accuracy:.2%}, "
-                f"sentences {scores[-1].sentence_accuracy:.2%}",
+                f"sentences {scores[-1].sentence_accuracy:.2%}, "
+                f"capitals {shouted[-1][1] / max(shouted[-1][0], 1):.2%}",
                 flush=True,
             )
         intervals, differences = bootstrap(
@@ -86,6 +111,7 @@ def main() -> int:
             "sentences": len(references),
             "groups": len(scores[0].by_group),
             "scores": scores,
+            "capitals": shouted,
             "intervals": intervals,
             "differences": differences,
         }
@@ -94,9 +120,11 @@ def main() -> int:
         f"{SPLITS[split]}: {what}" for split in SPLITS for what in ("ambiguous", "sentences")
     )
     lines = [
-        f"The tagger alone, trained on different text: {', '.join(models.values())}. Same "
-        "architecture, settings and seed. In brackets: 95% interval from "
-        f"{args.resamples:,} bootstrap resamples of whole articles or documents.",
+        "The tagger alone, trained "
+        + ", ".join(f"{name} (`{path}`)" for name, path in models.items())
+        + ". Same architecture, settings and seed; only what it read differs. In brackets: "
+        f"95% interval from {args.resamples:,} bootstrap resamples of whole articles or "
+        "documents.",
         "",
         header + " |",
         "|---" * (1 + 2 * len(SPLITS)) + "|",
@@ -131,6 +159,20 @@ def main() -> int:
             ]
         lines.append(f"| {name} | " + " | ".join(cells) + " |")
 
+    lines += [
+        "",
+        "Words written entirely in capitals, restored right:",
+        "",
+        "| Trained on | " + " | ".join(SPLITS.values()) + " |",
+        "|---" * (1 + len(SPLITS)) + "|",
+    ]
+    for index, name in enumerate(names):
+        cells = []
+        for split in SPLITS:
+            total, right = results[split]["capitals"][index]
+            cells.append(f"{right / max(total, 1):.1%} of {total:,}")
+        lines.append(f"| {name} | " + " | ".join(cells) + " |")
+
     write_section("domain shift", "\n".join(lines))
 
     summary = {
@@ -140,6 +182,9 @@ def main() -> int:
             "models": {
                 name: {
                     **result["scores"][index].as_dict(),
+                    "capitals": dict(
+                        zip(("words", "right"), result["capitals"][index], strict=True)
+                    ),
                     "intervals": {
                         rate: [bound.low, bound.high]
                         for rate, bound in result["intervals"][index].items()

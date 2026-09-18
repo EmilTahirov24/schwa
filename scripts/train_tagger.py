@@ -5,7 +5,15 @@ one, whether it does. Characters that could not carry a diacritic are masked out
 loss: two thirds of the text is punctuation, digits and letters with no alternative, and
 learning to say "keep" there teaches nothing.
 
-    uv run --group train python scripts/train_tagger.py --sentences 200000
+The defaults are the settings of the shipped model: two epochs over the whole Wikipedia
+training split, about a quarter of an hour on a laptop GPU. Several files may be given; they
+are read in full and shuffled together.
+
+    uv run --group train python scripts/train_tagger.py
+    uv run --group train python scripts/train_tagger.py --sentences 200000   # a quick run
+    uv run --group train python scripts/train_tagger.py \\
+        --train data/processed/train.txt data/processed/web_train.txt \\
+        --dev data/processed/dev.txt data/processed/web_dev.txt --out models/tagger_both.pt
 """
 
 from __future__ import annotations
@@ -20,8 +28,9 @@ from pathlib import Path
 
 import torch
 from schwa._tagger_model import PAD_ID, CharTagger, predict_labels, save_checkpoint
-from schwa.alphabet import is_foldable, strip_diacritics, to_labels
+from schwa.alphabet import az_upper, is_foldable, strip_diacritics, to_labels
 from schwa.tagger import CharVocabulary, TaggerConfig
+from schwa.tokenize import iter_words
 from torch import nn
 
 DEFAULT_TRAIN = Path("data/processed/train.txt")
@@ -44,6 +53,28 @@ def read_sentences(path: Path, limit: int = 0) -> list[str]:
         return sentences
 
 
+def shout(sentence: str, rate: float, rng: random.Random) -> str:
+    """Now and then put the sentence, or one word of it, in capitals.
+
+    Headlines and emphasis are typed in capitals, and there the i-family turns around: a
+    plain "I" is dotted İ far more often than dotless I, while a plain "i" is usually just i.
+    Wikipedia has too few capitals to teach that, and on web text words in capitals were
+    the ones the model got wrong most often.
+    """
+    if rate <= 0:
+        return sentence
+    shouted = sentence
+    if rng.random() < rate:
+        shouted = az_upper(sentence)
+    elif rng.random() < rate:
+        spans = iter_words(sentence)
+        if spans:
+            start, end = rng.choice(spans)
+            shouted = sentence[:start] + az_upper(sentence[start:end]) + sentence[end:]
+    # Upper-casing may not change the length; if some rare character would, leave it be.
+    return shouted if len(shouted) == len(sentence) else sentence
+
+
 def encode_pair(sentence: str, vocabulary: CharVocabulary) -> tuple[list[int], list[int]]:
     """Return character ids and the target label of every position."""
     stripped, labels = to_labels(sentence)
@@ -60,8 +91,15 @@ def batches(
     batch_size: int,
     device: torch.device | str,
     shuffle: bool = True,
+    caps: float = 0.0,
+    rng: random.Random | None = None,
 ) -> Iterator[tuple[torch.Tensor, torch.Tensor]]:
-    """Yield padded batches, grouping texts of similar length to waste less padding."""
+    """Yield padded batches, grouping texts of similar length to waste less padding.
+
+    Augmentation draws from its own `rng`, so switching it on changes what the model reads
+    and nothing else: the order of the batches stays the same.
+    """
+    rng = rng or random.Random(0)
     order = list(range(len(sentences)))
     if shuffle:
         random.shuffle(order)
@@ -75,7 +113,8 @@ def batches(
 
     for start in range(0, len(order), batch_size):
         rows = [
-            encode_pair(sentences[index], vocabulary) for index in order[start : start + batch_size]
+            encode_pair(shout(sentences[index], caps, rng), vocabulary)
+            for index in order[start : start + batch_size]
         ]
         width = max(len(ids) for ids, _ in rows)
 
@@ -116,31 +155,48 @@ def decision_accuracy(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--train", type=Path, default=DEFAULT_TRAIN)
-    parser.add_argument("--dev", type=Path, default=DEFAULT_DEV)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("--train", type=Path, nargs="+", default=[DEFAULT_TRAIN])
+    parser.add_argument("--dev", type=Path, nargs="+", default=[DEFAULT_DEV])
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
-    parser.add_argument("--sentences", type=int, default=0, help="training sentences to use")
-    parser.add_argument("--dev-sentences", type=int, default=5000)
-    parser.add_argument("--epochs", type=int, default=1)
-    parser.add_argument("--batch-size", type=int, default=256)
-    parser.add_argument("--lr", type=float, default=2e-3)
-    parser.add_argument("--eval-every", type=int, default=500, help="batches between checks")
+    parser.add_argument(
+        "--sentences", type=int, default=0, help="training sentences to use from each file"
+    )
+    parser.add_argument(
+        "--dev-sentences", type=int, default=3000, help="sentences for checks, from each file"
+    )
+    parser.add_argument("--epochs", type=int, default=2)
+    parser.add_argument("--batch-size", type=int, default=512)
+    parser.add_argument("--lr", type=float, default=3e-3)
+    parser.add_argument("--eval-every", type=int, default=1000, help="batches between checks")
+    parser.add_argument(
+        "--caps",
+        type=float,
+        default=0.0,
+        help="chance of a sentence in capitals, and again of one word in capitals",
+    )
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     args = parser.parse_args()
 
-    for path in (args.train, args.dev):
+    for path in (*args.train, *args.dev):
         if not path.exists():
             print(f"missing: {path}", file=sys.stderr)
             return 1
 
     random.seed(args.seed)
+    shouting = random.Random(args.seed + 1)
     torch.manual_seed(args.seed)
 
     print("reading sentences", flush=True)
-    training = read_sentences(args.train, args.sentences)
-    development = read_sentences(args.dev, args.dev_sentences)
+    training = [
+        sentence for path in args.train for sentence in read_sentences(path, args.sentences)
+    ]
+    development = [
+        sentence for path in args.dev for sentence in read_sentences(path, args.dev_sentences)
+    ]
     print(f"{len(training)} training sentences, {len(development)} for checks", flush=True)
 
     vocabulary = CharVocabulary.from_texts(training[:200_000], min_count=50)
@@ -161,7 +217,9 @@ def main() -> int:
     model.train()
 
     for epoch in range(args.epochs):
-        for ids, targets in batches(training, vocabulary, args.batch_size, args.device):
+        for ids, targets in batches(
+            training, vocabulary, args.batch_size, args.device, caps=args.caps, rng=shouting
+        ):
             with torch.autocast("cuda", dtype=torch.bfloat16, enabled=use_amp):
                 logits = model(ids)
                 loss = loss_function(logits.reshape(-1, 2), targets.reshape(-1))

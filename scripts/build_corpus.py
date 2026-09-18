@@ -2,7 +2,8 @@
 
 The split is decided per article, never per sentence: two sentences from the same article
 can be near-copies of each other, and letting them fall on both sides of the split would
-quietly inflate every score.
+quietly inflate every score. For the same reason each split gets a `.groups` file naming the
+article of every sentence, and the confidence intervals resample articles, not sentences.
 
     uv run python scripts/build_corpus.py
 """
@@ -86,9 +87,10 @@ def main() -> int:
         return 1
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
-    files = {
-        name: (args.out_dir / f"{name}.txt").open("w", encoding="utf-8")
-        for name in ("train", "dev", "test")
+    splits = ("train", "dev", "test")
+    files = {name: (args.out_dir / f"{name}.txt").open("w", encoding="utf-8") for name in splits}
+    groups = {
+        name: (args.out_dir / f"{name}.groups").open("w", encoding="utf-8") for name in splits
     }
 
     seen: set[str] = set()
@@ -117,6 +119,7 @@ def main() -> int:
                 seen.add(fingerprint)
 
                 files[target].write(sentence + "\n")
+                groups[target].write(f"{article['id']}\n")
                 kept[target] += 1
                 if any(is_foldable(char) for char in sentence):
                     with_foldable += 1
@@ -128,7 +131,7 @@ def main() -> int:
                     flush=True,
                 )
 
-    for handle in files.values():
+    for handle in (*files.values(), *groups.values()):
         handle.close()
 
     total = sum(kept.values())

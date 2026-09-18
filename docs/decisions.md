@@ -196,3 +196,21 @@ not go - never occurs, and the checker flagged it as a typo. The corpus cannot t
 does not contain, and these are exactly the forms people use in messages. On Wikipedia they
 cost 0.2 points of typo recall. Their benefit can only be measured on real informal text,
 which is what the hand-annotated set is for.
+
+## 16. Confidence intervals resample articles, not sentences
+
+**Context.** A number from 172,328 sentences looks exact, and two systems 0.3 points apart
+look different. Whether they are depends on how much the number would move on other text of
+the same kind.
+
+**Decision.** Every rate in `docs/results.md` carries a 95% bootstrap interval, and every
+system is compared with the one above it on the same resamples. The unit of resampling is
+the article (the document, for web text), never the sentence.
+
+**Why.** Sentences from one article share its names and its topic, and a name that recurs
+through an article is restored right every time or wrong every time. Resampling sentences
+one by one treats those repeats as independent evidence and reports intervals narrower than
+the truth; a test pins that grouped resampling widens them when errors cluster. The
+comparison is paired because two intervals that overlap can still hide a consistent
+difference: scoring both systems on the same resamples and taking the interval of their
+difference answers "is the hybrid better than the tagger?" directly.

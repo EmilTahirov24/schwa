@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { stripDiacritics } from "../lib/alphabet.js";
-import { applyLexicon, keyOf, parseLexicon, restoreCase } from "../lib/hybrid.js";
+import { applyLexicon, explain, keyOf, parseLexicon, restoreCase } from "../lib/hybrid.js";
 
 const LEXICON = parseLexicon("sulaveri\tşulaveri\t9\nsence\tsəncə\t40\n");
 
@@ -57,4 +57,26 @@ test("the shipped format parses, blank lines and all", () => {
   const lexicon = parseLexicon("a\tə\t2\n\nb\tç\t3");
   assert.equal(lexicon.size, 2);
   assert.equal(lexicon.get("b"), "ç");
+});
+
+test("explain says where each changed word came from", () => {
+  const text = "Sulaveri kendi";
+  const restored = "Şulaveri kəndi";
+  const confidence = [...text].map((_, index) => (index === 10 ? 0.62 : 0.99));
+
+  const words = explain(text, restored, confidence, LEXICON);
+  assert.deepEqual(
+    words.map((word) => [word.from, word.to, word.source]),
+    [
+      ["Sulaveri", "Şulaveri", "dictionary"],
+      ["kendi", "kəndi", "model"],
+    ],
+  );
+  assert.equal(words[0].confidence, null);
+  // "kendi" is only as sure as its least certain letter: the "e" at index 10.
+  assert.equal(words[1].confidence, 0.62);
+});
+
+test("explain leaves unchanged words out", () => {
+  assert.deepEqual(explain("salam", "salam", [1, 1, 1, 1, 1], LEXICON), []);
 });

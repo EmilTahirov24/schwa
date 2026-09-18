@@ -7,7 +7,7 @@
  * nowhere else. Measured on the test split that is worth 1.4 points of whole-sentence accuracy.
  */
 
-import { azLower, azUpper, stripDiacritics } from "./alphabet.js";
+import { azLower, azUpper, isFoldable, stripDiacritics } from "./alphabet.js";
 
 /** Letters, with apostrophes inside a word - the same rule as the Python tokenizer. */
 const WORD = /[\p{L}\p{M}]+(?:['’][\p{L}\p{M}]+)*/gu;
@@ -56,6 +56,50 @@ export function applyLexicon(typed, tagged, lexicon) {
 
   return result + tagged.slice(cursor);
 }
+
+/**
+ * Every changed word, with where its spelling came from and how sure the model was.
+ *
+ * A word the lexicon decided is marked "dictionary": the training text only ever spelled it
+ * one way. Otherwise it is the model's call, and its confidence is that of its least certain
+ * letter - a word is only as sure as its weakest decision.
+ *
+ * @param text        what was typed
+ * @param restored    the final restored text
+ * @param confidence  the model's confidence per character of the typed text
+ * @param lexicon     the shipped lexicon, or null
+ */
+export function explain(text, restored, confidence, lexicon) {
+  const typed = stripDiacritics(text);
+  const words = [];
+
+  for (const match of text.matchAll(WORD)) {
+    const start = match.index;
+    const end = start + match[0].length;
+    const after = restored.slice(start, end);
+    if (after === match[0]) continue;
+
+    const fromDictionary = lexicon !== null && lexicon.has(keyOf(match[0]));
+    let least = 1;
+    if (!fromDictionary) {
+      for (let index = start; index < end; index += 1) {
+        if (isFoldable(typed[index])) least = Math.min(least, confidence[index] ?? 1);
+      }
+    }
+
+    words.push({
+      start,
+      end,
+      from: match[0],
+      to: after,
+      source: fromDictionary ? "dictionary" : "model",
+      confidence: fromDictionary ? null : least,
+    });
+  }
+
+  return words;
+}
+
 
 /** Parse the shipped lexicon: one `key<TAB>form<TAB>count` line per entry. */
 export function parseLexicon(text) {

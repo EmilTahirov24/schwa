@@ -103,3 +103,18 @@ test("it only ever changes diacritics", async () => {
     assert.equal(stripDiacritics(restored), stripDiacritics(text));
   }
 });
+
+test("confidence is the probability of the chosen label", async () => {
+  const tagger = build();
+  const { labels, confidence } = await tagger.predictDetailed(["sence"]);
+  // The fake session scores 1 against 0, so every decision is sigmoid(1) sure.
+  const sure = 1 / (1 + Math.exp(-1));
+  assert.deepEqual(labels[0], [0, 1, 0, 0, 1]);
+  for (const value of confidence[0]) assert.ok(Math.abs(value - sure) < 1e-6);
+});
+
+test("predict and predictDetailed agree on the labels", async () => {
+  const tagger = build();
+  const texts = ["sence neden", "x".repeat(40)];
+  assert.deepEqual(await tagger.predict(texts), (await tagger.predictDetailed(texts)).labels);
+});

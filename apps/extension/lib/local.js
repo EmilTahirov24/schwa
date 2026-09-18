@@ -10,7 +10,8 @@
  * path on the demo page. That is the only difference between the two.
  */
 
-import { applyLexicon, parseLexicon } from "./hybrid.js";
+import { restoreWithLabels, stripDiacritics } from "./alphabet.js";
+import { applyLexicon, explain, parseLexicon } from "./hybrid.js";
 import { LocalTagger } from "./tagger.js";
 
 async function loadLexicon(url) {
@@ -50,9 +51,21 @@ async function create(base, runtime) {
 
   return {
     name: lexicon ? "hybrid" : "tagger",
+
     async restore(text) {
       const tagged = await tagger.restore(text);
       return lexicon ? applyLexicon(text, tagged, lexicon) : tagged;
+    },
+
+    /** The restored text, and for every changed word where it came from and how sure. */
+    async restoreDetailed(text) {
+      const {
+        labels: [labels],
+        confidence: [confidence],
+      } = await tagger.predictDetailed([stripDiacritics(text)]);
+      const tagged = restoreWithLabels(text, labels);
+      const restored = lexicon ? applyLexicon(text, tagged, lexicon) : tagged;
+      return { text: restored, words: explain(text, restored, confidence, lexicon) };
     },
   };
 }

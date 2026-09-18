@@ -57,6 +57,17 @@ export class LocalTagger {
 
   /** One label per character, for each text. */
   async predict(texts) {
+    return (await this.predictDetailed(texts)).labels;
+  }
+
+  /**
+   * Labels plus how sure the model was of each one.
+   *
+   * The two scores per character are turned into a probability with a softmax; the
+   * confidence of a character is the probability of the label that was chosen, so it is
+   * always at least one half.
+   */
+  async predictDetailed(texts) {
     const pieces = [];
     texts.forEach((text, index) => {
       const characters = [...text];
@@ -71,7 +82,8 @@ export class LocalTagger {
     });
 
     const labels = texts.map(() => []);
-    if (pieces.length === 0) return labels;
+    const confidence = texts.map(() => []);
+    if (pieces.length === 0) return { labels, confidence };
 
     const columns = Math.max(...pieces.map((piece) => [...piece.text].length), 1);
     const ids = new BigInt64Array(pieces.length * columns).fill(BigInt(PAD_ID));
@@ -87,11 +99,14 @@ export class LocalTagger {
     pieces.forEach((piece, row) => {
       for (let column = piece.from; column < piece.to; column += 1) {
         const at = (row * columns + column) * 2;
-        labels[piece.index].push(scores[at + 1] > scores[at] ? 1 : 0);
+        const mark = 1 / (1 + Math.exp(scores[at] - scores[at + 1]));
+        const label = mark > 0.5 ? 1 : 0;
+        labels[piece.index].push(label);
+        confidence[piece.index].push(label ? mark : 1 - mark);
       }
     });
 
-    return labels;
+    return { labels, confidence };
   }
 
   /** Restore one text. */

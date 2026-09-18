@@ -171,7 +171,7 @@ schwa --spell "xayis edirem, mektbe gec qalmisam"   # xayis -> xahiş, xalis, ma
 from schwa import check
 
 for suggestion in check("xayis edirem"):
-    print(suggestion.typed, suggestion.options)      # xayis ('xahiş', 'xalis', 'mayıs')
+    print(suggestion.typed, suggestion.options)  # xayis ('xahiş', 'xalis', 'mayıs')
 ```
 
 The model travels with the package — 3.5 MB, no downloads, no configuration. Without the

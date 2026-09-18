@@ -50,6 +50,9 @@ test = "pytest"
 lint = "ruff check ."
 fmt = "ruff format ."
 check = ["lint", "test"]
+# Exactly what CI runs, so a push is not the first place a check fails.
+format-check = "ruff format --check ."
+ci = ["lint", "format-check", "test"]
 
 # The pipeline, in order. Each step reads what the previous one wrote.
 extract = "python scripts/extract_wiki.py"

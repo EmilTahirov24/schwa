@@ -177,6 +177,12 @@ def main() -> int:
         default=0.0,
         help="chance of a sentence in capitals, and again of one word in capitals",
     )
+    parser.add_argument(
+        "--parts",
+        type=int,
+        default=1,
+        help="push each batch through in this many parts: the same gradient, less GPU memory",
+    )
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     args = parser.parse_args()
@@ -208,7 +214,9 @@ def main() -> int:
     optimiser = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01)
     steps = args.epochs * math.ceil(len(training) / args.batch_size)
     schedule = torch.optim.lr_scheduler.OneCycleLR(optimiser, max_lr=args.lr, total_steps=steps)
-    loss_function = nn.CrossEntropyLoss(ignore_index=IGNORE)
+    # Summed, then divided by the decisions in the whole batch: the mean over the batch, however
+    # many parts it is pushed through in.
+    loss_function = nn.CrossEntropyLoss(ignore_index=IGNORE, reduction="sum")
     use_amp = args.device.startswith("cuda")
 
     best = 0.0
@@ -220,12 +228,18 @@ def main() -> int:
         for ids, targets in batches(
             training, vocabulary, args.batch_size, args.device, caps=args.caps, rng=shouting
         ):
-            with torch.autocast("cuda", dtype=torch.bfloat16, enabled=use_amp):
-                logits = model(ids)
-                loss = loss_function(logits.reshape(-1, 2), targets.reshape(-1))
-
+            decisions = (targets != IGNORE).sum().clamp(min=1)
             optimiser.zero_grad(set_to_none=True)
-            loss.backward()
+            loss = torch.zeros((), device=args.device)
+            for part_ids, part_targets in zip(
+                ids.chunk(args.parts), targets.chunk(args.parts), strict=True
+            ):
+                with torch.autocast("cuda", dtype=torch.bfloat16, enabled=use_amp):
+                    logits = model(part_ids)
+                    part = loss_function(logits.reshape(-1, 2), part_targets.reshape(-1))
+                    part = part / decisions
+                part.backward()
+                loss += part.detach()
             nn.utils.clip_grad_norm_(model.parameters(), 1.0)
             optimiser.step()
             schedule.step()

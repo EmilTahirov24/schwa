@@ -1,0 +1,27 @@
+# Changelog
+
+## Unreleased
+
+### Added
+
+- The Python package carries the model: `pip install "duzelt[onnx]"` and `restore()` works
+  with nothing to download and no flags to pass.
+- The browser extension carries it too, so text is restored inside the browser and is not
+  sent anywhere. The service remains as a fallback.
+- `duzelt` command line tool, FastAPI service, demo page, Chrome extension.
+- Four restorers, measured against each other: lexicon, context model, character tagger, and
+  the hybrid of the tagger and the lexicon.
+
+### Measured
+
+- Test split, 172,328 sentences, scored once: 93.8% on ambiguous words, 98.9% of all words,
+  88.1% of sentences exactly right. Dev agrees within 0.2 points.
+- Quantising the tagger to int8 makes it 2.3 MB — 3.9× smaller and 1.6× faster — for 0.01
+  points of accuracy.
+
+### Known limits
+
+- Everything is measured on Wikipedia. Informal words it never contains, such as `hərşey`,
+  are still restored wrongly. The hand-annotated set of real sentences will put a number on
+  that; until then the reported accuracy describes encyclopedic prose, not chat.
+- Proper nouns the training text never saw cannot be decided from the letters alone.

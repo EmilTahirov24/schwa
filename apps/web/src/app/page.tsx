@@ -155,6 +155,43 @@ export default function Page() {
         </section>
       )}
 
+      <section className="flex flex-col gap-3 border-t border-neutral-200 pt-6 text-sm dark:border-neutral-800">
+        <h2 className="font-medium text-neutral-900 dark:text-neutral-100">{text.resultsTitle}</h2>
+        <p className="text-neutral-600 dark:text-neutral-400">{text.results}</p>
+
+        <table className="w-full max-w-lg border-collapse text-left">
+          <thead className="text-xs uppercase tracking-wide text-neutral-500 dark:text-neutral-500">
+            <tr>
+              <th className="py-1 font-medium">{text.columnSystem}</th>
+              <th className="py-1 font-medium">{text.columnAmbiguous}</th>
+              <th className="py-1 font-medium">{text.columnSentences}</th>
+            </tr>
+          </thead>
+          <tbody className="text-neutral-700 dark:text-neutral-300">
+            {[
+              [text.rowLexicon, "79.3%", "71.9%", false],
+              [text.rowTagger, "93.8%", "86.7%", false],
+              [text.rowHybrid, "93.8%", "88.1%", true],
+            ].map(([name, ambiguous, sentences, highlight]) => (
+              <tr
+                key={String(name)}
+                className={
+                  highlight
+                    ? "border-t border-neutral-200 font-medium text-neutral-900 dark:border-neutral-800 dark:text-neutral-100"
+                    : "border-t border-neutral-200 dark:border-neutral-800"
+                }
+              >
+                <td className="py-1.5">{name}</td>
+                <td className="py-1.5 tabular-nums">{ambiguous}</td>
+                <td className="py-1.5 tabular-nums">{sentences}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <p className="text-xs text-neutral-500 dark:text-neutral-500">{text.resultsCaveat}</p>
+      </section>
+
       <footer className="mt-auto flex flex-col gap-3 border-t border-neutral-200 pt-6 text-sm text-neutral-600 dark:border-neutral-800 dark:text-neutral-400">
         <h2 className="font-medium text-neutral-900 dark:text-neutral-100">{text.howTitle}</h2>
         <p className="leading-relaxed">{text.how}</p>

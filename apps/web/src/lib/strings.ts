@@ -23,6 +23,17 @@ export const strings = {
     ambiguity:
       "Çətinlik ondadır ki, qiz sözü həm qız, həm də qiz ola bilər. Doğru variantı yalnız yanındakı sözlər müəyyən edir.",
     running: (name: string) => `İşləyən model: ${name}`,
+    resultsTitle: "Nə qədər dəqiqdir",
+    results:
+      "Rəqəmlər test setindən gəlir: 172 328 cümlə, öyrətmədə heç görünməmiş məqalələrdən, bir dəfə ölçülüb.",
+    resultsCaveat:
+      "Bu ölçmə Vikipediya mətnindədir. Gündəlik yazışmada rəqəm fərqli ola bilər — onu ölçmək növbəti işdir.",
+    columnSystem: "Sistem",
+    columnAmbiguous: "Çoxmənalı sözlər",
+    columnSentences: "Tam düzgün cümlə",
+    rowLexicon: "Lüğət",
+    rowTagger: "Model",
+    rowHybrid: "Model + lüğət",
   },
   en: {
     tagline: "Restores Azerbaijani diacritics",
@@ -44,6 +55,17 @@ export const strings = {
     ambiguity:
       "The hard part is that qiz can be either qız or qiz. Only the surrounding words decide which one is meant.",
     running: (name: string) => `Running the ${name} model`,
+    resultsTitle: "How accurate it is",
+    results:
+      "Measured on the test split: 172,328 sentences from articles never seen in training, scored once.",
+    resultsCaveat:
+      "That is encyclopedic prose. How it does on everyday writing is the next thing to measure, not something to assume.",
+    columnSystem: "System",
+    columnAmbiguous: "Ambiguous words",
+    columnSentences: "Sentences exactly right",
+    rowLexicon: "Dictionary",
+    rowTagger: "Model",
+    rowHybrid: "Model + dictionary",
   },
 } satisfies Record<Language, Record<string, unknown>>;
 

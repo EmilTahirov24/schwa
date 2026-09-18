@@ -10,7 +10,6 @@
 - Renamed to Schwa; the Python distribution is `schwa-az`, the import and command `schwa`.
 - The demo page restores as you type, with each restored letter animated into place and a
   per-word note on where its spelling came from.
-
 - The Python package carries the model: `pip install "schwa-az[onnx]"` and `restore()` works
   with nothing to download and no flags to pass.
 - The browser extension carries it too, so text is restored inside the browser and is not

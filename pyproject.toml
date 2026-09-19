@@ -63,9 +63,11 @@ corpus = "python scripts/build_corpus.py"
 lexicon = "python scripts/build_lexicon.py"
 web = "python scripts/fetch_web.py"
 context = "python scripts/train_context.py"
-tagger = "python scripts/train_tagger.py"
+# The shipped tagger reads Wikipedia and the web sample; the other four are what it was
+# chosen against (docs/decisions.md, 19).
+tagger = "python scripts/train_tagger.py --train data/processed/train.txt data/processed/web_train.txt --dev data/processed/dev.txt data/processed/web_dev.txt --parts 2"
+tagger-wikipedia = "python scripts/train_tagger.py --out models/tagger_wikipedia.pt"
 tagger-web = "python scripts/train_tagger.py --train data/processed/web_train.txt --dev data/processed/web_dev.txt --out models/tagger_web.pt"
-tagger-both = "python scripts/train_tagger.py --train data/processed/train.txt data/processed/web_train.txt --dev data/processed/dev.txt data/processed/web_dev.txt --out models/tagger_both.pt --parts 2"
 tagger-caps = "python scripts/train_tagger.py --caps 0.05 --out models/tagger_caps.pt"
 tagger-both-caps = "python scripts/train_tagger.py --train data/processed/train.txt data/processed/web_train.txt --dev data/processed/dev.txt data/processed/web_dev.txt --caps 0.05 --parts 2 --out models/tagger_both_caps.pt"
 export = "python scripts/export_onnx.py"
@@ -83,9 +85,9 @@ eval = [
     { cmd = "python scripts/text_stats.py --split test" },
     { cmd = "python scripts/text_stats.py --split web_test" },
 ]
-domain = "python scripts/domain_shift.py --models wikipedia=models/tagger.pt web=models/tagger_web.pt both=models/tagger_both.pt capitals=models/tagger_caps.pt both+capitals=models/tagger_both_caps.pt"
+domain = "python scripts/domain_shift.py --models wikipedia=models/tagger_wikipedia.pt web=models/tagger_web.pt both=models/tagger.pt capitals=models/tagger_caps.pt both+capitals=models/tagger_both_caps.pt"
 data = ["extract", "corpus", "lexicon", "web"]
-train = ["context", "tagger", "tagger-web", "tagger-both", "tagger-caps", "tagger-both-caps"]
+train = ["context", "tagger", "tagger-wikipedia", "tagger-web", "tagger-caps", "tagger-both-caps"]
 ship = ["export", "quantize", "bundle"]
 reproduce = ["data", "train", "ship", "eval", "domain"]
 

@@ -42,6 +42,9 @@ split and ~300 real informal sentences annotated by hand and never used for trai
 **Why.** Reporting a single number would hide the domain gap. Keeping the two sets apart
 turns that gap into a measurement, which is the more honest and more interesting result.
 
+*Later:* web text became a second test set (18) and then part of the training text (19); the
+hand-annotated set is still the one measurement of chat.
+
 ## 4. The headline metric is accuracy on ambiguous words only
 
 **Context.** Most words are unambiguous once the diacritics are dropped, so overall word
@@ -52,8 +55,9 @@ maps to more than one real word.
 
 **Why.** That subset is the entire problem. On the dev split, always writing the commonest
 spelling already gets 97.1% of all words right, but only 79.2% of the ambiguous ones; the
-character tagger gets 98.7% and 93.8%. Over all words the two systems are 1.6 points apart,
-over ambiguous words 14.5. Only the second number says how much better one of them is.
+character tagger, trained on Wikipedia alone, gets 98.7% and 93.8%. Over all words the two
+systems are 1.6 points apart, over ambiguous words 14.5. Only the second number says how
+much better one of them is.
 
 ## 5. The context model sees its neighbours as keys, not as spellings
 
@@ -139,10 +143,10 @@ context model is not part of the combination.
 accuracy, because the tagger garbles rare names the training text is unanimous about
 (`Sulaveri` against nine occurrences of `Şulaveri`). Letting the context model decide the
 ambiguous words drags the hybrid's accuracy on them from 93.8% down to the context model's
-own 85.0%, and whole sentences from 87.9% to 84.0% (dev split;
-`evaluate.py --split dev --hybrid-context --no-report`) — the tagger turned out to be the
-better judge of exactly the words the context model was built for. The context model stays
-in the repository as a measured baseline, not as part of the product.
+own 85.0%, and whole sentences from 87.9% to 84.0% (dev split, with the tagger trained on
+Wikipedia alone; `evaluate.py --split dev --hybrid-context --no-report`) — the tagger turned
+out to be the better judge of exactly the words the context model was built for. The context
+model stays in the repository as a measured baseline, not as part of the product.
 
 ## 12. The shipped model is quantised to int8
 
@@ -255,3 +259,28 @@ it was taken off there: 3,828 sentences came back, and the hybrid's accuracy on 
 words moved from 93.25% to 93.22%, far inside its interval. In train and dev it stays, where
 losing a few good sentences costs nothing. What web text cannot stand in for is chat: it is
 still edited, which is why the hand-annotated set remains the last missing measurement.
+
+## 19. The shipped tagger reads the web as well as Wikipedia; artificial capitals do not ship
+
+**Context.** The tagger had only read Wikipedia. On the web test set it lost half a point on
+ambiguous words, and the error analysis found words written entirely in capitals -
+headlines, mostly - wrong 13% of the time: in capitals a plain `I` is usually a dotted `İ`,
+the reverse of lowercase, and Wikipedia has few capitals to learn that from.
+
+**Decision.** Train on Wikipedia and the web sample's training split together, 4,306,000
+sentences. Do not put training text into capitals artificially.
+
+**Why.** Five taggers, the same in everything but what they read, were scored alone on both
+test sets, each against the Wikipedia-only model on the same resamples. The rule was set
+before the runs: a candidate ships only if it is no worse on either test set, on ambiguous
+words or on whole sentences. Reading the web as well raised the web's ambiguous words from
+93.2% to 95.7% and its whole sentences from 88.4% to 92.8% (+2.50 and +4.42 points, intervals
+well clear of zero) and left Wikipedia where it was (+0.15 and -0.02, both intervals spanning
+zero). It also fixed most of the capitals by itself - on the web they went from 83.5% right
+to 94.4% - because the web has real headlines to learn from. Capitals made artificially did
+the same job worse: on Wikipedia text they lifted the web's capitals only to 91.1%, and cost
+0.20 and 0.23 points on Wikipedia, intervals clear of zero, so they failed the rule; added to
+the combined text they bought one more point on the web's capitals and lost 0.4 on
+Wikipedia's. The web alone made the best model for the web's ambiguous words and one four
+points worse on Wikipedia's. What a model reads is what it is good at, and the numbers say
+read both.

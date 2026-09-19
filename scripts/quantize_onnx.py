@@ -88,7 +88,7 @@ def main() -> int:
         "| Model | Size | Decisions correct | Time |\n|---|---|---|---|\n"
         f"{rows}\n"
         f"int8 is {smaller:.1f}× smaller and {faster:.1f}× faster, and loses "
-        f"{lost * 100:.2f} points.",
+        + ("no accuracy." if round(lost * 100, 2) <= 0 else f"{lost * 100:.2f} points."),
     )
     return 0
 

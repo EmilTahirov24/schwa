@@ -4,7 +4,8 @@
  * The tagger reads letters, so it handles words nothing is known about, but it can still
  * garble a name the training text was unanimous about. The shipped lexicon holds exactly
  * those words - one spelling each, seen at least twice - and overrules the tagger on them and
- * nowhere else. Measured on the test split that is worth 1.4 points of whole-sentence accuracy.
+ * nowhere else. Measured on the Wikipedia test split that is worth 1.5 points of whole-sentence
+ * accuracy.
  */
 
 import { azLower, azUpper, isFoldable, stripDiacritics } from "./alphabet.js";
@@ -99,7 +100,6 @@ export function explain(text, restored, confidence, lexicon) {
 
   return words;
 }
-
 
 /**
  * The decision behind every letter that could carry a diacritic, for showing the model at work.

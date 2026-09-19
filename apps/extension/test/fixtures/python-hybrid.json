@@ -49,7 +49,7 @@
  },
  {
   "typed": "Gurculer ozlerini \"kartveli\" (gurcu) (tek hal) ve \"kartvelebi\" (gurculer) (cem hal), olkelerini \"Sakartvelo\" (Gurcustan / kartvel ve ya gurcu diyari), dillerini \"kartuli\" (gurcuce, kartvelce) ve ya \"kartuli ena\" (gurcu dili, kartvel dili) olaraq adlandirir.",
-  "expected": "Gürcülər özlərini \"kartveli\" (gürcü) (tək hal) və \"kartvelebi\" (gürcülər) (cəm hal), ölkələrini \"Sakartvelo\" (Gürcüstan / kartvel və ya gürcü diyarı), dillərini \"kartuli\" (gürcücə, kartvelce) və ya \"kartuli ena\" (gürcü dili, kartvel dili) olaraq adlandırır."
+  "expected": "Gürcülər özlərini \"kartveli\" (gürcü) (tək hal) və \"kartveləbi\" (gürcülər) (cəm hal), ölkələrini \"Sakartvelo\" (Gürcüstan / kartvel və ya gürcü diyarı), dillərini \"kartuli\" (gürcücə, kartvelce) və ya \"kartuli əna\" (gürcü dili, kartvel dili) olaraq adlandırır."
  },
  {
   "typed": "Ingilisce ise \"Georgian\" (corcian), \"Georgians\" (corcians) ve \"Georgia\" (Corciya) adlari istifade edilir.",
@@ -133,7 +133,7 @@
  },
  {
   "typed": "Usqulideki Svanetiya mudafie qulleleri",
-  "expected": "Uşqulidəki Svanetiya müdafiə qüllələri"
+  "expected": "Usqulidəki Svanetiya müdafiə qüllələri"
  },
  {
   "typed": "Roma-Iran muharibeleri bolgeni xaosa surukledi.",

@@ -23,9 +23,9 @@ The text is replaced in place, and Ctrl+Z undoes it like any other edit.
 
 Putting the letters back is not a simple lookup. "qiz" can be "qız" or "qiz", and only the
 surrounding words decide which. The extension carries a character-level model trained on
-2.9 million sentences of Azerbaijani; on held-out text it gets 93.8% of the genuinely
-ambiguous words right, against 79.2% for a dictionary that always picks the most common
-spelling.
+4.3 million sentences of Azerbaijani from Wikipedia and the web; on web text it had never
+seen, it gets 95.7% of the genuinely ambiguous words right, against 79.2% for a dictionary
+that always picks the most common spelling.
 
 The model runs inside your browser. Your text is not sent to any server, and the extension
 works with no connection at all.

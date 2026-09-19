@@ -5,15 +5,14 @@ one, whether it does. Characters that could not carry a diacritic are masked out
 loss: two thirds of the text is punctuation, digits and letters with no alternative, and
 learning to say "keep" there teaches nothing.
 
-The defaults are the settings of the shipped model: two epochs over the whole Wikipedia
-training split, about a quarter of an hour on a laptop GPU. Several files may be given; they
-are read in full and shuffled together.
+The defaults train on the Wikipedia split alone: two epochs, about a quarter of an hour on a
+laptop GPU. Several files may be given; they are read in full and shuffled together. The
+shipped model reads the web sample too, which is what `poe tagger` runs:
 
-    uv run --group train python scripts/train_tagger.py
     uv run --group train python scripts/train_tagger.py --sentences 200000   # a quick run
     uv run --group train python scripts/train_tagger.py \\
         --train data/processed/train.txt data/processed/web_train.txt \\
-        --dev data/processed/dev.txt data/processed/web_dev.txt --out models/tagger_both.pt
+        --dev data/processed/dev.txt data/processed/web_dev.txt --parts 2
 """
 
 from __future__ import annotations

@@ -11,7 +11,7 @@
  */
 
 import { restoreWithLabels, stripDiacritics } from "./alphabet.js";
-import { applyLexicon, explain, parseLexicon } from "./hybrid.js";
+import { applyLexicon, explain, letters, parseLexicon } from "./hybrid.js";
 import { parseVocabulary, Speller } from "./spelling.js";
 import { LocalTagger } from "./tagger.js";
 
@@ -58,7 +58,10 @@ async function create(base, runtime) {
       return lexicon ? applyLexicon(text, tagged, lexicon) : tagged;
     },
 
-    /** The restored text, and for every changed word where it came from and how sure. */
+    /**
+     * The restored text; for every changed word, where it came from and how sure; and for
+     * every letter that needed a decision, the model's odds on it.
+     */
     async restoreDetailed(text) {
       const {
         labels: [labels],
@@ -66,7 +69,11 @@ async function create(base, runtime) {
       } = await tagger.predictDetailed([stripDiacritics(text)]);
       const tagged = restoreWithLabels(text, labels);
       const restored = lexicon ? applyLexicon(text, tagged, lexicon) : tagged;
-      return { text: restored, words: explain(text, restored, confidence, lexicon) };
+      return {
+        text: restored,
+        words: explain(text, restored, confidence, lexicon),
+        letters: letters(text, restored, labels, confidence, lexicon),
+      };
     },
   };
 }

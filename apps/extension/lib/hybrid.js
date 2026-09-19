@@ -101,6 +101,44 @@ export function explain(text, restored, confidence, lexicon) {
 }
 
 
+/**
+ * The decision behind every letter that could carry a diacritic, for showing the model at work.
+ *
+ * One entry per character of `text`; null where no decision was needed. `probability` is how
+ * likely the model found the accented reading, whether or not it chose it; `source` says who
+ * had the last word: the model, the lexicon, or the person who typed the accent themselves.
+ *
+ * @param text        what was typed
+ * @param restored    the final restored text
+ * @param labels      the model's label per character of the typed text (1 = accented)
+ * @param confidence  the model's confidence in each of those labels
+ * @param lexicon     the shipped lexicon, or null
+ */
+export function letters(text, restored, labels, confidence, lexicon) {
+  const typed = stripDiacritics(text);
+  const byLexicon = new Array(text.length).fill(false);
+  if (lexicon !== null) {
+    for (const match of text.matchAll(WORD)) {
+      if (lexicon.has(keyOf(match[0]))) {
+        byLexicon.fill(true, match.index, match.index + match[0].length);
+      }
+    }
+  }
+
+  return Array.from({ length: text.length }, (_, index) => {
+    if (!isFoldable(typed[index])) return null;
+    const chosen = confidence[index] ?? 1;
+    let source = "model";
+    if (text[index] !== typed[index]) source = "typed";
+    else if (byLexicon[index]) source = "dictionary";
+    return {
+      probability: labels[index] ? chosen : 1 - chosen,
+      marked: restored[index] !== typed[index],
+      source,
+    };
+  });
+}
+
 /** Parse the shipped lexicon: one `key<TAB>form<TAB>count` line per entry. */
 export function parseLexicon(text) {
   const lexicon = new Map();

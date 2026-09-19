@@ -22,9 +22,10 @@ Azerbaijani has seven letters a plain keyboard cannot produce — `ç ə ğ ı �
 drop them and type `sence` for `səncə`. Putting them back is not a lookup: `qiz` is either
 `qız` ("girl") or `qiz`, and only the surrounding words decide which.
 
-**Status:** working, and measured on two kinds of text it never saw in training: Wikipedia
-and the open web. The demo page, the browser extension and the Python package all carry the
-model and run it locally. Still to come: an evaluation set of real chat messages, and the
+**Status:** working, and measured on two kinds of text it never saw in training: it gets
+93.9% of the genuinely ambiguous words right on Wikipedia and 95.7% on the open web. The
+demo page, the browser extension and the Python package all carry the model and run it
+locally. Still to come: an evaluation set of real chat messages, and the
 extension's store release.
 
 ## What is in here
@@ -239,8 +240,10 @@ hand-annotated set of real messages that will put a number on that gap.
 ## Use it
 
 ```bash
-pip install "schwa-az[onnx]"
+pip install "schwa-az[onnx] @ git+https://github.com/EmilTahirov24/schwa#subdirectory=packages/core"
 ```
+
+It is not on PyPI yet; that installs it straight from this repository, model included.
 
 ```python
 from schwa import restore

@@ -1,4 +1,4 @@
-"""The result tables in the README and the model card must say what the last evaluation measured.
+"""Every result table in the docs must say what the last evaluation measured.
 
 Each table is preceded by a comment naming its split, `<!-- results: test -->`, and every
 number in it is compared with docs/results.json, which scripts/evaluate.py writes. A number
@@ -16,7 +16,11 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).parents[3]
-DOCUMENTS = [ROOT / "README.md", ROOT / "docs" / "model_card.md"]
+DOCUMENTS = [
+    ROOT / "README.md",
+    ROOT / "docs" / "model_card.md",
+    ROOT / "packages" / "core" / "README.md",
+]
 NUMBERS = ROOT / "docs" / "results.json"
 MARKER = re.compile(r"<!-- results: (\w+) -->")
 

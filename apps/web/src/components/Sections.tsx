@@ -188,8 +188,8 @@ export function GetIt({ text }: { text: Strings }) {
         <div className={card}>
           <h3 className="font-semibold">{text.getPythonTitle}</h3>
           <p className="flex-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">{text.getPython}</p>
-          <code className="rounded-lg bg-neutral-100 px-3 py-2 font-mono text-sm dark:bg-neutral-800">
-            pip install &quot;schwa-az[onnx]&quot;
+          <code className="break-all rounded-lg bg-neutral-100 px-3 py-2 font-mono text-xs leading-relaxed dark:bg-neutral-800">
+            pip install &quot;schwa-az[onnx] @ git+https://github.com/EmilTahirov24/schwa#subdirectory=packages/core&quot;
           </code>
         </div>
         <div className={card}>

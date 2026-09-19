@@ -7,9 +7,14 @@ Put the sentences as they were typed - one per line - into data/real/raw.txt, th
 
     uv run python scripts/annotate.py --annotator emil
 
-For each sentence the current restorer's guess is shown. Press Enter to accept it, type the
-correct sentence to replace it, "s" to skip, or "q" to stop. Progress is saved after every
-line, so the file can be worked through in several sittings.
+For each sentence a guess is shown. Press Enter to accept it, type the correct sentence to
+replace it, "s" to skip, or "q" to stop. Progress is saved after every line, so the file can
+be worked through in several sittings.
+
+The guess comes from the lexicon, never from the model being measured. A reference built by
+accepting the model's own answers would lean towards them, and the model would be scored
+against itself; the lexicon saves typing without that pull. Without the full training
+lexicon in data/processed, the smaller one shipped in the package is used.
 """
 
 from __future__ import annotations
@@ -19,6 +24,7 @@ import json
 import sys
 from pathlib import Path
 
+from schwa import bundled
 from schwa.alphabet import strip_diacritics
 from schwa.lexicon import Lexicon
 from schwa.restore import IdentityRestorer, LexiconRestorer, Restorer
@@ -50,6 +56,8 @@ def main() -> int:
 
     if args.lexicon.exists():
         restorer: Restorer = LexiconRestorer(Lexicon.load(args.lexicon))
+    elif bundled.is_bundled():
+        restorer = LexiconRestorer(bundled.bundled_lexicon())
     else:
         restorer = IdentityRestorer()
 

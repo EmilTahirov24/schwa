@@ -1,8 +1,9 @@
 # Building the real-world evaluation set
 
-Wikipedia is written carefully; chat messages are not. Every number in the README so far
-comes from Wikipedia text, which means it describes how the systems do on prose nobody types
-in practice. This set is how that gap gets measured instead of guessed.
+Wikipedia and news sites are written carefully; chat messages are not. Every number in the
+README so far comes from edited text - Wikipedia and a web crawl - which means it describes
+how the systems do on prose somebody proofread. This set is how the gap to real messages
+gets measured instead of guessed.
 
 ## What goes in
 
@@ -25,9 +26,13 @@ was already right is making a mistake worth counting.
 uv run python scripts/annotate.py --annotator emil
 ```
 
-For each sentence the current restorer shows its guess. Press Enter to accept it, type the
-correct sentence to replace it, `s` to skip, `q` to stop. Progress is saved after every line,
-so it can be done in several sittings.
+For each sentence the tool shows a guess. Press Enter to accept it, type the correct sentence
+to replace it, `s` to skip, `q` to stop. Progress is saved after every line, so it can be
+done in several sittings.
+
+The guess comes from the lexicon, not from the model this set will measure. Accepting the
+model's own answers would tilt the reference towards them. The lexicon leaves the ambiguous
+words - the ones that matter - as typed, so each of those is a decision you make yourself.
 
 The tool refuses any correction that changes more than diacritics — a different word order or
 a fixed typo would make the sentence unusable as a reference, because the restorers are not

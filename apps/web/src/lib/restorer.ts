@@ -42,9 +42,21 @@ export type Word = {
   confidence: number | null;
 };
 
+/** The decision behind one letter that could carry a diacritic. */
+export type Letter = {
+  /** How likely the model found the accented reading, whether or not it chose it. */
+  probability: number;
+  /** Whether the letter came out accented. */
+  marked: boolean;
+  /** Who had the last word: the model, the lexicon, or the person who typed the accent. */
+  source: "model" | "dictionary" | "typed";
+};
+
 export type Restored = {
   text: string;
   words: Word[];
+  /** One entry per character of the text; null where no decision was needed. */
+  letters: Array<Letter | null>;
 };
 
 export type Restorer = {

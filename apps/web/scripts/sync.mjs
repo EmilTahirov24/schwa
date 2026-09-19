@@ -36,4 +36,12 @@ for (const [from, to, keep] of COPIES) {
   }
 }
 
-console.log(`${copied} files synced from the extension`);
+// The measured numbers the results section shows, written by scripts/evaluate.py.
+const results = resolve(web, "..", "..", "docs", "results.json");
+if (!existsSync(results)) {
+  console.error(`missing ${results}\nrun scripts/evaluate.py in the repository root first`);
+  process.exit(1);
+}
+copyFileSync(results, join(web, "src", "lib", "schwa", "results.json"));
+
+console.log(`${copied + 1} files synced from the extension and docs/`);

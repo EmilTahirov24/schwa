@@ -6,6 +6,7 @@ import {
   withRejected,
   wordKey,
   wordSpans,
+  type Letter,
   type Restored,
   type Suggestion,
   type Word,
@@ -33,6 +34,7 @@ export function LiveEditor({ text }: { text: Strings }) {
   const [ignored, setIgnored] = useState<ReadonlySet<string>>(new Set());
   const [open, setOpen] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
+  const [xray, setXray] = useState(false);
 
   useEffect(() => {
     if (model.status !== "ready" || !input) return;
@@ -123,26 +125,47 @@ export function LiveEditor({ text }: { text: Strings }) {
         />
 
         <div className="relative min-h-44 rounded-2xl border border-neutral-200 bg-neutral-50 px-5 py-4 text-lg leading-relaxed dark:border-neutral-800 dark:bg-neutral-900/60">
+          {visible && (
+            <button
+              type="button"
+              onClick={() => setXray(!xray)}
+              aria-pressed={xray}
+              title={text.xrayTitle}
+              className={`float-right mt-1 ml-3 rounded-full border px-2.5 py-0.5 text-xs font-semibold tracking-wide transition ${
+                xray
+                  ? "border-emerald-500 bg-emerald-500 text-white"
+                  : "border-neutral-300 text-neutral-500 hover:border-emerald-500 hover:text-emerald-700 dark:border-neutral-700 dark:text-neutral-400 dark:hover:text-emerald-300"
+              }`}
+            >
+              {text.xray}
+            </button>
+          )}
           {visible ? (
             <output className="whitespace-pre-wrap break-words" aria-live="polite">
-              <Rendered
-                typed={visible.typed}
-                words={visible.restored.words}
-                spelling={spelling}
-                rejected={rejected}
-                open={open}
-                onToggle={toggle}
-                onOpen={setOpen}
-                onAccept={accept}
-                onIgnore={ignore}
-                text={text}
-              />
+              {xray ? (
+                <XRay typed={visible.typed} restored={visible.restored} text={text} />
+              ) : (
+                <Rendered
+                  typed={visible.typed}
+                  words={visible.restored.words}
+                  spelling={spelling}
+                  rejected={rejected}
+                  open={open}
+                  onToggle={toggle}
+                  onOpen={setOpen}
+                  onAccept={accept}
+                  onIgnore={ignore}
+                  text={text}
+                />
+              )}
             </output>
           ) : (
             <p className="text-neutral-400 dark:text-neutral-500">{text.nothingYet}</p>
           )}
         </div>
       </div>
+
+      {xray && visible && <XRayLegend restored={visible.restored} text={text} />}
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
@@ -336,6 +359,154 @@ function RestoredWord({
         <span className="block font-normal opacity-60">{kept ? text.undoHint : text.keepHint}</span>
       </span>
     </button>
+  );
+}
+
+/**
+ * The text as the model saw it. Every letter that could carry a diacritic gets a bar as long
+ * as the model's odds that it does, so a confident "ə" shows a full bar, a plain "e" an empty
+ * one, and a letter the model hesitated over is lit amber. Words are kept whole, so a line
+ * only ever breaks where the text has a space.
+ */
+function XRay({ typed, restored, text }: { typed: string; restored: Restored; text: Strings }) {
+  const pieces: React.ReactNode[] = [];
+  let offset = 0;
+
+  for (const token of restored.text.split(/(\s+)/)) {
+    const start = offset;
+    offset += token.length;
+    if (!token) continue;
+    if (/^\s+$/.test(token)) {
+      pieces.push(token);
+      continue;
+    }
+
+    const parts: React.ReactNode[] = [];
+    let plain = "";
+    for (let index = start; index < offset; index += 1) {
+      const letter = restored.letters[index];
+      if (!letter) {
+        plain += restored.text[index];
+        continue;
+      }
+      if (plain) parts.push(plain);
+      plain = "";
+      parts.push(
+        <XRayLetter
+          key={index}
+          from={typed[index]}
+          to={restored.text[index]}
+          letter={letter}
+          text={text}
+        />,
+      );
+    }
+    if (plain) parts.push(plain);
+    pieces.push(
+      <span key={start} className="whitespace-nowrap">
+        {parts}
+      </span>,
+    );
+  }
+
+  return <>{pieces}</>;
+}
+
+const UNSURE = [0.1, 0.9] as const;
+
+function unsure(letter: Letter): boolean {
+  return letter.source === "model" && letter.probability > UNSURE[0] && letter.probability < UNSURE[1];
+}
+
+function XRayLetter({
+  from,
+  to,
+  letter,
+  text,
+}: {
+  from: string;
+  to: string;
+  letter: Letter;
+  text: Strings;
+}) {
+  const percent = Math.round(letter.probability * 100);
+  const hesitant = unsure(letter);
+  let hint: string = text.letterDictionary;
+  if (letter.source === "typed") hint = text.letterTyped;
+  else if (letter.source === "model") {
+    hint = letter.marked ? text.letterMarked(from, to, percent) : text.letterKept(to, 100 - percent);
+  }
+  const bar =
+    letter.source !== "model"
+      ? "bg-neutral-400 dark:bg-neutral-500"
+      : hesitant
+        ? "bg-amber-500"
+        : "bg-emerald-500";
+
+  return (
+    <span
+      tabIndex={0}
+      className={`group relative inline-block rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
+        hesitant ? "bg-amber-200/70 dark:bg-amber-500/25" : ""
+      } ${letter.marked ? "font-medium text-emerald-800 dark:text-emerald-300" : ""}`}
+    >
+      {to}
+      <span
+        aria-hidden
+        className="absolute inset-x-px -bottom-0.5 h-[3px] overflow-hidden rounded-full bg-neutral-200/60 dark:bg-neutral-700/40"
+      >
+        <span
+          className={`letter-bar block h-full rounded-full ${bar}`}
+          style={{ width: `${letter.source === "model" ? percent : 100}%` }}
+        />
+      </span>
+      <span
+        role="tooltip"
+        className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden -translate-x-1/2 whitespace-nowrap rounded-lg bg-neutral-900 px-2.5 py-1.5 text-xs font-medium text-white shadow-lg group-hover:block group-focus-visible:block dark:bg-white dark:text-neutral-900"
+      >
+        {hint}
+      </span>
+    </span>
+  );
+}
+
+function XRayLegend({ restored, text }: { restored: Restored; text: Strings }) {
+  const decided = restored.letters.filter((letter): letter is Letter => letter !== null);
+  const hesitant = decided.filter(unsure).length;
+
+  // The model's closest call: the letter whose odds sit nearest to a coin toss.
+  let closest = -1;
+  let distance = 1;
+  restored.letters.forEach((letter, index) => {
+    if (letter?.source === "model" && Math.abs(letter.probability - 0.5) < distance) {
+      distance = Math.abs(letter.probability - 0.5);
+      closest = index;
+    }
+  });
+  const letter = closest >= 0 ? restored.letters[closest] : null;
+  let word = "";
+  if (letter && unsure(letter)) {
+    const span = wordSpans(restored.text).find(([from, to]) => from <= closest && closest < to);
+    const [start, end] = span ?? [closest, closest + 1];
+    word = restored.text.slice(start, end);
+  }
+
+  return (
+    <p className="line-in flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm text-neutral-500 dark:text-neutral-400">
+      <span className="font-medium tabular-nums text-neutral-700 dark:text-neutral-300">
+        {text.xrayStats(decided.length, hesitant)}
+      </span>
+      {letter && word && (
+        <span className="font-medium text-amber-700 dark:text-amber-400">
+          {text.xrayClosest(
+            restored.text[closest],
+            word,
+            Math.round(Math.max(letter.probability, 1 - letter.probability) * 100),
+          )}
+        </span>
+      )}
+      <span>{text.xrayLegend}</span>
+    </p>
   );
 }
 

@@ -10,6 +10,8 @@
 
 import { changesBetween } from "./lib/changes.js";
 import { localTagger } from "./lib/local.js";
+// The self-contained build: a service worker may not import() anything at run time.
+import * as ort from "./vendor/ort.wasm.bundle.min.mjs";
 
 const MENU_ID = "schwa-fix-selection";
 
@@ -45,7 +47,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 
 /** Restore text with the model packaged in the extension. */
 async function restore(text) {
-  const restorer = await localTagger();
+  const restorer = await localTagger(ort);
   if (!restorer) throw new Error("model yüklənmədi");
   const restored = await restorer.restore(text);
   return { text: restored, changes: changesBetween(text, restored) };

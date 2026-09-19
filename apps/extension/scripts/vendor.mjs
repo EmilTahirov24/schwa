@@ -19,7 +19,10 @@ const extension = resolve(here, "..");
 const bundle = resolve(extension, "..", "..", "packages", "core", "schwa", "data");
 
 const RUNTIME = [
+  // The page loads this one when it needs it...
   "ort.wasm.min.mjs",
+  // ...the extension's service worker imports this one, which carries its own loader.
+  "ort.wasm.bundle.min.mjs",
   "ort-wasm-simd-threaded.mjs",
   "ort-wasm-simd-threaded.wasm",
 ];

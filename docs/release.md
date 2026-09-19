@@ -40,10 +40,11 @@ restorer reports `lexicon` instead of `hybrid`.
 ## The extension
 
 1. Bump `version` in `apps/extension/manifest.json`.
-2. `npm install && npm run vendor && npm test`
-3. Load it unpacked once and use it on a real page — the parts that talk to Chrome have no
-   automated coverage.
-4. Zip the folder without `node_modules` and upload it.
+2. `npm install && npm run vendor && npm test && npm run pack && npm run e2e` — the last one
+   loads the packed extension into Chrome and restores text through it, as CI does.
+3. Load `dist/schwa-extension` unpacked once and use it on a real page: the context menu,
+   the shortcut and the replacement inside a site's own editor have no automated coverage.
+4. Zip `dist/schwa-extension` and upload it.
 5. The listing text is in [store-listing.md](store-listing.md); screenshots have to be retaken
    whenever the interface changes.
 

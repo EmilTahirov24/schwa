@@ -24,12 +24,20 @@ async function loadLexicon(url) {
   return parseLexicon(await new Response(unpacked).text());
 }
 
-async function create(base, runtime) {
-  const ort = await import(/* webpackIgnore: true */ /* turbopackIgnore: true */ `${runtime}ort.wasm.min.mjs`);
+async function create(base, runtime, runtimeModule) {
+  // A page can load the runtime when it is needed. A service worker cannot: the HTML
+  // specification forbids import() there, so the extension imports the self-contained build
+  // statically and hands it in.
+  const ort =
+    runtimeModule ??
+    (await import(/* webpackIgnore: true */ /* turbopackIgnore: true */ `${runtime}ort.wasm.min.mjs`));
 
   // The runtime files sit next to the page, never on a CDN; one thread is all a service
-  // worker can have anyway, and it starts faster.
-  ort.env.wasm.wasmPaths = runtime;
+  // worker can have anyway, and it starts faster. The self-contained build is told where the
+  // .wasm file is and nothing else, or it would try to import its loader from there too.
+  ort.env.wasm.wasmPaths = runtimeModule
+    ? { wasm: `${runtime}ort-wasm-simd-threaded.wasm` }
+    : runtime;
   ort.env.wasm.numThreads = 1;
 
   const [meta, session, lexicon] = await Promise.all([
@@ -83,15 +91,16 @@ const loading = new Map();
 /**
  * The restorer, or null when the files are missing. Loaded once per location, then reused.
  *
- * @param base    URL of the folder holding tagger.onnx, tagger.json and lexicon.tsv.gz
- * @param runtime URL of the folder holding the onnxruntime files
+ * @param base          URL of the folder holding tagger.onnx, tagger.json and lexicon.tsv.gz
+ * @param runtime       URL of the folder holding the onnxruntime files
+ * @param runtimeModule onnxruntime itself, when the caller has already imported it
  */
-export function localRestorer(base, runtime) {
+export function localRestorer(base, runtime, runtimeModule = null) {
   const cacheKey = `${base}|${runtime}`;
   if (!loading.has(cacheKey)) {
     loading.set(
       cacheKey,
-      create(base, runtime).catch((error) => {
+      create(base, runtime, runtimeModule).catch((error) => {
         console.warn("schwa: no local model", error);
         return null;
       }),
@@ -100,9 +109,13 @@ export function localRestorer(base, runtime) {
   return loading.get(cacheKey);
 }
 
-/** Inside the extension, the files are packaged with it. */
-export function localTagger() {
-  return localRestorer(chrome.runtime.getURL("model/"), chrome.runtime.getURL("vendor/"));
+/** Inside the extension, the files are packaged with it and the runtime is imported already. */
+export function localTagger(runtimeModule) {
+  return localRestorer(
+    chrome.runtime.getURL("model/"),
+    chrome.runtime.getURL("vendor/"),
+    runtimeModule,
+  );
 }
 
 const spelling = new Map();

@@ -15,6 +15,8 @@ cd apps/extension
 npm install
 npm run vendor     # copies onnxruntime and the model into the extension
 npm test
+npm run pack       # the shipped files alone, in dist/schwa-extension
+npm run e2e        # that folder in a real Chrome, restoring text with its own model
 ```
 
 The model comes from the Python package's bundle in `packages/core/schwa/data`, which is
@@ -22,7 +24,7 @@ committed, so the package, the extension and the demo page always carry the same
 The integration test then checks that this folder answers exactly as the Python package does.
 
 Then open `chrome://extensions`, turn on developer mode, choose **Load unpacked**, and pick
-this folder.
+`dist/schwa-extension`.
 
 ## What it is allowed to do
 

@@ -6,9 +6,12 @@
   "description": "Chrome extension that restores Azerbaijani diacritics",
   "scripts": {
     "test": "node --test test/*.test.js",
-    "vendor": "node scripts/vendor.mjs"
+    "vendor": "node scripts/vendor.mjs",
+    "pack": "node scripts/pack.mjs",
+    "e2e": "node --test test/browser.e2e.js"
   },
   "devDependencies": {
-    "onnxruntime-web": "^1.30.0"
+    "onnxruntime-web": "^1.30.0",
+    "puppeteer-core": "^24.43.1"
   }
 }

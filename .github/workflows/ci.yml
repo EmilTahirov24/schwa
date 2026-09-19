@@ -50,6 +50,12 @@ jobs:
       # exactly as the Python package recorded in test/fixtures.
       - run: npm test
 
+      # The packed extension in the runner's Chrome, restoring text with its own model.
+      - name: Test the extension in Chrome
+        run: npm run pack && npm run e2e
+        env:
+          CHROME: /usr/bin/google-chrome
+
   web:
     runs-on: ubuntu-latest
     steps:

@@ -20,7 +20,7 @@ from schwa.alphabet import (
 )
 from schwa.bundled import check, default_restorer, is_bundled, restore
 
-__version__ = "0.1.0.dev0"
+__version__ = "0.1.0"
 
 __all__ = [
     "FOLD_PAIRS",

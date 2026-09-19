@@ -1,6 +1,6 @@
 [project]
 name = "schwa-api"
-version = "0.1.0.dev0"
+version = "0.1.0"
 description = "HTTP service that restores Azerbaijani diacritics"
 requires-python = ">=3.12"
 dependencies = [

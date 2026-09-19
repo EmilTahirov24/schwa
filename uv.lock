@@ -921,7 +921,7 @@ wheels = [
 
 [[package]]
 name = "schwa-api"
-version = "0.1.0.dev0"
+version = "0.1.0"
 source = { editable = "packages/api" }
 dependencies = [
     { name = "fastapi" },
@@ -938,7 +938,7 @@ requires-dist = [
 
 [[package]]
 name = "schwa-az"
-version = "0.1.0.dev0"
+version = "0.1.0"
 source = { editable = "packages/core" }
 
 [package.optional-dependencies]

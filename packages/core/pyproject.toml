@@ -1,6 +1,6 @@
 [project]
 name = "schwa-az"
-version = "0.1.0.dev0"
+version = "0.1.0"
 description = "Restore Azerbaijani diacritics in text typed without them"
 readme = "README.md"
 requires-python = ">=3.12"

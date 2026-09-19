@@ -1,16 +1,26 @@
 # Changelog
 
-## Unreleased
+## 0.1.1 — 2026-09-20
+
+The browser extension only. The Python package and the model are unchanged.
 
 ### Fixed
 
 - In chat-style editors - WhatsApp Web, Gmail, most message boxes - `Ctrl+Shift+E` with
   nothing selected did nothing. It now restores everything typed there, as it already did in
   plain fields.
+- Restoring selected text in an editor replaced it as plain text, dropping bold, links and
+  emoji drawn as images. Now only the letters that change are edited; everything around
+  them stays as it was, and so does the cursor.
+- A password field could be read and changed. Password fields are never read now, and email
+  or number fields are left alone instead of failing.
 - Where a field refused the browser's editing command, the fallback put the restored text
   next to the original instead of in its place.
-- An editor that refuses the change is now reported on the page instead of silently left
-  as it was.
+- An editor that refuses the change, or text that changed while the model was working, is
+  now reported on the page instead of being silently left or overwritten. Selected text that
+  cannot be edited says so, instead of blaming the editor.
+- In the popup, a failed restoration no longer leaves the button disabled, and spaces and line
+  breaks at either end of the text are kept.
 
 ## 0.1.0 — 2026-09-19
 

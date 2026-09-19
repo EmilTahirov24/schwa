@@ -3,8 +3,8 @@
  *
  * When this succeeds nothing talks to a server: the text stays in the tab it was typed in.
  * It is the same combination that scores best in the evaluation - the tagger, overruled by
- * the lexicon on words the training text was unanimous about. If the model was not bundled
- * (`npm run vendor` copies it in), the caller falls back to the service.
+ * the lexicon on words the training text was unanimous about. `npm run vendor` copies the
+ * model in from the Python package's bundle.
  *
  * `base` is where the files live: the extension's own URL inside the extension, the site's
  * path on the demo page. That is the only difference between the two.

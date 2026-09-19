@@ -1,8 +1,9 @@
 """The HTTP service.
 
-It never writes the text it is given anywhere: not to disk, not to the logs. The only
-things recorded are how many characters arrived and how long the work took. The browser
-extension sends whatever someone is typing, and that promise is the reason it can.
+It never writes the text it is given anywhere: not to disk, not to the logs. The only thing it
+remembers, in memory, is the address and time of recent requests, which the rate limit
+counts. The demo page and the browser extension do not use it - they carry the model - so it
+is for restoring text from code.
 """
 
 from __future__ import annotations

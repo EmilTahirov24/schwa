@@ -4,14 +4,13 @@
  * Nothing runs on any page until you ask for it. There is no content script in the
  * manifest and no permission for any site: when you pick the context menu item or press
  * the shortcut, the two small functions below are injected into that one tab under
- * activeTab, they do their work, and they are gone. Text leaves the browser only at that
- * moment, and only to the service you configured.
+ * activeTab, they do their work, and they are gone. The model is packaged with the
+ * extension, so the text is restored right here and never leaves the browser.
  */
 
 import { changesBetween } from "./lib/changes.js";
 import { localTagger } from "./lib/local.js";
 
-const DEFAULT_API = "http://127.0.0.1:8000";
 const MENU_ID = "schwa-fix-selection";
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -44,40 +43,13 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   return false;
 });
 
-async function settings() {
-  const stored = await chrome.storage.sync.get({ apiUrl: DEFAULT_API, preferLocal: true });
-  return { apiUrl: stored.apiUrl.replace(/\/$/, ""), preferLocal: stored.preferLocal };
-}
-
-/**
- * Restore text, in the browser where the model is bundled and through the service where it
- * is not. Locally is both faster and private, so it is the default; the setting exists for
- * comparing the two.
- */
+/** Restore text with the model packaged in the extension. */
 async function restore(text) {
-  const { apiUrl, preferLocal } = await settings();
-
-  if (preferLocal) {
-    const tagger = await localTagger();
-    if (tagger) {
-      const restored = await tagger.restore(text);
-      return { text: restored, changes: changesBetween(text, restored), local: true };
-    }
-  }
-
-  const response = await fetch(`${apiUrl}/v1/restore`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text }),
-  });
-
-  if (!response.ok) {
-    throw new Error(response.status === 429 ? "too many requests" : `service said ${response.status}`);
-  }
-
-  return { ...(await response.json()), local: false };
+  const restorer = await localTagger();
+  if (!restorer) throw new Error("model yüklənmədi");
+  const restored = await restorer.restore(text);
+  return { text: restored, changes: changesBetween(text, restored) };
 }
-
 
 async function fixTab(tabId) {
   const [collected] = await chrome.scripting.executeScript({

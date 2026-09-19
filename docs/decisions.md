@@ -120,6 +120,10 @@ functions are injected into that one tab under `activeTab`, do their work and di
 at any other moment, and a store reviewer has nothing to question. It also matches what the
 service promises: text leaves the browser only on an explicit action and is never stored.
 
+*Later:* once the model shipped inside the extension, the fallback to the service went, and
+with it the one host permission and the `storage` permission its settings needed. Text now
+never leaves the browser at all.
+
 ## 10. Restoration runs through the browser's own editing path
 
 **Context.** Replacing text in a field by assigning `value` is simple, but React-based sites

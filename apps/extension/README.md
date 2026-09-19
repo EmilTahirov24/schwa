@@ -5,11 +5,8 @@ menu, or press `Ctrl+Shift+E` in the field you are writing in.
 
 ## Where the work happens
 
-By default, inside your browser. The extension carries the model, so the text you are
-writing never leaves the tab — no server sees it, and it works with no connection at all.
-
-If the model was not bundled, the extension falls back to the service, and the setting under
-options lets you switch deliberately. The popup says which one answered.
+Inside your browser. The extension carries the model, so the text you are writing never
+leaves the tab — no server sees it, and it works with no connection at all.
 
 ## Install it while developing
 
@@ -29,9 +26,8 @@ this folder.
 
 ## What it is allowed to do
 
-The manifest asks for `contextMenus`, `scripting`, `activeTab` and `storage`, and for one
-host — the service address, used only in fallback mode. There is no content script and no
-permission for any website.
+The manifest asks for `contextMenus`, `scripting` and `activeTab`, and for nothing else: no
+host, no storage, no content script, no permission for any website.
 
 That is deliberate. Nothing runs on a page until you invoke the extension; at that moment two
 short functions are injected into that single tab, they read the text you pointed at, put the
@@ -49,4 +45,5 @@ the Python tests, so the two cannot quietly drift apart — including the casing
 
 ## Not here yet
 
-Icons, store listing material, and a Firefox build.
+The Chrome Web Store release — the listing text is in
+[docs/store-listing.md](../../docs/store-listing.md) — and a Firefox build.

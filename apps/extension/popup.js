@@ -29,8 +29,3 @@ copy.addEventListener("click", async () => {
   await navigator.clipboard.writeText(text.value);
   status.textContent = "kopyalandı";
 });
-
-document.getElementById("options").addEventListener("click", (event) => {
-  event.preventDefault();
-  chrome.runtime.openOptionsPage();
-});

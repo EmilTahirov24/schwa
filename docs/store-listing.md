@@ -44,26 +44,20 @@ Restoring missing Azerbaijani diacritics in text the user selects or is typing.
   restored text back. There is no content script, so nothing runs on a page otherwise.
 - **contextMenus** — adds the "Azərbaycan hərflərini düzəlt" item on selected or editable
   text, which is one of the two ways to use the extension.
-- **storage** — stores two settings: whether to run the model locally, and the address of the
-  optional service.
-- **Host permission (the service address)** — used only in fallback mode, when the user turns
-  local processing off or no model is bundled. In the default configuration it is never
-  contacted.
 
 ## Data usage disclosures
 
 - Does the extension collect personally identifiable information? **No.**
 - Health, financial, authentication, personal communications, location, web history, user
-  activity, website content? **No** — text is processed in the browser and is not transmitted
-  or stored. In fallback mode the selected text is sent to the configured service for the
-  length of one request and is not stored there either.
+  activity, website content? **No** — text is processed in the browser by the model packaged
+  with the extension, and is never transmitted or stored.
 - Is data sold to third parties? **No.**
 - Is data used for purposes unrelated to the single purpose? **No.**
 - Is data used to determine creditworthiness or for lending? **No.**
 
 ## Privacy policy URL
 
-`<demo domain>/privacy` — the page is in `apps/web/src/app/privacy`.
+https://emiltahirov24.github.io/schwa/privacy/ — the page is in `apps/web/src/app/privacy`.
 
 ## Category and language
 
@@ -74,7 +68,6 @@ Category: Productivity. Language: Azerbaijani.
 1. The extension fixing a message in a real chat, before and after.
 2. The context menu open on selected text.
 3. The popup with text restored and "N söz dəyişdi" shown.
-4. The options page, with local processing on.
 
 ## Before submitting
 

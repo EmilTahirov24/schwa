@@ -178,7 +178,9 @@ class Speller:
         )
         header = "@suffixes\t" + ",".join(sorted(self.suffixes))
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_bytes(gzip.compress("\n".join([header, *rows]).encode("utf-8"), 9))
+        # mtime=0: the same vocabulary always gives the same bytes.
+        text = "\n".join([header, *rows]).encode("utf-8")
+        path.write_bytes(gzip.compress(text, 9, mtime=0))
         return len(rows)
 
     @classmethod

@@ -44,7 +44,9 @@ def write_confident_lexicon(lexicon: Lexicon, path: Path) -> tuple[int, int]:
 
     payload = "\n".join(sorted(rows)).encode("utf-8")
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_bytes(gzip.compress(payload, 9))
+    # No timestamp in the header: the same words must give the same bytes, or every rebuild
+    # of the committed bundle shows up as a change.
+    path.write_bytes(gzip.compress(payload, 9, mtime=0))
     return len(rows), path.stat().st_size
 
 

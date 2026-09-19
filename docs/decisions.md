@@ -288,3 +288,21 @@ the combined text they bought one more point on the web's capitals and lost 0.4 
 Wikipedia's. The web alone made the best model for the web's ambiguous words and one four
 points worse on Wikipedia's. What a model reads is what it is good at, and the numbers say
 read both.
+
+## 20. The extension edits only the letters that change
+
+**Context.** Restoring a whole editor the simple way - select everything, insert the restored
+text - works in a plain box. In an editor like Gmail's or WhatsApp Web's it flattened what
+was there: in Chrome, a two-line message lost its bold, its link and an emoji drawn as an
+image, and gained a blank line.
+
+**Decision.** The page side reads the editor's visible, editable text nodes and puts back
+only the stretch of each node from its first changed letter to its last, each through the
+browser's editing command.
+
+**Why.** A restoration never changes the length of anything, so every letter's place is
+known before and after, and a text node has one format throughout: an edit inside it cannot
+lose formatting, and nothing between nodes is touched. A line break is read wherever a new
+line or an image separates two nodes, so words the reader sees apart are never read as one.
+The cost is undo: every changed node is its own edit, so in formatted text `Ctrl+Z` may take
+several presses.

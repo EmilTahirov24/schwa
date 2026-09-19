@@ -26,15 +26,20 @@ chrome.runtime.onInstalled.addListener(() => {
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === MENU_ID && tab?.id !== undefined) {
-    void fixTab(tab.id);
+    fixTab(tab.id).catch(unreachable);
   }
 });
 
 chrome.commands.onCommand.addListener((command, tab) => {
   if (command === "fix-field" && tab?.id !== undefined) {
-    void fixTab(tab.id);
+    fixTab(tab.id).catch(unreachable);
   }
 });
+
+/** Chrome keeps extensions out of its own pages and the Web Store; nothing can be shown there. */
+function unreachable(error) {
+  console.warn(`Schwa could not work in this tab: ${error.message ?? error}`);
+}
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message?.type === "restore") {
@@ -60,9 +65,13 @@ async function fixTab(tabId) {
     func: collectText,
   });
 
-  const text = collected?.result;
+  const { text, editable } = collected?.result ?? {};
   if (!text) {
     await flash(tabId, "Seçilmiş mətn yoxdur");
+    return;
+  }
+  if (!editable) {
+    await flash(tabId, "Bu mətn dəyişdirilə bilməz. Popup-a yapışdırın.");
     return;
   }
 
@@ -84,7 +93,9 @@ async function fixTab(tabId) {
     func: replaceText,
     args: [restored],
   });
-  if (!replaced?.result) {
+  if (replaced?.result === "changed") {
+    await flash(tabId, "Mətn bu arada dəyişdi. Yenidən cəhd edin.");
+  } else if (replaced?.result !== "done") {
     await flash(tabId, "Bu redaktor dəyişikliyi qəbul etmədi");
   }
 }

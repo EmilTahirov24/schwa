@@ -4,8 +4,9 @@ Restores Azerbaijani letters in whatever you are typing: select the text and use
 menu, or press `Ctrl+Shift+E` in the field you are writing in.
 
 With text selected, only the selection is restored. With nothing selected, everything in the
-field is - a plain input, or a chat-style editor like WhatsApp Web's. In a rich editor with
-formatting, select the part you want: restoring all of it replaces it as plain text.
+field is - a plain input, or an editor like WhatsApp Web's or Gmail's. Only the letters that
+change are touched: bold, links, emoji and line breaks stay as they were, and so does the
+cursor. Password fields are never read.
 
 ## Where the work happens
 
@@ -40,7 +41,9 @@ short functions are injected into that single tab, they read the text you pointe
 restored text back, and are gone. The page cannot be read at any other time.
 
 Replacements go through the browser's own editing path, so sites built on React — WhatsApp
-Web, Instagram, Gmail — see real input events, and `Ctrl+Z` undoes the change.
+Web, Instagram, Gmail — see real input events, and `Ctrl+Z` undoes the change. In an editor,
+each differently formatted stretch of text is its own edit, so there it may take a few
+presses.
 
 ## Why the alphabet code exists twice
 

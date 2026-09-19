@@ -2,7 +2,15 @@
 
 ## Unreleased
 
-Nothing yet.
+### Fixed
+
+- In chat-style editors - WhatsApp Web, Gmail, most message boxes - `Ctrl+Shift+E` with
+  nothing selected did nothing. It now restores everything typed there, as it already did in
+  plain fields.
+- Where a field refused the browser's editing command, the fallback put the restored text
+  next to the original instead of in its place.
+- An editor that refuses the change is now reported on the page instead of silently left
+  as it was.
 
 ## 0.1.0 — 2026-09-19
 

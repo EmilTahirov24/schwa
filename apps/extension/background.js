@@ -10,6 +10,7 @@
 
 import { changesBetween } from "./lib/changes.js";
 import { localTagger } from "./lib/local.js";
+import { collectText, replaceText, showToast } from "./lib/page.js";
 // The self-contained build: a service worker may not import() anything at run time.
 import * as ort from "./vendor/ort.wasm.bundle.min.mjs";
 
@@ -78,74 +79,16 @@ async function fixTab(tabId) {
     return;
   }
 
-  await chrome.scripting.executeScript({
+  const [replaced] = await chrome.scripting.executeScript({
     target: { tabId },
     func: replaceText,
     args: [restored],
   });
+  if (!replaced?.result) {
+    await flash(tabId, "Bu redaktor dəyişikliyi qəbul etmədi");
+  }
 }
 
 async function flash(tabId, message) {
   await chrome.scripting.executeScript({ target: { tabId }, func: showToast, args: [message] });
-}
-
-/* The three functions below run inside the page, not here. */
-
-function collectText() {
-  const active = document.activeElement;
-  const isField =
-    active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement;
-
-  if (isField) {
-    const { selectionStart, selectionEnd, value } = active;
-    const hasSelection = selectionStart !== selectionEnd;
-    return hasSelection ? value.slice(selectionStart, selectionEnd) : value;
-  }
-
-  return window.getSelection()?.toString() ?? "";
-}
-
-function replaceText(restored) {
-  const active = document.activeElement;
-  const isField =
-    active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement;
-
-  if (isField) {
-    const { selectionStart, selectionEnd, value } = active;
-    if (selectionStart === selectionEnd) active.setSelectionRange(0, value.length);
-    // insertText goes through the browser's own editing path, so the page sees real
-    // input events and Ctrl+Z still undoes the change.
-    if (!document.execCommand("insertText", false, restored)) {
-      const start = selectionStart ?? 0;
-      const end = selectionEnd ?? value.length;
-      active.value = value.slice(0, start) + restored + value.slice(end);
-      active.dispatchEvent(new Event("input", { bubbles: true }));
-    }
-    return;
-  }
-
-  const selection = window.getSelection();
-  if (selection && selection.rangeCount > 0 && !selection.isCollapsed) {
-    document.execCommand("insertText", false, restored);
-  }
-}
-
-function showToast(message) {
-  const toast = document.createElement("div");
-  toast.textContent = message;
-  toast.style.cssText = [
-    "position:fixed",
-    "bottom:20px",
-    "right:20px",
-    "z-index:2147483647",
-    "padding:10px 14px",
-    "border-radius:8px",
-    "background:#171717",
-    "color:#fafafa",
-    "font:14px system-ui,sans-serif",
-    "box-shadow:0 4px 16px rgba(0,0,0,.25)",
-  ].join(";");
-
-  document.body.appendChild(toast);
-  setTimeout(() => toast.remove(), 2200);
 }

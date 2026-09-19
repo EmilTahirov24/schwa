@@ -3,6 +3,10 @@
 Restores Azerbaijani letters in whatever you are typing: select the text and use the context
 menu, or press `Ctrl+Shift+E` in the field you are writing in.
 
+With text selected, only the selection is restored. With nothing selected, everything in the
+field is - a plain input, or a chat-style editor like WhatsApp Web's. In a rich editor with
+formatting, select the part you want: restoring all of it replaces it as plain text.
+
 ## Where the work happens
 
 Inside your browser. The extension carries the model, so the text you are writing never

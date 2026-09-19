@@ -33,10 +33,20 @@ def context_file(tmp_path):
     return path
 
 
-def test_without_any_files_it_changes_nothing(monkeypatch):
+def test_without_configuration_it_serves_the_shipped_model():
+    pytest.importorskip("onnxruntime")
+    loaded = load_restorer()
+    assert loaded.name == "hybrid"
+    assert set(loaded.sources) == {"bundle"}
+    assert loaded.restorer.restore("sence neden basliyaq") == "səncə nədən başlıyaq"
+
+
+def test_an_installation_without_the_model_changes_nothing(monkeypatch):
+    from schwa import bundled
+
+    monkeypatch.setattr(bundled, "is_bundled", lambda: False)
     loaded = load_restorer()
     assert loaded.name == "identity"
-    assert loaded.sources == {}
     assert loaded.restorer.restore("sence") == "sence"
 
 
@@ -56,15 +66,15 @@ def test_the_context_model_is_used_when_present(monkeypatch, lexicon_file, conte
 
 
 def test_a_path_that_does_not_exist_is_ignored(monkeypatch, tmp_path):
-    # A deployment with a typo in its configuration should fall back visibly rather than
-    # crash on the first request.
+    # A deployment with a typo in its configuration should fall back to the shipped model,
+    # visibly in /v1/info, rather than crash on the first request.
     monkeypatch.setenv(ENV_LEXICON, str(tmp_path / "missing.jsonl"))
-    assert load_restorer().name == "identity"
+    assert set(load_restorer().sources) == {"bundle"}
 
 
 def test_an_empty_variable_is_ignored(monkeypatch):
     monkeypatch.setenv(ENV_LEXICON, "")
-    assert load_restorer().name == "identity"
+    assert set(load_restorer().sources) == {"bundle"}
 
 
 @pytest.fixture

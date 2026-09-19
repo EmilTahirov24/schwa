@@ -1,9 +1,10 @@
-"""Pick the best restorer the deployment actually has files for.
+"""Pick the restorer the service runs.
 
-The service should run with whatever is present: a bare lexicon on a small box, the context
-model when it is shipped alongside, the character tagger once it is trained. Each step up is
-optional, and the one in use is reported by ``/v1/info`` so a demo can never quietly serve a
-weaker model than the numbers next to it claim.
+With no configuration it runs the model the package ships - the tagger corrected by the
+lexicon, the system the README's numbers are about. The environment can point it at other
+files instead: a bare lexicon, the context model, another tagger. Whichever is in use is
+reported by ``/v1/info``, so a deployment can never quietly serve a weaker model than the
+numbers next to it claim.
 """
 
 from __future__ import annotations
@@ -47,8 +48,17 @@ def _path_from_env(variable: str) -> Path | None:
     return path if path.exists() else None
 
 
+def shipped() -> Loaded:
+    """The model the package carries, or no change at all if this installation has none."""
+    from schwa import bundled
+
+    if not bundled.is_bundled():
+        return Loaded(IdentityRestorer(), {})
+    return Loaded(bundled.default_restorer(), {"bundle": str(bundled.MODEL.parent)})
+
+
 def load_restorer() -> Loaded:
-    """Build the strongest restorer whose files are present."""
+    """The restorer the environment names, or the shipped one when it names none."""
     sources: dict[str, str] = {}
 
     tagger_path = _path_from_env(ENV_TAGGER)
@@ -76,7 +86,7 @@ def load_restorer() -> Loaded:
         return Loaded(tagger, sources)
 
     if lexicon_path is None:
-        return Loaded(IdentityRestorer(), sources)
+        return shipped()
 
     sources["lexicon"] = str(lexicon_path)
     lexicon = Lexicon.load(lexicon_path)

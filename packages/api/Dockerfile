@@ -1,10 +1,10 @@
 # Build from the repository root:
 #   docker build -f packages/api/Dockerfile -t schwa-api .
-#   docker run -p 8000:8000 -v "$PWD/data/processed:/models:ro" \
-#     -e SCHWA_LEXICON=/models/lexicon.jsonl -e SCHWA_CONTEXT=/models/context.jsonl schwa-api
+#   docker run -p 8000:8000 schwa-api
 #
-# The model files are mounted rather than baked in, so the same image can serve the plain
-# lexicon on a small box and the full model where there is room for it.
+# The image carries the model the package ships, so it needs nothing else. Other files can
+# be mounted and named instead - SCHWA_TAGGER, SCHWA_LEXICON, SCHWA_CONTEXT - and /v1/info
+# says which restorer is running.
 
 FROM python:3.12-slim AS build
 

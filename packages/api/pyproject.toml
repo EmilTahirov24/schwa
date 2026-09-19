@@ -4,7 +4,7 @@ version = "0.1.0.dev0"
 description = "HTTP service that restores Azerbaijani diacritics"
 requires-python = ">=3.12"
 dependencies = [
-    "schwa-az",
+    "schwa-az[onnx]",
     "fastapi>=0.115",
     "uvicorn>=0.32",
 ]

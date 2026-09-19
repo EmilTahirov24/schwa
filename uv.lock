@@ -925,14 +925,14 @@ version = "0.1.0.dev0"
 source = { editable = "packages/api" }
 dependencies = [
     { name = "fastapi" },
-    { name = "schwa-az" },
+    { name = "schwa-az", extra = ["onnx"] },
     { name = "uvicorn" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "fastapi", specifier = ">=0.115" },
-    { name = "schwa-az", editable = "packages/core" },
+    { name = "schwa-az", extras = ["onnx"], editable = "packages/core" },
     { name = "uvicorn", specifier = ">=0.32" },
 ]
 

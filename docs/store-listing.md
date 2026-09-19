@@ -63,11 +63,21 @@ https://emiltahirov24.github.io/schwa/privacy/ — the page is in `apps/web/src/
 
 Category: Productivity. Language: Azerbaijani.
 
-## Screenshots to take (1280×800)
+## Images
 
-1. The extension fixing a message in a real chat, before and after.
-2. The context menu open on selected text.
-3. The popup with text restored and "N söz dəyişdi" shown.
+In [store/](store/), made by `npm run store-images` in `apps/extension` from the packed
+extension restoring real text - every restored sentence in them is the shipped model's own
+answer:
+
+1. `1-before-after.png` (1280×800) — a message typed without the letters, and after
+   Ctrl+Shift+E.
+2. `2-popup.png` (1280×800) — the popup, with text restored and "N söz dəyişdi".
+3. `3-private.png` (1280×800) — the model runs in the browser, offline, with no site
+   permission.
+4. `promo-small.png` (440×280) — the small promotional tile.
+
+The store icon is `apps/extension/icons/icon128.png`. Remake the images whenever the
+interface or the model changes.
 
 ## Before submitting
 

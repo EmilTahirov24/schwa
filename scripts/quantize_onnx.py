@@ -75,7 +75,7 @@ def main() -> int:
     lost = results["float32"][1] - results["int8"][1]
     smaller = results["float32"][0] / results["int8"][0]
     faster = results["float32"][2] / results["int8"][2]
-    print(f"\nint8 is {smaller:.1f}x smaller and loses {lost * 100:.2f} points of accuracy")
+    print(f"\nint8 is {smaller:.1f}x smaller and loses {max(lost, 0) * 100:.2f} points of accuracy")
 
     rows = "".join(
         f"| {name} | {size:.1f} MB | {accuracy:.2%} | {elapsed:.1f} s |\n"

@@ -1,0 +1,386 @@
+{
+  "dev": {
+    "ambiguous_words": 0.04362712176878811,
+    "groups": 10664,
+    "sentences": 172034,
+    "systems": {
+      "context": {
+        "ambiguous_accuracy": 0.8503491990799047,
+        "character_error_rate": 0.005601968422574285,
+        "intervals": {
+          "ambiguous_accuracy": [
+            0.8468102619423209,
+            0.8537150340668352
+          ],
+          "character_error_rate": [
+            0.0054636687404327165,
+            0.005739927497645485
+          ],
+          "sentence_accuracy": [
+            0.7373114833520618,
+            0.7461159106514177
+          ],
+          "word_accuracy": [
+            0.9729971970330623,
+            0.9742067956445022
+          ]
+        },
+        "sentence_accuracy": 0.741591778369392,
+        "word_accuracy": 0.9736122141591868
+      },
+      "hybrid": {
+        "ambiguous_accuracy": 0.9372690654370973,
+        "character_error_rate": 0.001797200674254599,
+        "intervals": {
+          "ambiguous_accuracy": [
+            0.9347764919544725,
+            0.9395455191701898
+          ],
+          "character_error_rate": [
+            0.0017326655736608593,
+            0.0018691097437833093
+          ],
+          "sentence_accuracy": [
+            0.8752190725876526,
+            0.8820383293300241
+          ],
+          "word_accuracy": [
+            0.987970579780037,
+            0.9888053238297781
+          ]
+        },
+        "sentence_accuracy": 0.8788204657218922,
+        "word_accuracy": 0.9884090270275916
+      },
+      "identity": {
+        "ambiguous_accuracy": 0.40972345098202484,
+        "character_error_rate": 0.14555655233406725,
+        "intervals": {
+          "ambiguous_accuracy": [
+            0.40198658067873894,
+            0.4175672012753334
+          ],
+          "character_error_rate": [
+            0.14459111405733527,
+            0.14656138263984447
+          ],
+          "sentence_accuracy": [
+            0.03287702567069639,
+            0.041336630252066756
+          ],
+          "word_accuracy": [
+            0.3613510030002655,
+            0.3685270576216906
+          ]
+        },
+        "sentence_accuracy": 0.03698687468756176,
+        "word_accuracy": 0.36501620402219387
+      },
+      "lexicon": {
+        "ambiguous_accuracy": 0.7924789491761816,
+        "character_error_rate": 0.00596341988839348,
+        "intervals": {
+          "ambiguous_accuracy": [
+            0.7878261039085561,
+            0.7974352212072476
+          ],
+          "character_error_rate": [
+            0.005818836838204893,
+            0.006100409975228406
+          ],
+          "sentence_accuracy": [
+            0.7167377355411338,
+            0.7259020231338562
+          ],
+          "word_accuracy": [
+            0.9704310824572682,
+            0.9717421635029324
+          ]
+        },
+        "sentence_accuracy": 0.7213399676808073,
+        "word_accuracy": 0.9710875017198468
+      },
+      "tagger": {
+        "ambiguous_accuracy": 0.9372690654370973,
+        "character_error_rate": 0.0020240341112322483,
+        "intervals": {
+          "ambiguous_accuracy": [
+            0.9347764919544725,
+            0.9395455191701898
+          ],
+          "character_error_rate": [
+            0.001955335315013624,
+            0.002097261580664002
+          ],
+          "sentence_accuracy": [
+            0.8602174558635087,
+            0.8675006568376162
+          ],
+          "word_accuracy": [
+            0.9863813933718089,
+            0.9872683338432666
+          ]
+        },
+        "sentence_accuracy": 0.8640908192566585,
+        "word_accuracy": 0.9868378930275706
+      }
+    },
+    "unseen_words": 0.03227999242586268
+  },
+  "test": {
+    "ambiguous_words": 0.043615364294679576,
+    "groups": 10429,
+    "sentences": 172328,
+    "systems": {
+      "context": {
+        "ambiguous_accuracy": 0.8510359486565686,
+        "character_error_rate": 0.005616369677338181,
+        "intervals": {
+          "ambiguous_accuracy": [
+            0.8476304775021041,
+            0.8544973709723868
+          ],
+          "character_error_rate": [
+            0.005485402398179311,
+            0.005763344062074637
+          ],
+          "sentence_accuracy": [
+            0.7348851416723218,
+            0.7444434980231781
+          ],
+          "word_accuracy": [
+            0.9730867393845954,
+            0.9742915143853513
+          ]
+        },
+        "sentence_accuracy": 0.7395489995821921,
+        "word_accuracy": 0.9737225935741638
+      },
+      "hybrid": {
+        "ambiguous_accuracy": 0.939380494448801,
+        "character_error_rate": 0.0017130469490252126,
+        "intervals": {
+          "ambiguous_accuracy": [
+            0.9367972866980276,
+            0.9419275521107804
+          ],
+          "character_error_rate": [
+            0.0016532394169655798,
+            0.0017801583702910962
+          ],
+          "sentence_accuracy": [
+            0.8778934348094994,
+            0.8854356257099735
+          ],
+          "word_accuracy": [
+            0.9884667875224252,
+            0.9892694116669077
+          ]
+        },
+        "sentence_accuracy": 0.8817429552945546,
+        "word_accuracy": 0.9888648421442976
+      },
+      "identity": {
+        "ambiguous_accuracy": 0.40076973874282884,
+        "character_error_rate": 0.14710285851852298,
+        "intervals": {
+          "ambiguous_accuracy": [
+            0.39298517283776,
+            0.4087149562539219
+          ],
+          "character_error_rate": [
+            0.14619349852475924,
+            0.14793335345170247
+          ],
+          "sentence_accuracy": [
+            0.03102030980735859,
+            0.04193308702317756
+          ],
+          "word_accuracy": [
+            0.35638097632029064,
+            0.36313626885256883
+          ]
+        },
+        "sentence_accuracy": 0.03540341674016991,
+        "word_accuracy": 0.3596120898571191
+      },
+      "lexicon": {
+        "ambiguous_accuracy": 0.7934499979363573,
+        "character_error_rate": 0.005974422422866703,
+        "intervals": {
+          "ambiguous_accuracy": [
+            0.788960779545051,
+            0.7979823511049403
+          ],
+          "character_error_rate": [
+            0.0058389544371453776,
+            0.006119339106238984
+          ],
+          "sentence_accuracy": [
+            0.7142837386486836,
+            0.7240104268299042
+          ],
+          "word_accuracy": [
+            0.9705538905101994,
+            0.9717854250086563
+          ]
+        },
+        "sentence_accuracy": 0.7191518499605404,
+        "word_accuracy": 0.9712109613552463
+      },
+      "tagger": {
+        "ambiguous_accuracy": 0.939380494448801,
+        "character_error_rate": 0.0019334498597655884,
+        "intervals": {
+          "ambiguous_accuracy": [
+            0.9367972866980276,
+            0.9419275521107804
+          ],
+          "character_error_rate": [
+            0.0018668918676330362,
+            0.0020048340729160387
+          ],
+          "sentence_accuracy": [
+            0.8631253251272404,
+            0.8711186411633747
+          ],
+          "word_accuracy": [
+            0.9869068813792927,
+            0.9877615402489852
+          ]
+        },
+        "sentence_accuracy": 0.8670964672020798,
+        "word_accuracy": 0.9873428317224414
+      }
+    },
+    "unseen_words": 0.031383476871247006
+  },
+  "web_test": {
+    "ambiguous_words": 0.04504377907265783,
+    "groups": 21797,
+    "sentences": 268532,
+    "systems": {
+      "context": {
+        "ambiguous_accuracy": 0.8760797723705868,
+        "character_error_rate": 0.0068403442038354875,
+        "intervals": {
+          "ambiguous_accuracy": [
+            0.8724664821974634,
+            0.8791696077267314
+          ],
+          "character_error_rate": [
+            0.006694834821078299,
+            0.006999247625274777
+          ],
+          "sentence_accuracy": [
+            0.7285588769555803,
+            0.73650076671158
+          ],
+          "word_accuracy": [
+            0.9727097533753462,
+            0.9738281825136602
+          ]
+        },
+        "sentence_accuracy": 0.7325719094930958,
+        "word_accuracy": 0.9732756413406405
+      },
+      "hybrid": {
+        "ambiguous_accuracy": 0.9572365483010731,
+        "character_error_rate": 0.0010141287048102319,
+        "intervals": {
+          "ambiguous_accuracy": [
+            0.9556795197093185,
+            0.9588355262019024
+          ],
+          "character_error_rate": [
+            0.0009732185926592952,
+            0.0010529839963273205
+          ],
+          "sentence_accuracy": [
+            0.9268027482756005,
+            0.9315038403869895
+          ],
+          "word_accuracy": [
+            0.9933774399738484,
+            0.9938403590538656
+          ]
+        },
+        "sentence_accuracy": 0.929129489222886,
+        "word_accuracy": 0.993602326990835
+      },
+      "identity": {
+        "ambiguous_accuracy": 0.2785270437523127,
+        "character_error_rate": 0.15591817049730955,
+        "intervals": {
+          "ambiguous_accuracy": [
+            0.27274020120387804,
+            0.2849031520299656
+          ],
+          "character_error_rate": [
+            0.15550631358946473,
+            0.15631590474468135
+          ],
+          "sentence_accuracy": [
+            0.002035635036080448,
+            0.0024778313785106536
+          ],
+          "word_accuracy": [
+            0.3329308368038207,
+            0.33565736747355684
+          ]
+        },
+        "sentence_accuracy": 0.002241818479734259,
+        "word_accuracy": 0.334258083445335
+      },
+      "lexicon": {
+        "ambiguous_accuracy": 0.7923838566853381,
+        "character_error_rate": 0.007383033774860632,
+        "intervals": {
+          "ambiguous_accuracy": [
+            0.7879216608267792,
+            0.7962745818261565
+          ],
+          "character_error_rate": [
+            0.007229361937354915,
+            0.007551276834034082
+          ],
+          "sentence_accuracy": [
+            0.6971610352123925,
+            0.7054860298981745
+          ],
+          "word_accuracy": [
+            0.9688283437887816,
+            0.9701258963536832
+          ]
+        },
+        "sentence_accuracy": 0.7012534818941504,
+        "word_accuracy": 0.9695056610052304
+      },
+      "tagger": {
+        "ambiguous_accuracy": 0.9572365483010731,
+        "character_error_rate": 0.0010170376569138822,
+        "intervals": {
+          "ambiguous_accuracy": [
+            0.9556795197093185,
+            0.9588355262019024
+          ],
+          "character_error_rate": [
+            0.0009773802421884578,
+            0.0010547525491079485
+          ],
+          "sentence_accuracy": [
+            0.9255461073138219,
+            0.9302541802601401
+          ],
+          "word_accuracy": [
+            0.993230076156824,
+            0.9936967835755711
+          ]
+        },
+        "sentence_accuracy": 0.9278707937973872,
+        "word_accuracy": 0.993457493536376
+      }
+    },
+    "unseen_words": 0.023658717206645443
+  }
+}

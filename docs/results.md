@@ -144,6 +144,18 @@ The same predictions on the test split, 172,328 sentences, scored against severa
 | 10% | 68,373 | 3.1% | 73.4% (72.8%–74.0%) | 92.6% (92.3%–92.9%) | +19.19 (+18.61 to +19.75) |
 | 20% | 33,937 | 1.5% | 64.1% (63.1%–65.0%) | 90.0% (89.4%–90.5%) | +25.89 (+24.94 to +26.81) |
 
+### names (dev)
+
+Capitalised mid-sentence words on the dev split: 344,304 of them, 12,804 restored wrong (3.72%). Each rule proposes a spelling from the names in 159,883 training articles' titles (87,950 typed forms, 86,087 of them spelled one way), and is scored on the answers above: a word it changes is fixed if the rule is right and the model was wrong, broken if the model was right and the rule is not.
+
+| Rule | Words changed | Fixed | Broken | Net |
+|---|---|---|---|---|
+| the titles spell it one way | 2,536 | 1,227 | 1,174 | +53 |
+| ... and training never saw the word | 115 | 92 | 21 | +71 |
+| ... and it is in two titles or more | 966 | 454 | 470 | -16 |
+| a name in the titles, plus a suffix | 8,051 | 1,977 | 5,352 | -3,375 |
+| ... and training never saw the name | 627 | 127 | 472 | -345 |
+
 ### errors (test)
 
 The shipped model (tagger.onnx, int8, with the lexicon) on 172,328 sentences of the test split: 25,995 wrong words out of 2,120,093 that could be wrong. The first four rows split every word by case and position; the others overlap them.

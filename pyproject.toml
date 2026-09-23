@@ -88,10 +88,11 @@ eval = [
 domain = "python scripts/domain_shift.py --models wikipedia=models/tagger_wikipedia.pt web=models/tagger_web.pt both=models/tagger.pt capitals=models/tagger_caps.pt both+capitals=models/tagger_both_caps.pt"
 domain-dev = "python scripts/domain_shift.py --splits dev web_dev --models wikipedia=models/tagger_wikipedia.pt web=models/tagger_web.pt both=models/tagger.pt capitals=models/tagger_caps.pt both+capitals=models/tagger_both_caps.pt"
 threshold = "python scripts/ambiguity_threshold.py --split test"
+names = "python scripts/names.py --split dev"
 data = ["extract", "corpus", "lexicon", "web"]
 train = ["context", "tagger", "tagger-wikipedia", "tagger-web", "tagger-caps", "tagger-both-caps"]
 ship = ["export", "quantize", "bundle"]
-reproduce = ["data", "train", "ship", "eval", "domain-dev", "domain", "threshold"]
+reproduce = ["data", "train", "ship", "eval", "domain-dev", "domain", "threshold", "names"]
 
 [tool.ruff.lint.flake8-bugbear]
 # FastAPI's Depends() in a default is the framework's own idiom, not a mutable default.

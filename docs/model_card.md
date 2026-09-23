@@ -60,7 +60,9 @@ they are in [results.md](results.md) with the baselines and the paired compariso
 ## Where it fails
 
 - **Names.** A capital letter in mid-sentence marks 15% of Wikipedia's words and 47% of the
-  errors. Whether `Gurcan` is `Gürcan` depends on the person, not the sentence.
+  errors. Whether `Gurcan` is `Gürcan` depends on the person, not the sentence. A list of
+  names from Wikipedia's titles was measured and does not help: one typed form stands for
+  different people ([decision 21](decisions.md)).
 - **Genuinely ambiguous words.** `yeni` (new) and `yəni` (that is), `səhər` (morning) and
   `şəhər` (city), `ölüb` (died) and `olub` (was): the errors that change what a sentence
   says, and the ones a reader should check.

@@ -221,8 +221,13 @@ could be wrong. `scripts/error_analysis.py` sorts them by kind of word (the kind
 | lowercase | 76.8% | 36.5% |
 
 **Names** are the largest part. Whether `Gurcan` is meant to be `Gürcan` is not decidable
-from the letters — you have to know the person. A dictionary of names would move this;
-nothing about the sentence will.
+from the letters — you have to know the person. A dictionary of names was the obvious fix,
+so it was measured before being built (`poe names`, on dev): of the names that go wrong,
+62.9% are not in Wikipedia's own titles at all, and where such a list has an opinion it is
+about as often wrong as right — 1,227 words fixed against 1,174 broken, because one typed
+form stands for different names, `Şahin` and `Şahın` among them. The best of five rules is
+worth 71 words out of 344,304. It does not ship; [decision 21](docs/decisions.md) has the
+table.
 
 **Ambiguous words** are the part a better model could still win: `yeni` (new) against `yəni`
 (that is), `səhər` (morning) against `şəhər` (city), `ölüb` (died) against `olub` (was) —

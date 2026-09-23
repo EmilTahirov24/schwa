@@ -327,3 +327,26 @@ lose formatting, and nothing between nodes is touched. A line break is read wher
 line or an image separates two nodes, so words the reader sees apart are never read as one.
 The cost is undo: every changed node is its own edit, so in formatted text `Ctrl+Z` may take
 several presses.
+
+## 21. A list of names does not ship
+
+**Context.** Capitalised words in mid-sentence are 15% of the words and 47% of the errors, so
+the obvious next move is a gazetteer: let the names Wikipedia knows overrule the model. The
+README said a dictionary of names would move this.
+
+**Decision.** Measured on dev, and not built. Five rules, from the strictest to the most
+generous; the best of them is worth +71 words out of 344,304.
+
+**Why.** The list may only come from the titles of training articles, because a dev or test
+article's title is part of the text that article is scored on - which is also why taking the
+names from Wikidata or the live site would not be a way round it. Built that way it holds
+87,950 typed forms, 86,087 of them spelled one way. Against the errors it is meant to fix,
+62.9% are not in it at all, and where it does have an opinion it is as often wrong as right:
+1,227 words fixed against 1,174 broken. One typed form stands for different names - `Şahin`
+and `Şahın` are different people, `Qazı` and `Qazi` different words - and a list cannot say
+which was meant. Matching a name followed by an Azerbaijani suffix, which looked like the way
+to reach the long tail, is worse: 1,977 fixed against 5,352 broken, because a short prefix
+matches the wrong name. `poe names` rebuilds the table in [results.md](results.md).
+
+So the claim in the README was wrong, and it has been corrected. The size of the list is not
+what limits it: the letters do not say which name was meant, and neither does the sentence.

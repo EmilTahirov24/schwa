@@ -101,6 +101,37 @@ Words written entirely in capitals, restored right:
 | capitals | 94.2% of 16,309 | 91.1% of 32,395 |
 | both+capitals | 94.7% of 16,309 | 95.4% of 32,395 |
 
+### domain shift (dev)
+
+The tagger alone, trained wikipedia (`models/tagger_wikipedia.pt`), web (`models/tagger_web.pt`), both (`models/tagger.pt`), capitals (`models/tagger_caps.pt`), both+capitals (`models/tagger_both_caps.pt`). Same architecture, settings and seed; only what it read differs. In brackets: 95% interval from 1,000 bootstrap resamples of whole articles or documents.
+
+| Trained on | Wikipedia dev: ambiguous | Wikipedia dev: sentences | Web dev: ambiguous | Web dev: sentences |
+|---|---|---|---|---|
+| wikipedia | 93.8% (93.5–94.0) | 86.4% (86.0–86.8) | 93.3% (93.1–93.4) | 88.1% (87.8–88.5) |
+| web | 89.6% (89.2–90.0) | 78.2% (77.6–78.6) | 96.1% (96.0–96.3) | 92.5% (92.2–92.8) |
+| both | 93.7% (93.5–94.0) | 86.4% (86.0–86.8) | 95.8% (95.6–95.9) | 92.7% (92.4–93.0) |
+| capitals | 93.6% (93.3–93.8) | 86.4% (86.0–86.7) | 93.2% (93.0–93.4) | 88.9% (88.6–89.3) |
+| both+capitals | 93.8% (93.5–94.0) | 86.6% (86.3–87.0) | 95.6% (95.5–95.8) | 92.5% (92.2–92.8) |
+
+Against the model trained on wikipedia, in points:
+
+| Trained on | Wikipedia dev: ambiguous | Wikipedia dev: sentences | Web dev: ambiguous | Web dev: sentences |
+|---|---|---|---|---|
+| web | -4.14 (-4.50 to -3.80) | -8.26 (-8.64 to -7.92) | +2.89 (+2.73 to +3.04) | +4.35 (+4.16 to +4.54) |
+| both | -0.05 (-0.20 to +0.10) | -0.00 (-0.17 to +0.16) | +2.51 (+2.39 to +2.64) | +4.56 (+4.38 to +4.73) |
+| capitals | -0.18 (-0.31 to -0.06) | -0.04 (-0.18 to +0.10) | -0.09 (-0.19 to +0.02) | +0.83 (+0.70 to +0.95) |
+| both+capitals | -0.02 (-0.17 to +0.12) | +0.24 (+0.08 to +0.41) | +2.37 (+2.25 to +2.50) | +4.38 (+4.21 to +4.55) |
+
+Words written entirely in capitals, restored right:
+
+| Trained on | Wikipedia dev | Web dev |
+|---|---|---|
+| wikipedia | 94.6% of 15,791 | 83.7% of 30,987 |
+| web | 89.7% of 15,791 | 94.8% of 30,987 |
+| both | 94.5% of 15,791 | 94.6% of 30,987 |
+| capitals | 93.2% of 15,791 | 91.3% of 30,987 |
+| both+capitals | 94.1% of 15,791 | 95.3% of 30,987 |
+
 ### errors (test)
 
 The shipped model (tagger.onnx, int8, with the lexicon) on 172,328 sentences of the test split: 25,995 wrong words out of 2,120,093 that could be wrong. The first four rows split every word by case and position; the others overlap them.

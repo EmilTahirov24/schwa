@@ -289,6 +289,18 @@ Wikipedia's. The web alone made the best model for the web's ambiguous words and
 points worse on Wikipedia's. What a model reads is what it is good at, and the numbers say
 read both.
 
+*Later:* this choice was made on the test splits, which is choosing on what is reported. The
+same five taggers were therefore scored again on the dev splits, where a choice between
+models belongs — `poe domain-dev`, the table in [results.md](results.md) — and nothing about
+the decision changes. Reading both texts gains 2.51 points on the web's ambiguous words
+(+2.39 to +2.64) and 4.56 on its whole sentences, and is level on Wikipedia (-0.05, -0.20 to
++0.10, and -0.00, -0.17 to +0.16). Artificial capitals still fail on Wikipedia's ambiguous
+words (-0.18, -0.31 to -0.06). Added to the combined text they still pass the rule and still
+trade Wikipedia's capitals for the web's (94.1% against 94.5%, and 95.3% against 94.6%), so
+the model that ships is still the one trained on the two texts as they are. One difference
+between the tables is worth knowing: the web dev split keeps the ə filter that the web test
+split does not (18).
+
 ## 20. The extension edits only the letters that change
 
 **Context.** Restoring a whole editor the simple way - select everything, insert the restored

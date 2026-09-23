@@ -1,11 +1,14 @@
 """How much does it matter what the tagger read? Score taggers trained on different text on
-both test splits, Wikipedia and the web.
+Wikipedia and on the web, either on the dev splits or on the test splits.
 
 Every tagger has the same architecture, settings and seed; only what it read differs - which
 text, or the same text with some of it in capitals. The comparison is the tagger alone,
 without the lexicon, so that nothing else in the table depends on Wikipedia. Intervals come
 from the same article- and document-level bootstrap as the main results, and each model is
 compared with the first on the same resamples.
+
+`--splits dev web_dev` is where a choice between models belongs: the test splits are for
+reporting the model that was chosen, and choosing on them is choosing on what is reported.
 
     uv run --group train python scripts/domain_shift.py \\
         --models wikipedia=models/tagger.pt web=models/tagger_web.pt both=models/tagger_both.pt
@@ -26,7 +29,13 @@ from schwa.metrics import Interval, Scores, bootstrap, evaluate
 from schwa.tokenize import iter_words, key_of
 
 DATA = Path("data/processed")
-SPLITS = {"test": "Wikipedia test", "web_test": "Web test"}
+LABELS = {
+    "dev": "Wikipedia dev",
+    "test": "Wikipedia test",
+    "web_dev": "Web dev",
+    "web_test": "Web test",
+}
+DEFAULT_SPLITS = ["test", "web_test"]
 
 
 def capitals(references: list[str], predictions: list[str]) -> tuple[int, int]:
@@ -66,9 +75,22 @@ def main() -> int:
         required=True,
         help="name=checkpoint pairs; the first is the baseline the others are compared with",
     )
+    parser.add_argument(
+        "--splits",
+        nargs="+",
+        default=DEFAULT_SPLITS,
+        choices=list(LABELS),
+        help="which splits to score on; dev is how the choice between models should be made",
+    )
     parser.add_argument("--resamples", type=int, default=1000)
     parser.add_argument("--limit", type=int, default=0, help="score only the first N sentences")
     args = parser.parse_args()
+
+    splits = {name: LABELS[name] for name in args.splits}
+    default = args.splits == DEFAULT_SPLITS
+    section = "domain shift" if default else f"domain shift ({args.splits[0]})"
+    stem = "domain_shift" if default else f"domain_shift_{'_'.join(args.splits)}"
+    numbers = DATA / f"{stem}.json"
 
     models = dict(item.split("=", 1) for item in args.models)
     for path in models.values():
@@ -83,7 +105,7 @@ def main() -> int:
     names = list(taggers)
 
     results: dict[str, dict] = {}
-    for split in SPLITS:
+    for split in splits:
         references = (DATA / f"{split}.txt").read_text(encoding="utf-8").splitlines()
         groups = (DATA / f"{split}.groups").read_text(encoding="utf-8").splitlines()
         if args.limit:
@@ -117,7 +139,7 @@ def main() -> int:
         }
 
     header = "| Trained on | " + " | ".join(
-        f"{SPLITS[split]}: {what}" for split in SPLITS for what in ("ambiguous", "sentences")
+        f"{splits[split]}: {what}" for split in splits for what in ("ambiguous", "sentences")
     )
     lines = [
         "The tagger alone, trained "
@@ -127,11 +149,11 @@ def main() -> int:
         "documents.",
         "",
         header + " |",
-        "|---" * (1 + 2 * len(SPLITS)) + "|",
+        "|---" * (1 + 2 * len(splits)) + "|",
     ]
     for index, name in enumerate(names):
         cells = []
-        for split in SPLITS:
+        for split in splits:
             score = results[split]["scores"][index]
             bounds = results[split]["intervals"][index]
             cells += [
@@ -141,10 +163,10 @@ def main() -> int:
         lines.append(f"| {name} | " + " | ".join(cells) + " |")
 
     lines += ["", f"Against the model trained on {names[0]}, in points:", "", header + " |"]
-    lines.append("|---" * (1 + 2 * len(SPLITS)) + "|")
+    lines.append("|---" * (1 + 2 * len(splits)) + "|")
     for index, name in enumerate(names[1:], start=1):
         cells = []
-        for split in SPLITS:
+        for split in splits:
             base = results[split]["scores"][0]
             score = results[split]["scores"][index]
             bounds = results[split]["differences"][index - 1]
@@ -163,17 +185,17 @@ def main() -> int:
         "",
         "Words written entirely in capitals, restored right:",
         "",
-        "| Trained on | " + " | ".join(SPLITS.values()) + " |",
-        "|---" * (1 + len(SPLITS)) + "|",
+        "| Trained on | " + " | ".join(splits.values()) + " |",
+        "|---" * (1 + len(splits)) + "|",
     ]
     for index, name in enumerate(names):
         cells = []
-        for split in SPLITS:
+        for split in splits:
             total, right = results[split]["capitals"][index]
             cells.append(f"{right / max(total, 1):.1%} of {total:,}")
         lines.append(f"| {name} | " + " | ".join(cells) + " |")
 
-    write_section("domain shift", "\n".join(lines))
+    write_section(section, "\n".join(lines))
 
     summary = {
         split: {
@@ -195,8 +217,8 @@ def main() -> int:
         }
         for split, result in results.items()
     }
-    (DATA / "domain_shift.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
-    print("results -> data/processed/domain_shift.json and docs/results.md")
+    numbers.write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    print(f"results -> {numbers} and docs/results.md")
     return 0
 
 

@@ -171,6 +171,11 @@ capitals artificially fixed some of them but cost 0.2 points on Wikipedia; the r
 headlines in web text fixed more on their own. The rule for what would ship was set before
 the runs; [decision 19](docs/decisions.md) has the rest.
 
+The table above is the test splits, because that is what the rest of this README reports. A
+choice between models belongs on dev, so the same five taggers were scored there too
+(`poe domain-dev`, in [results.md](docs/results.md)): the same candidates pass the rule and
+the same model ships.
+
 ## Spelling
 
 Diacritics are only half of what goes wrong when typing fast. Schwa also points out words

@@ -54,5 +54,10 @@ the Python tests, so the two cannot quietly drift apart — including the casing
 
 ## Not here yet
 
-The Chrome Web Store release — the listing text is in
-[docs/store-listing.md](../../docs/store-listing.md) — and a Firefox build.
+- **Editors inside a frame.** Both functions are sent to the page's main frame, so an editor
+  the site puts in its own `<iframe>` is not reached: the shortcut reports that there is
+  nothing to restore. The context menu knows which frame was clicked, which is where a fix
+  would start; a frame from another site would need a permission this extension does not ask
+  for.
+- The Chrome Web Store release — the listing text is in
+  [docs/store-listing.md](../../docs/store-listing.md) — and a Firefox build.

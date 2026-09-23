@@ -134,7 +134,10 @@ Two details behind the numbers:
 
 - A rival spelling only counts as a real second reading when it reaches 5% of a word's
   occurrences. Wikipedia writes `bir` 286k times and `bır` 39 times — that is a typo, and
-  counting it as an ambiguity would have filled the score with unwinnable words.
+  counting it as an ambiguity would have filled the score with unwinnable words. That
+  threshold is a judgement, so it is measured: at 1%, 2%, 5%, 10% and 20% the ambiguous set
+  covers 7.8% down to 1.5% of all words, and the model leads the lexicon on it by 8.5, 10.9,
+  14.6, 19.2 and 25.9 points. A lower threshold flatters the lexicon, not the model.
 - Sentences are split into train, dev and test **per article**, so near-copies inside one
   article cannot land on both sides of the split.
 

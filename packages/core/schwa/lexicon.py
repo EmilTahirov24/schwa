@@ -108,14 +108,18 @@ class Lexicon:
                 out.write(json.dumps(row, ensure_ascii=False) + "\n")
 
     @classmethod
-    def load(cls, path: Path) -> Lexicon:
-        """Read a lexicon written by :meth:`save`."""
+    def load(cls, path: Path, **thresholds: float) -> Lexicon:
+        """Read a lexicon written by :meth:`save`.
+
+        `thresholds` overrides what counts as ambiguous, which is how the same counts can be
+        scored against several thresholds without being read again.
+        """
         forms: dict[str, Counter[str]] = {}
         with path.open(encoding="utf-8") as source:
             for line in source:
                 row = json.loads(line)
                 forms[row["key"]] = Counter(row["forms"])
-        return cls(forms)
+        return cls(forms, **thresholds)  # type: ignore[arg-type]
 
     def __len__(self) -> int:
         return len(self._forms)

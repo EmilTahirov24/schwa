@@ -59,6 +59,15 @@ character tagger, trained on Wikipedia alone, gets 98.7% and 93.8%. Over all wor
 systems are 1.6 points apart, over ambiguous words 14.5. Only the second number says how
 much better one of them is.
 
+*Later:* which words count as ambiguous rests on a threshold - a rival spelling has to reach
+5% of a form's occurrences - and that is a judgement, so it was measured instead of argued
+(`poe threshold`, the table in [results.md](results.md)). Scoring the same predictions at 1%,
+2%, 5%, 10% and 20% changes how many words are in the set, from 7.8% of all words down to
+1.5%, and it moves both systems the same way: the lower the threshold, the more easy words
+join the set and the better the lexicon looks. The shipped model leads at every one of them,
+from +8.51 points (+8.24 to +8.78) at 1% to +25.89 (+24.94 to +26.81) at 20%. 5% sits in the
+middle, and no threshold in that range changes what the comparison says.
+
 ## 5. The context model sees its neighbours as keys, not as spellings
 
 **Context.** To choose between `qız` and `qiz`, the model looks at the words around it. Those

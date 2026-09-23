@@ -28,6 +28,7 @@ ORDER = (
     "web_dev",
     "web_test",
     "domain shift",
+    "ambiguity threshold",
     "errors",
     "spelling",
     "quantisation",

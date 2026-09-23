@@ -132,6 +132,18 @@ Words written entirely in capitals, restored right:
 | capitals | 93.2% of 15,791 | 91.3% of 30,987 |
 | both+capitals | 94.1% of 15,791 | 95.3% of 30,987 |
 
+### ambiguity threshold (test)
+
+The same predictions on the test split, 172,328 sentences, scored against several definitions of an ambiguous word. A second spelling counts as a real reading once it reaches this share of a typed form's occurrences and 10 occurrences in all; the repository uses 5%. In brackets: 95% interval from 1,000 bootstrap resamples of whole articles or documents.
+
+| Minority share | Ambiguous words | Of all words | lexicon | hybrid | hybrid - lexicon |
+|---|---|---|---|---|---|
+| 1% | 173,602 | 7.8% | 87.4% (87.2%–87.7%) | 96.0% (95.8%–96.1%) | +8.51 (+8.24 to +8.78) |
+| 2% | 134,725 | 6.1% | 84.2% (83.9%–84.5%) | 95.1% (94.9%–95.3%) | +10.86 (+10.53 to +11.20) |
+| 5% (shipped) | 96,916 | 4.4% | 79.3% (78.9%–79.8%) | 93.9% (93.7%–94.2%) | +14.59 (+14.17 to +15.01) |
+| 10% | 68,373 | 3.1% | 73.4% (72.8%–74.0%) | 92.6% (92.3%–92.9%) | +19.19 (+18.61 to +19.75) |
+| 20% | 33,937 | 1.5% | 64.1% (63.1%–65.0%) | 90.0% (89.4%–90.5%) | +25.89 (+24.94 to +26.81) |
+
 ### errors (test)
 
 The shipped model (tagger.onnx, int8, with the lexicon) on 172,328 sentences of the test split: 25,995 wrong words out of 2,120,093 that could be wrong. The first four rows split every word by case and position; the others overlap them.

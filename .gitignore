@@ -1,6 +1,9 @@
 # Data (downloaded or generated, never committed)
 data/raw/
 data/processed/
+# Chat exports hold the other side of every conversation; only what import_chat.py takes
+# from them may leave the machine.
+data/exports/
 *.bz2
 *.xml
 

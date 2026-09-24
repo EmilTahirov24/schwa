@@ -16,9 +16,26 @@ was already right is making a mistake worth counting.
 
 ## How to collect them
 
-1. Copy your own messages out of wherever you write them.
-2. Put one sentence per line in `data/real/raw.txt`, exactly as typed.
-3. Strip anything you would not want public: names, numbers, addresses.
+The quick way is a chat export. In WhatsApp, open a chat you write a lot in, then **More →
+Export chat → Without media**. In Telegram Desktop, **Export chat history**, with JSON as the
+format. Save it in `data/exports/`: git ignores that folder, and it has to, because an export
+holds the other side of every conversation. Then:
+
+```bash
+uv run python scripts/import_chat.py data/exports/chat.txt            # who wrote how much
+uv run python scripts/import_chat.py data/exports/chat.txt --me Emil  # your name, as spelled there
+```
+
+It keeps only your messages - never the other person's - and drops links, email addresses,
+phone numbers, media placeholders, deleted and forwarded messages, and anything under three
+words. Then it samples 300 into `data/real/raw.txt`. Several exports can go in one command,
+and `--append` adds to a file that is already there.
+
+It cannot find names. Read `data/real/raw.txt` before annotating and take out anything you
+would not want public: unlike the exports, this folder is meant to be published once the set
+is done, and git will offer it.
+
+By hand works too: one sentence per line in `data/real/raw.txt`, exactly as typed.
 
 ## How to annotate
 

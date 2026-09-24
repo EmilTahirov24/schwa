@@ -43,9 +43,12 @@ By hand works too: one sentence per line in `data/real/raw.txt`, exactly as type
 uv run python scripts/annotate.py --annotator emil
 ```
 
-For each sentence the tool shows a guess. Press Enter to accept it, type the correct sentence
-to replace it, `s` to skip, `q` to stop. Progress is saved after every line, so it can be
-done in several sittings.
+For each sentence the tool shows a guess. Press Enter to accept it. If a word in it is wrong,
+type only that word, spelled right: the tool puts it in place, capitals and all, and shows the
+sentence again for the next fix or for Enter. Several words can go in one line, and the whole
+sentence works too. `s` skips a sentence - one that is not Azerbaijani, or that you cannot
+decide - and `q` stops. Progress is saved after every sentence, so it can be done in several
+sittings.
 
 The guess comes from the lexicon, not from the model this set will measure. Accepting the
 model's own answers would tilt the reference towards them. The lexicon leaves the ambiguous
